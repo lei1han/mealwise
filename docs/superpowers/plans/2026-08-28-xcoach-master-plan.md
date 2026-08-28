@@ -1,7 +1,7 @@
 # X教练（代号）实施总计划与规划
 
 - 文档类型：实施总计划（Master Plan）
-- 版本：v1.1（契约 A/C 同步后端板块冻结版）
+- 版本：v1.2（契约 B 对齐 prompt 冻结版 + 承接契约 A 增量提案）
 - 日期：2026-08-28
 - 依赖设计：`../specs/2026-08-28-xcoach-design.md`
 - 分板块文档：见下表 4 个子文档
@@ -32,9 +32,9 @@
 - 实体：`users`、`memories`、`weight_records`、`diet_records`（字段见设计规格第 7 节，具体类型已由后端板块细化为 schema，见 `2026-08-28-xcoach-backend.md` 第 4 节）。
 - `memories.category` 枚举固定为：`static / dynamic / emotion`。
 - 静态记忆字段包含：性别（gender）、年龄段（age_group）、饮食偏好（dietary_preferences）、运动习惯（exercise_habits）、减肥史（weight_loss_history）。性别/年龄段为定标公式（BMR/TDEE）必需，摸底时自然带出。
-- 后端板块扩展：新增 `messages`（聊天历史）、`subscribe_quotas`（订阅消息额度）两个集合；`memories` 增加 `source` 字段。
-- 记忆写入：统一**追加式**（不做合并/覆盖，降低写路径复杂度），读取侧按 recency 截断兜底（static 全量、emotion 近 5 条、dynamic 当日饮食 + 近 7 天体重），与后端 `2026-08-28-xcoach-backend.md` §7、提示词 §8 口径一致。
-- **待办联动**：板块 4（运营商业）提出契约 A 增量提案 [`2026-08-28-xcoach-contract-a-proposal.md`](file:///c:/Code/weight_loss_coach/deliverables/operations-business/2026-08-28-xcoach-contract-a-proposal.md)，为支撑指标计算提议补字段（记录表时间戳、`diet_records.confidence`、`users.onboarding_completed_at`/`last_active_at`、`subscribe_auth`/`notify_log` 两表）。待后端板块 Review 采纳（注意与既有 `subscribe_quotas`/`subscribe.report` 去重）后回写本节。
+- 后端板块扩展：新增 `messages`（聊天历史）、`subscribe_auth`（订阅授权/额度账本）、`notify_log`（触达日志）集合（后两者承接契约 A 增量提案）；`memories` 增加 `source` 字段。
+- 记忆写入：按提示词成品 §8.3 **去重契约**——static 同语义更新不新增、dynamic 按自然日覆盖、emotion 保留最近 20 条；读取侧 static 全量、emotion 近 5 条、dynamic 当日饮食 + 近 7 天体重，与后端 `2026-08-28-xcoach-backend.md` §7、提示词 §8 口径一致。
+- **待办联动**：契约 A 增量提案（板块 4）**已被后端板块采纳并回写本节（2026-08-28）**：记录表时间戳、`diet_records.confidence`、`users.onboarding_completed_at`/`last_active_at`、`subscribe_auth`/`notify_log` 两表均已并入 schema（见后端 §4）；`subscribe_quotas` 已并入 `subscribe_auth`。商业计划书 §8 待对账项第 1 条由板块 4 销项。
 
 ### 1.2 契约 B：结构化输出（提示词产出，后端消费）—— 冻结版
 
@@ -49,16 +49,16 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
     "weight_record": { "weight_kg": 65.2 },
     "memory_points": [ { "category": "emotion", "content": "今天压力大想吃甜" } ]
   },
-  "budget_remaining": { "min": 500, "max": 600 }
+  "budget_remaining_kcal": 600
 }
 ```
 
 字段规则（后端解析据此校验，详细解析/降级见提示词成品 `deliverables/prompt/2026-08-28-xcoach-prompts.md` §7）：
 - `diet_record` 仅当本轮汇报饮食时出现：`food_refs` 数组与 `items` 一一对应，库内 `food:xxx`、库外/复合菜 `food:external`；`confidence`（high/medium/low）支撑"低置信度诚实标注"。`is_estimated` 由后端派生：`food_refs` 含 `food:external` 或 `confidence=low` 时为 true，落库 `diet_records.is_estimated`。
 - `weight_record` 仅当报体重时出现；`memory_points` 仅当出现值得长期记忆的新信息时出现，`category` 枚举 `static / dynamic / emotion`。
-- `budget_remaining` 为区间 `{min, max}`，**由服务端计算并覆盖 LLM 输出**（预算 − 今日已报餐热量累计），无法确定时填 `null`。
+- `budget_remaining_kcal` 为整数 kcal，**无法确定时填 `null`**（如定标前闲聊、纯情绪陪聊）；后端以自身预算计算兜底覆盖，不信任模型口径（见后端计划 §6.4）。
 
-> 契约 A / B / C 均已冻结（B 于 2026-08-28 由提示词板块冻结并回写；记忆写入采用**追加式**存储、读取侧 recency 截断兜底，见 §1.1 与提示词 §8）。
+> 契约 A / B / C 均已冻结（B 于 2026-08-28 由提示词板块冻结并回写；记忆去重契约见提示词 §8.3，写入策略见 §1.1）。
 
 ### 1.3 契约 C：前后端接口（后端产出，前端消费）
 

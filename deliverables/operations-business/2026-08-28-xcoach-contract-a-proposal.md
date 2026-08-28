@@ -5,7 +5,7 @@
 - 日期：2026-08-28
 - 上游：总计划 `../../docs/superpowers/plans/2026-08-28-xcoach-master-plan.md` §1.1（契约 A）、设计规格 `../../docs/superpowers/specs/2026-08-28-xcoach-design.md` §7、商业计划书 `2026-08-28-xcoach-business-plan.md` §1.3
 - 目标读者：板块 3（后端）
-- 状态：**待后端冻结**（提案未生效，不被采纳前不回写总计划 §1.1）
+- 状态：**已承接（2026-08-28 后端 v2.1 采纳）**——7 项增量全部被后端 schema 承接，回写总计划 §1.1；差异点见下表，详见后端文档 §3.1 / §4
 
 ---
 
@@ -115,6 +115,20 @@
 2. `weight_records / diet_records` 中文占位字段是否统一归一为英文命名？
 3. `notify_log.status` 是否可获得真实"送达/点击"回传，还是降级为间接度量（§5.4）？
 4. `last_active_at` 选择冗余落库还是查询派生？
+
+---
+
+## 8. 承接差异记录（2026-08-28 后端 v2.1）
+
+后端已按提案 §7 回写完总计划。7 项增量全部承接，差异如下：
+
+| 提案 | 后端版本 | 差异说明 |
+|---|---|---|
+| `subscribe_auth.template_id` | `template_key` | 改名，语义一致；且与额度账本合并为**同一张表** `subscribe_auth`，复用该集合原有的额度表达 |
+| `notify_log.status.clicked` | 保留但并不保证可得 | 同提案 §5.4，不可得时降级为 `sent/delivered` + 「触达后 24h 内是否汇报」间接度量 |
+| `last_active_at` | 冗余刷新 | 采纳提案 §5.4 的冗余落库分支（非派生） |
+
+其余字段（`created_at`×2、`confidence`、`onboarding_completed_at`）按提案原样入库。提案使命完成，归档为已采纳。
 
 ---
 
