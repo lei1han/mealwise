@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { buildApp } from '../src/index.js';
 import { CloudDB, CLOUD_COLLECTIONS } from '../src/db/cloud.js';
 import { createLlm } from '../src/llm/client.js';
+import { dailyBudget, bmr } from '../src/domain/onboarding.js';
 
 // —— 假云端存储：与 wx-server-sdk 集合接口对齐 ——
 // 简单匹配：等值 where
@@ -95,4 +96,23 @@ test('M7·云持久化：两个容器实例跨会话可续（报餐 → 画像 �
   await d3.load();
   const meals = d3.find('diet_records', (x) => x.user_id === uid).map((x) => x.meal).sort();
   assert.ok(meals.includes('lunch') && meals.includes('dinner'), `餐次跨容器累积：${meals.join(',')}`);
+});
+
+test('M4·预算一致性：Mifflin 定标确定性 + 1200/1500 下限钳制（mock 与真 LLM 共用同一 server 预算）', () => {
+  // 服务端统一覆盖 budget_remaining_kcal = calcBudget，与 mock/真 LLM 无关，天然一致；
+  // 此处锁定 Mifflin 公式与性别下限的确定性，防止后续改动漂移。
+  // 女性 50kg/165cm/25-34：BMR=500+1031.25-147.5-161=1222.75 → 1223
+  assert.equal(bmr({ weightKg: 50, heightCm: 165, ageGroup: '25-34', gender: 'female' }), 1223);
+  // light(1.375) 缺口 500：round(1223*1.375-500)=1182 → 触发女性下限 1200
+  assert.equal(dailyBudget({ weightKg: 50, heightCm: 165, ageGroup: '25-34', gender: 'female' }), 1200);
+
+  // 女性体重较大时预算明显 > 1200，验证钳制只在低位生效（公式一致性）
+  assert.ok(dailyBudget({ weightKg: 63, heightCm: 165, ageGroup: '25-34', gender: 'female' }) > 1200);
+
+  // 男性 80kg/180cm/25-34：BMR=800+1125-147.5+5=1782.5 → 1783
+  assert.equal(bmr({ weightKg: 80, heightCm: 180, ageGroup: '25-34', gender: 'male' }), 1783);
+  assert.ok(dailyBudget({ weightKg: 80, heightCm: 180, ageGroup: '25-34', gender: 'male' }) >= 1500, 'male 应 ≥1500 下限');
+
+  // 缺参数 → 不定标 null（与 budgetRemaining 的 null 口径一致）
+  assert.equal(dailyBudget({ weightKg: null, heightCm: 165, ageGroup: '25-34', gender: 'female' }), null);
 });

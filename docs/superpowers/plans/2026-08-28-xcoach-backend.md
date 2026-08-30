@@ -467,8 +467,8 @@ scripts/
 - [x] 端到端：真 LLM **单轮真实冒烟已过**（`degraded:false`、`intent=diet_report` 结构化输出，reply 真人化，2026-08-30 云上 requestID `28a4ebdd…`）；**M3 用例已补**：3 轮连续对话（单例状态跨轮保持、餐次/消息/画像累积）与注入非法 JSON 触发降级（`degraded:true`、回显 LLM 原文、不落坏数据）落 `test/chat.test.js`，`npm test` 12/12 通过（2026-08-30）；**真 LLM 3 轮真实对话已过**（2026-08-30 云上 `u_real_3r6`）：目标 63→58、体重 63、餐次/画像跨轮连续，三轮 intent 依次 `goal_setup→weight_report→diet_report`、全 `degraded:false`、`new→profiling` 后不再重置。注：云函数适配层只转发 `payload` 内字段，外部调用需 `{ action, payload:{ text } }`
 
 #### M4 定标与状态机（内核已落地，仅剩真实画像确认）
-- [ ] 用真 LLM 重跑 onboarding 会话，确认 `profiling_progress` 各字段（gender/age_group/height/weight/history/target）能稳定抽取
-- [ ] 校验 Mifflin 预算与 1200/1500 下限在 mock 与真实模型间一致
+- [ ] 用真 LLM 重跑 onboarding 会话，确认 `profiling_progress` 各字段（gender/age_group/height/weight/history/target）能稳定抽取（待 M7 云持久化部署确认后落库核验真实字段）
+- [x] 校验 Mifflin 预算与 1200/1500 下限在 mock 与真实模型间一致（2026-08-30：服务端统一覆盖 `budget_remaining_kcal = calcBudget`，与 mock/真 LLM 无关、天然一致；Mifflin 公式与 1200/1500 性别下限已由 `test/cloud.test.js` 的确定性测试锁定，`npm test` 14/14）
 
 #### M5 定时督促（依赖外部申请，尽早启动）
 - [ ] 小程序后台申请订阅消息模板（1 个通用提醒类），获取 `template_id`
