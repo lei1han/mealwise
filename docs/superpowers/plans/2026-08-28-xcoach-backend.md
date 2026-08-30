@@ -88,26 +88,22 @@
 | 字段 | 类型 | 说明 |
 |---|---|---|
 | _id | auto | |
-| openid | string | 唯一索引 |
+| user_id | string | 唯一索引；存 openid 映射（云函数 `cloud.getWXContext().OPENID` 服务端注入） |
 | nickname | string | |
 | gender | string | `male / female`（定标公式必需） |
 | age_group | string | `18-24 / 25-34 / 35-44 / 45-54 / 55+`（定标公式取组中值算 BMR） |
 | height_cm | number | 身高 |
-| initial_weight_kg | number | 初始体重 |
+| current_weight_kg | number | 当前体重（最近一次上报） |
 | target_weight_kg | number | 目标体重 |
-| estimate_weeks | number | 预估周期（周） |
-| daily_calorie_budget_kcal | number | 每日热量预算 |
-| snark_level | string | `gentle / light / spicy`，默认 `light` |
-| food_restrictions | string[] | 禁忌/过敏 |
-| dietary_preferences | string | 饮食偏好 |
-| exercise_condition | string | 运动条件 |
-| exercise_habits | string | 运动习惯 |
-| motivation | string | 减肥动机 |
+| history_kg | number | 过往累计算重身（减肥史量化） |
+| target_estimate_weeks | number | 预估周期（周），定标转 active 时写入 |
 | onboarding_state | string | 状态机（见第 10 节） |
 | profiling_progress | object | 摸底各字段完成标记 `{ gender:false, age_group:false, height:false, weight:false, history:false, ... }` |
 | onboarding_completed_at | date，可空 | 定标完成时刻 = **执行期起点锚点**（写一次，不随更新刷新） |
 | last_active_at | date | 最后活跃时刻（任意记录/对话落库时冗余刷新，支撑流失节点） |
 | created_at / updated_at | date | |
+
+> 设计变更记录（2026-08-31 对齐唯一工程实现）：`openid`→`user_id`、`initial_weight_kg`→`current_weight_kg`、`weight_loss_history`→`history_kg`、`estimate_weeks`→`target_estimate_weeks`。`daily_calorie_budget_kcal` 不入库——由服务端每次对话现场计算（§10.2）；`snark_level` MVP 为代码常量，不入库。字段以 `MealWise/cloudfunctions/api/src/db/schema.js` 为冻结版。
 
 ### 4.2 memories
 
@@ -117,8 +113,10 @@
 | user_id | string | |
 | category | string | `static / dynamic / emotion` |
 | content | string | 记忆内容 |
+| date | string | `YYYY-MM-DD`，仅 dynamic 复用（按自然日覆盖） |
 | source | string | `onboarding / chat_extract` |
 | created_at | date | |
+| updated_at | date | 更新置顶（static 同语义更新时刷新） |
 
 索引：`user_id + category + created_at`（降序）。写入遵循去重契约（§7.2）：static 同语义更新不新增、dynamic 按自然日覆盖、emotion 保留最近 20 条。
 
@@ -142,9 +140,9 @@
 | user_id | string | |
 | date | string | `YYYY-MM-DD` |
 | meal | string | `breakfast / lunch / dinner / snack` |
-| raw_text | string | 用户原始描述 |
 | items | array | `[{ food_id, food_name, portion_fist }]`，portion_fist ∈ {0.5, 1, 2, 2.5} |
 | cal_min / cal_max | number | 区间 |
+| food_refs | array | 契约 B `diet_record.food_refs`，与 items 一一对应；库内 `food:xxx`、库外 `food:external` |
 | confidence | enum | `high / medium / low`，可空；来自契约 B `diet_record.confidence`，支撑低置信度占比监控 |
 | is_estimated | bool | 库外/复合菜估算标记（由 `food_refs` 含 `food:external` 或 `confidence=low` 派生） |
 | created_at | date | |
@@ -159,8 +157,6 @@
 | user_id | string | |
 | role | string | `user / coach` |
 | content | string | 消息文本 |
-| intent | string | coach 消息附带（契约 B 解析结果） |
-| meta | object | 提取摘要（food_refs、是否降级等） |
 | created_at | date | |
 
 索引：`user_id + created_at`（降序）。上下文裁剪取最近 20 条。
@@ -222,7 +218,7 @@ wx.cloud.callFunction({
 | `user.state.get` | — | `{ onboarding_state }` 首帧读取状态 |
 | `user.profile.get` | — | users 脱敏文档 |
 | `user.profile.update` | `{ patch }` | `{ ok }` 白名单字段；**仅主动编辑用**（如 Sheet 补充录入），摸底画像走 `chat.send` + LLM 抽取 |
-| `user.target.update` | `{ target_weight_kg, estimate_weeks? }` | `{ ok }` |
+| `user.target.update` | `{ target_weight_kg, target_estimate_weeks? }` | `{ ok }` |
 | `subscribe.report` | `{ accepted, template_key }` | `{ remaining }` |
 
 限流：`chat.send` 每用户每分钟 6 条上限（防刷 + 控成本）。
@@ -452,10 +448,11 @@ scripts/
 |---|---|---|---|
 | M1 环境与骨架 | 云开发 env 初始化、`api`/`scheduler` 函数骨架、集合+索引脚本、foods.json v0 | 骨架可部署、setup-db 跑通 | ✅ **已落地**：`deliverables/backend` 零依赖内核 + `src/data/foods.json`（24 项）+ `scripts/setup-db.js`（schema/索引 7 集合打印）；云开发 env/函数骨架待 M3 部署时建 |
 | M2 mock 闭环 | mock LLM（固定 JSON 响应）跑通 chat pipeline 全时序 | 脚本模拟"发消息→回复→落库→返回"闭环通过 | ✅ **已落地**：`scripts/demo-chat.js` 多轮闭环通过；`npm test` 10/10（解析/降级/画像/状态机/记忆去重） |
-| M3 真 LLM 接入 | DeepSeek key 配置、解析/降级管线、注入非法 JSON 用例 | 降级用例：返回纯文本、无坏数据落库 | ⬜ 解析/降级管线**已就绪**（`src/llm/parser.js` + `client.js` OpenAI 兼容适配器）；待接入真实 key |
+| M3 真 LLM 接入 | DeepSeek key 配置、解析/降级管线、注入非法 JSON 用例 | 降级用例：返回纯文本、无坏数据落库 | ✅ **已落地（2026-08-30）**：`client.js` OpenAI 兼容适配器 + `buildApp` 按 `DEEPSEEK_API_KEY` 自动选真 LLM（未配时回退 mock）；`OUTPUT_CONTRACT`（契约 B JSON schema）注入系统提示词保证可解析；云函数运行时升 **Nodejs20.19**、env 配 `DEEPSEEK_API_KEY`；云上真实冒烟 **degraded:false** 非降级 |
 | M4 定标与状态机 | 10.2 公式 + onboarding 状态机 + 摸底落库 | onboarding 模拟会话走到 active | ✅ **已落地**：`src/domain/onboarding.js`（Mifflin/状态机/画像提取）、`budget.js`（剩余单值）；demo 已转 active |
 | M5 定时督促 | 模板申请、scheduler、漏报判断、额度管理 | dry-run 日志：漏报判断与额度扣减正确 | 🟡 **逻辑已落地**：NUDGE_SLOTS 对齐 §9.1、`src/services/nudge.js`（漏报判断/额度扣减/notify_log）、`src/scheduler.js` 入口 + `scheduler.nudge`/`subscribe.report` action、`scripts/nudge-dryrun.js` 探针全程正确；待订阅模板 ID 后接真推送 |
 | M6 食物库完备 | 扩到 50~100 项 + 校准 benchmark | 第 8.3 节 benchmark 通过 | ✅ **已落地**：`foods.json` v0.2 共 **51 项**（五大类齐全）+ `foods-benchmark.js` 数据自省 11/11 + `food-calib.json` §8.3 校准 **20/20、平均偏差 2.0%** |
+| M7 云持久化 | CloudDB 适配：与 MemoryDB 同接口（find/findOne/insert/upsert/remove），但读写在微信云开发集合，按 user_id 载入→业务→差分写回 | 跨容器/跨会话可续：新容器/新请求能读回画像、餐次、消息，餐次累积不清零 | 🟡 **已落地（2026-08-30）**：`src/db/cloud.js`（`CloudDB`，差分 commit；不 import wx-server-sdk，构造传 `cloud.database()`）+ 云函数 `api/index.js` 改为每请求构建 CloudDB 工作集；`test/cloud.test.js` 用「假云端存储」模拟两/三个容器实例，`npm test` **13/13** 通过（跨容器读回画像+餐次累积）。云上部署待确认后真实验证（users 等 7 集合已建） |
 
 **最终完成标准**（对齐 v1.0）：M2 + M3 + M6 即满足"mock 前端/脚本跑通闭环 + schema 建表脚本 + 食物库数据交付"。
 
@@ -464,10 +461,10 @@ scripts/
 > 内核代码已就绪，以下为**部署/外部依赖**类接入点，需在腾讯云开发与小程序后台人工完成。
 
 #### M3 真 LLM 接入
-- [ ] 申请 DeepSeek API key，写入环境变量 `DEEPSEEK_API_KEY`（或云函数环境变量）
-- [ ] `src/llm/client.js` 调用方改为 `createLlm({ service:'openai', apiKey, baseURL, model:'deepseek-chat' })`（默认即 OpenAI 兼容，切供应商只改 baseURL/model）
-- [ ] 云函数 `api` 部署：`src/index.js` 作为 `main` 入口，`event.action` 分发已就绪
-- [ ] 端到端：真 LLM 跑 3 轮对话，校验结构化输出能落库、注入非法 JSON 触发降级（`npm run demo` 改接真实 key 验证）
+- [x] 申请 DeepSeek API key，写入环境变量 `DEEPSEEK_API_KEY`（云函数环境变量，2026-08-30 已配）
+- [x] 接真 LLM（实现为 `buildApp` 按 `LLM_SERVICE === 'openai'` 或存在 `DEEPSEEK_API_KEY` 自动选 openai，否则回退 mock；`client.js` 默认 OpenAI 兼容，切商只改 baseURL/model）
+- [x] 云函数 `api` 部署：`src/index.js` 作为 `main` 入口，`event.action` 分发就绪（运行 Nodejs20.19，2026-08-30 冒烟走通）
+- [x] 端到端：真 LLM **单轮真实冒烟已过**（`degraded:false`、`intent=diet_report` 结构化输出，reply 真人化，2026-08-30 云上 requestID `28a4ebdd…`）；**M3 用例已补**：3 轮连续对话（单例状态跨轮保持、餐次/消息/画像累积）与注入非法 JSON 触发降级（`degraded:true`、回显 LLM 原文、不落坏数据）落 `test/chat.test.js`，`npm test` 12/12 通过（2026-08-30）；**真 LLM 3 轮真实对话已过**（2026-08-30 云上 `u_real_3r6`）：目标 63→58、体重 63、餐次/画像跨轮连续，三轮 intent 依次 `goal_setup→weight_report→diet_report`、全 `degraded:false`、`new→profiling` 后不再重置。注：云函数适配层只转发 `payload` 内字段，外部调用需 `{ action, payload:{ text } }`
 
 #### M4 定标与状态机（内核已落地，仅剩真实画像确认）
 - [ ] 用真 LLM 重跑 onboarding 会话，确认 `profiling_progress` 各字段（gender/age_group/height/weight/history/target）能稳定抽取
