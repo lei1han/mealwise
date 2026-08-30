@@ -14,7 +14,7 @@
 
 ## 2. 交付物清单
 
-> 已执行完毕，成品见 [`2026-08-29-xcoach-frontend-design-v1.md`](file:///c:/Code/weight_loss_coach/deliverables/frontend/2026-08-29-xcoach-frontend-design-v1.md)（设计稿定稿 v1.0）与 [`xcoach-miniapp/`](file:///c:/Code/weight_loss_coach/deliverables/frontend/xcoach-miniapp/)（微信小程序代码，Mock 模式可走通核心链路）。
+> 已执行完毕，成品见 [`2026-08-29-xcoach-frontend-design-v1.md`](file:///c:/Code/weight_loss_coach/deliverables/frontend/2026-08-29-xcoach-frontend-design-v1.md)（设计稿定稿 v1.0）与 [`mealwise-miniapp/`](file:///c:/Code/weight_loss_coach/deliverables/frontend/mealwise-miniapp/)（微信小程序代码，Mock 模式可走通核心链路）。
 
 - [x] 页面清单与信息架构（导航流）
 - [x] 新用户 Onboarding 流程设计（摸底 → 定标 → 开始）

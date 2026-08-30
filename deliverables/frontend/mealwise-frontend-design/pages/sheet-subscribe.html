@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订阅消息授权</title>
+    <style id="theme-vars">
+:root {
+  /* ===== Brand Primary: Sage Green ===== */
+  --xc-primary: #4E7A5C;
+  --xc-primary-foreground: #FFFFFF;
+  --xc-primary-50: #EEF5F0;
+  --xc-primary-100: #D6E8DC;
+
+  /* ===== Surfaces ===== */
+  --xc-background: #F8FBF9;
+  --xc-surface: #FFFFFF;
+  --xc-surface-2: #F1F5F2;
+
+  /* ===== Text ===== */
+  --xc-foreground: #1A2620;
+  --xc-muted-foreground: #5C7064;
+  --xc-placeholder: #9AACA0;
+
+  /* ===== Lines & Borders ===== */
+  --xc-border: #DEE6E0;
+  --xc-input: #DEE6E0;
+  --xc-ring: #4E7A5C;
+  --xc-divider: rgba(26, 38, 32, 0.06);
+
+  /* ===== Status / Accent ===== */
+  --xc-state-accent: #C5733A;
+  --xc-state-accent-foreground: #FFFFFF;
+  --xc-state-success: #22C55E;
+  --xc-state-warning: #F59E0B;
+  --xc-state-error: #EF4444;
+
+  /* ===== Radius ===== */
+  --xc-radius-xs: 4px;
+  --xc-radius-sm: 8px;
+  --xc-radius-md: 12px;
+  --xc-radius-lg: 16px;
+  --xc-radius-pill: 999px;
+
+  /* ===== Shadows ===== */
+  --xc-shadow-1: 0 1px 2px rgba(26, 38, 32, 0.05), 0 1px 1px rgba(26, 38, 32, 0.03);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 38, 32, 0.05);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 38, 32, 0.05);
+
+  /* ===== Typography ===== */
+  --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --xc-font-mono: "SF Mono", "Menlo", monospace;
+
+  /* ===== Semantic Aliases ===== */
+  --xc-card: var(--xc-surface);
+  --xc-card-foreground: var(--xc-foreground);
+  --xc-popover: var(--xc-surface);
+  --xc-popover-foreground: var(--xc-foreground);
+  --xc-muted: var(--xc-surface-2);
+  --xc-muted-foreground: var(--xc-muted-foreground);
+}
+
+/* Base typography */
+body {
+  font-family: var(--xc-font-sans);
+  background-color: var(--xc-background);
+  color: var(--xc-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--xc-background);
+    --color-foreground: var(--xc-foreground);
+    --color-card: var(--xc-card);
+    --color-card-foreground: var(--xc-card-foreground);
+    --color-popover: var(--xc-popover);
+    --color-popover-foreground: var(--xc-popover-foreground);
+    --color-primary: var(--xc-primary);
+    --color-primary-foreground: var(--xc-primary-foreground);
+    --color-muted: var(--xc-muted);
+    --color-muted-foreground: var(--xc-muted-foreground);
+    --color-border: var(--xc-border);
+    --color-input: var(--xc-input);
+    --color-ring: var(--xc-ring);
+    --radius-sm: var(--xc-radius-sm);
+    --radius-md: var(--xc-radius-md);
+    --radius-lg: var(--xc-radius-lg);
+  }
+  @layer base {
+    body { background: var(--xc-background); color: var(--xc-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--xc-background); }
+      .text-background { color: var(--xc-background); }
+      .border-background { border-color: var(--xc-background); }
+      .ring-background { --tw-ring-color: var(--xc-background); }
+      .bg-foreground { background-color: var(--xc-foreground); }
+      .text-foreground { color: var(--xc-foreground); }
+      .border-foreground { border-color: var(--xc-foreground); }
+      .ring-foreground { --tw-ring-color: var(--xc-foreground); }
+      .bg-card { background-color: var(--xc-card); }
+      .text-card { color: var(--xc-card); }
+      .border-card { border-color: var(--xc-card); }
+      .ring-card { --tw-ring-color: var(--xc-card); }
+      .bg-card-foreground { background-color: var(--xc-card-foreground); }
+      .text-card-foreground { color: var(--xc-card-foreground); }
+      .border-card-foreground { border-color: var(--xc-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--xc-card-foreground); }
+      .bg-popover { background-color: var(--xc-popover); }
+      .text-popover { color: var(--xc-popover); }
+      .border-popover { border-color: var(--xc-popover); }
+      .ring-popover { --tw-ring-color: var(--xc-popover); }
+      .bg-popover-foreground { background-color: var(--xc-popover-foreground); }
+      .text-popover-foreground { color: var(--xc-popover-foreground); }
+      .border-popover-foreground { border-color: var(--xc-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--xc-popover-foreground); }
+      .bg-primary { background-color: var(--xc-primary); }
+      .text-primary { color: var(--xc-primary); }
+      .border-primary { border-color: var(--xc-primary); }
+      .ring-primary { --tw-ring-color: var(--xc-primary); }
+      .bg-primary-foreground { background-color: var(--xc-primary-foreground); }
+      .text-primary-foreground { color: var(--xc-primary-foreground); }
+      .border-primary-foreground { border-color: var(--xc-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--xc-primary-foreground); }
+      .bg-muted { background-color: var(--xc-muted); }
+      .text-muted { color: var(--xc-muted); }
+      .border-muted { border-color: var(--xc-muted); }
+      .ring-muted { --tw-ring-color: var(--xc-muted); }
+      .bg-muted-foreground { background-color: var(--xc-muted-foreground); }
+      .text-muted-foreground { color: var(--xc-muted-foreground); }
+      .border-muted-foreground { border-color: var(--xc-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--xc-muted-foreground); }
+      .bg-border { background-color: var(--xc-border); }
+      .text-border { color: var(--xc-border); }
+      .border-border { border-color: var(--xc-border); }
+      .ring-border { --tw-ring-color: var(--xc-border); }
+      .bg-input { background-color: var(--xc-input); }
+      .text-input { color: var(--xc-input); }
+      .border-input { border-color: var(--xc-input); }
+      .ring-input { --tw-ring-color: var(--xc-input); }
+      .bg-ring { background-color: var(--xc-ring); }
+      .text-ring { color: var(--xc-ring); }
+      .border-ring { border-color: var(--xc-ring); }
+      .ring-ring { --tw-ring-color: var(--xc-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="critical-layout bg-[var(--xc-background)] text-[var(--xc-foreground)]">
+  <!-- 微信小程序导航栏 -->
+  <header class="relative z-20 flex h-12 items-center justify-between px-4 bg-[var(--xc-surface)]">
+    <button class="flex h-8 w-8 items-center justify-center rounded-full text-[var(--xc-foreground)] hover:bg-[var(--xc-surface-2)]" aria-label="返回">
+      <i data-lucide="chevron-left" class="h-5 w-5"></i>
+    </button>
+    <h1 class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-base font-semibold tracking-tight">三餐教练</h1>
+    <div class="relative xc-nav-capsule flex h-8 w-[88px] items-center overflow-hidden">
+      <button class="flex flex-1 items-center justify-center text-[var(--xc-foreground)] hover:bg-[var(--xc-surface-2)]" aria-label="更多">
+        <i data-lucide="more-horizontal" class="h-4 w-4"></i>
+      </button>
+      <button class="flex flex-1 items-center justify-center text-[var(--xc-foreground)] hover:bg-[var(--xc-surface-2)]" aria-label="关闭">
+        <i data-lucide="x" class="h-4 w-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 页面背景内容：保持对话感，不喧宾夺主 -->
+  <main class="relative flex-1 overflow-hidden">
+    <div class="absolute inset-0 bg-[var(--xc-background)]"></div>
+    <div class="absolute inset-x-0 top-6 flex flex-col items-center gap-3 px-6 opacity-60">
+      <div class="text-xs text-[var(--xc-muted-foreground)]">昨天 21:42</div>
+      <div class="self-start flex max-w-[80%] gap-2">
+        <div class="h-9 w-9 shrink-0 rounded-full bg-[var(--xc-surface-2)] ring-1 ring-[var(--xc-border)]"></div>
+        <div class="rounded-2xl rounded-tl-sm bg-[var(--xc-surface)] px-4 py-3 text-sm leading-relaxed shadow-sm">早点睡，明天记得上秤。</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Sheet 区域 -->
+  <section id="subscribe-sheet" class="relative z-30 w-full rounded-t-[var(--xc-radius-lg)] bg-[var(--xc-surface)] px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 shadow-[var(--xc-shadow-3)]">
+    <!-- 顶部把手 -->
+    <div class="mx-auto mb-5 h-1 w-10 rounded-full bg-[var(--xc-border)]"></div>
+
+    <!-- 教练头像 + 气泡 -->
+    <div class="mb-5 flex gap-3">
+      <div class="h-11 w-11 shrink-0 rounded-full bg-[var(--xc-surface-2)] ring-1 ring-[var(--xc-border)]"></div>
+      <div class="flex-1">
+        <div class="relative inline-block max-w-full rounded-2xl rounded-tl-sm bg-[var(--xc-surface-2)] px-4 py-3 text-sm leading-relaxed">
+          以后我每天早 8 点催你报体重，漏报时毒舌一下。允许我给你发订阅消息吗？
+        </div>
+      </div>
+    </div>
+
+    <!-- 说明文案 -->
+    <p class="mb-6 text-center text-xs leading-5 text-[var(--xc-muted-foreground)]">
+      需要你手动开启，我才能在你没打开小程序时提醒。随时可以关。
+    </p>
+
+    <!-- 操作按钮 -->
+    <div id="auth-actions" class="flex flex-col gap-3">
+      <button class="h-12 w-full rounded-[var(--xc-radius-md)] bg-[var(--xc-primary)] px-4 text-[15px] font-medium text-[var(--xc-primary-foreground)] shadow-[var(--xc-shadow-1)] active:opacity-90" type="button">
+        允许提醒
+      </button>
+      <button class="h-12 w-full rounded-[var(--xc-radius-md)] border border-[var(--xc-border)] bg-transparent px-4 text-[15px] font-medium text-[var(--xc-muted-foreground)] active:bg-[var(--xc-surface-2)]" type="button">
+        不用了，我每天主动找你
+      </button>
+    </div>
+  </section>
+
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    } else if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.lucide) lucide.createIcons();
+      });
+    }
+  </script>
+
+    <style>
+    /* critical-layout: full-viewport mobile shell */
+    .critical-layout {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+    .xc-nav-capsule {
+      border: 1px solid var(--xc-border);
+      background: var(--xc-surface);
+      border-radius: var(--xc-radius-pill);
+    }
+    .xc-nav-capsule::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 16%;
+      bottom: 16%;
+      width: 1px;
+      background: var(--xc-border);
+      transform: translateX(-0.5px);
+    }
+  </style>
+</body>
+</html>

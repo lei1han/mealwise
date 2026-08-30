@@ -65,6 +65,7 @@
 | `GET /conversation/current` | `action:'conversation.current'` |
 | `GET /conversation/history` | `action:'conversation.history', payload:{ cursor, limit }` |
 | `GET/PUT /user/profile` | `action:'user.profile.get'` / `action:'user.profile.update'`，payload 传 patch |
+| （新增）用户状态 | `action:'user.state.get'`（首帧读取 onboarding_state） |
 | `PUT /user/target` | `action:'user.target.update'` |
 | `POST /subscribe/authorize` | `action:'subscribe.report', payload:{ accepted, template_key }` |
 
@@ -204,20 +205,23 @@ wx.cloud.callFunction({
   name: 'api',
   data: { action: 'chat.send', payload: { text: '中午吃了半拳米饭一拳青菜' } }
 })
-// → { code: 0, data: { reply_text, intent, budget_remaining_kcal, subscribe_hint } }
+// → { code: 0, data: { reply_text, intent, budget_remaining_kcal, degraded, subscribe_hint, onboarding_state } }
 ```
 
 鉴权：云函数天然可取调用者 openid，无需登录态。
 
 ### 5.2 action 清单
 
+> **2026-08-30 同步（前端单聊天页合并决策）**：摸底对话并入 `chat.send`（LLM 对话线 + 状态机主导），新增 `user.state.get`；`user.profile.update` 仅用于主动编辑（Sheet 补充录入），不再承担摸底画像写入。对应总计划 §1.3 契约 C。
+
 | action | payload | 返回 data |
 |---|---|---|
-| `chat.send` | `{ text }` | `{ reply_text, intent, budget_remaining_kcal, degraded, subscribe_hint }` |
+| `chat.send` | `{ text }`（`__start__` 作摸底开场：首次用户无历史时前端自动触发，后端返回并落库开场白） | `{ reply_text, intent, budget_remaining_kcal, degraded, subscribe_hint, onboarding_state }`（`onboarding_state`: new/profiling/active，状态机由后端主导） |
 | `conversation.current` | `{ limit? }` | `{ items: [...] }` 最近消息 |
 | `conversation.history` | `{ cursor, limit }` | `{ items, next_cursor }` |
+| `user.state.get` | — | `{ onboarding_state }` 首帧读取状态 |
 | `user.profile.get` | — | users 脱敏文档 |
-| `user.profile.update` | `{ patch }` | `{ ok }` 白名单字段 |
+| `user.profile.update` | `{ patch }` | `{ ok }` 白名单字段；**仅主动编辑用**（如 Sheet 补充录入），摸底画像走 `chat.send` + LLM 抽取 |
 | `user.target.update` | `{ target_weight_kg, estimate_weeks? }` | `{ ok }` |
 | `subscribe.report` | `{ accepted, template_key }` | `{ remaining }` |
 

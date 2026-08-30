@@ -1,4 +1,4 @@
-# X教练（代号）实施总计划与规划
+# 三餐教练（原代号 X教练）实施总计划与规划
 
 - 文档类型：实施总计划（Master Plan）
 - 版本：v1.2（契约 B 对齐 prompt 冻结版 + 承接契约 A 增量提案）
@@ -65,13 +65,22 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 
 > **后端板块已改版并冻结 v2（2026-08-28）**：部署形态确定为微信云开发，接口从 REST 改为云函数调用（`wx.cloud.callFunction`，action 路由），语义与原 REST 提案一一映射。MVP 非流式（前端打字机动画模拟）。详见 `2026-08-28-xcoach-backend.md` 第 3.2 / 5 节。
 
-- 会话：`callFunction('api', { action: 'chat.send', payload: { text } })` → 返回回复 + 结构化结果（统一 envelope `{ code, data, message }`）。
-- 会话上下文：`action: 'conversation.current'`、历史消息 `action: 'conversation.history'`（cursor 分页）。
-- 用户/目标：`user.profile.get / user.profile.update`、`user.target.update`。
+- 会话：`callFunction('api', { action: 'chat.send', payload: { text } })` → 返回回复 + 结构化结果（统一 envelope `{ code, data, message }`）。支持 `text: '__start__'`（或空文本）作摸底开场：首次用户（`onboarding_state=new`）无历史时前端自动触发，后端返回并落库摸底开场白。返回含 `onboarding_state`（`new/profiling/active`），前端据此渲染摸底引导 / 预算卡，状态机由后端主导、前端不做本地判定。
+- 会话上下文：`action: 'conversation.current'`、历史消息 `action: 'conversation.history'`（cursor 分页）；用户状态 `action: 'user.state.get'`（首帧读取 `onboarding_state`）。
+- 用户/目标：`user.profile.get / user.profile.update`（**仅主动编辑用**，如 Sheet 补充录入；摸底画像由 `chat.send` + LLM 抽取驱动，不再走 profile.update）、`user.target.update`。
 - 订阅消息：`action: 'subscribe.report'`（上报授权结果，accepted → 额度 +1）、后端 scheduler 云调用推送；`chat.send` 返回 `subscribe_hint`（额度不足 3 次时提示前端请求授权）。
 - 模板 ID：需在小程序后台申请，前端硬编码，后端按模板字段拼装。
 
-> 契约 A / B / C 均已冻结：A/C 由后端板块冻结（v2，2026-08-28）；B 由提示词板块冻结并回写本节（2026-08-28）。
+> 契约 A / B / C 均已冻结：A/C 由后端板块冻结（v2，2026-08-28）；B 由提示词板块冻结并回写本节（2026-08-28）。**2026-08-30 增量（前端单聊天页合并决策）**：摸底对话与每日聊天合并为单一聊天页，`chat.send` 新增 `__start__` 开场与 `onboarding_state` 返回，新增 `user.state.get`，`user.profile.update` 移除摸底用途。对应后端计划 §5.2 action 清单需同步。
+>
+> **2026-08-30 增量（工程迁移落地，`MealWise/` 为唯一工程）**：
+>
+> - **userId 注入**：前端不传 userId，云函数入口经 `wx-server-sdk` 的 `cloud.getWXContext().OPENID` 服务端注入；本地冒烟/无云端上下文时回退 `local_smoke`。
+> - **事件结构**：统一 `event = { action, payload }`，云函数适配层将 `payload` 展开至内核顶层字段（如 `payload.text` → `text`），与上述契约语义一一对应。
+> - **envelope**：成功 `{ code: 0, data }`；失败 `{ code: 400（未知 action）/ 500（内部错误）, message }`。
+> - **部署形态**：单云函数 `cloudfunctions/api/`（CJS 适配入口 `index.js` + ESM 内核 `src/`，`src/package.json` 的 `{"type":"module"}` 标记为 ESM 兼容必需）。环境 `cloud1-d6gmjs12rfd5c3925`，appid `wxd6def00245936b4c`。
+> - **实现进度**：内核当前已实现 `chat.send` / `subscribe.report` / `scheduler.nudge` 三个 action（本地冒烟 14/14 通过）；`conversation.current` / `conversation.history` / `user.state.get` / `user.profile.*` / `user.target.update` 尚未在内核实现，前端由 Mock 层承接。前端 `utils/api.js` 以 `REAL_ACTIONS` 白名单逐 action 灰度切换真实云函数。
+> - **快照冻结**：`deliverables/frontend/mealwise-miniapp/` 冻结为设计快照，后续开发一律在 `MealWise/` 进行。
 
 ---
 

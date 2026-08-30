@@ -1,0 +1,135 @@
+/* 毒舌档位选择 */
+.sheet-page {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.sheet {
+  position: relative;
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-lg) var(--xc-radius-lg) 0 0;
+  padding: 24rpx 40rpx 64rpx;
+  box-shadow: var(--xc-shadow-3);
+}
+
+.sheet-handle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40rpx;
+}
+
+.handle-bar {
+  width: 80rpx;
+  height: 8rpx;
+  border-radius: 4rpx;
+  background-color: var(--xc-border);
+}
+
+/* 教练提示 */
+.coach-bubble {
+  padding: 24rpx 28rpx;
+  background-color: var(--xc-surface-2);
+  border-radius: var(--xc-radius-md);
+  font-size: 28rpx;
+  color: var(--xc-foreground);
+  margin-bottom: 32rpx;
+}
+
+/* 档位选项 */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.option {
+  padding: 28rpx 32rpx;
+  border-radius: var(--xc-radius-md);
+  border: 2rpx solid var(--xc-border);
+  background-color: var(--xc-surface);
+  transition: all 0.2s;
+}
+
+.option-selected {
+  border-color: var(--xc-primary);
+  background-color: var(--xc-primary);
+  box-shadow: var(--xc-shadow-1);
+}
+
+.option-header {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.option-emoji {
+  font-size: 36rpx;
+}
+
+.option-label {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+  flex: 1;
+}
+
+.option-selected .option-label {
+  color: #FFFFFF;
+}
+
+.option-check {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+  font-size: 24rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.option-desc {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+  line-height: 1.5;
+}
+
+.option-selected .option-desc {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 按钮 */
+.btn-area {
+  margin-top: 40rpx;
+}
+
+.btn-primary {
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  background-color: var(--xc-primary);
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: var(--xc-radius-sm);
+  border: none;
+  text-align: center;
+}
+
+.btn-primary::after {
+  border: none;
+}

@@ -1,9 +1,9 @@
-# X教练 微信开发者工具接入调试与部署计划
+# 三餐教练（原代号 X教练）微信开发者工具接入调试与部署计划
 
 - 文档类型：分阶段执行计划（板块 1/3 落地联调）
 - 版本：v1.0
 - 日期：2026-08-28
-- 依赖：总计划契约 A/B/C、前端 `deliverables/frontend/xcoach-miniapp/`、后端零依赖内核 `deliverables/backend/`
+- 依赖：总计划契约 A/B/C、前端 `deliverables/frontend/mealwise-miniapp/`、后端零依赖内核 `deliverables/backend/`
 - 协作对象：程序开发者（人工，操作微信开发者工具与公众平台）+ agent（负责代码/配置/文档）
 
 ---
@@ -63,7 +63,7 @@
 
 | 命令 | 用途 | 阶段 |
 |---|---|---|
-| `cli.bat open --project <xcoach-miniapp路径>` | 打开/编译项目 | 1 |
+| `cli.bat open --project <mealwise-miniapp路径>` | 打开/编译项目 | 1 |
 | `cli.bat preview --project <路径>` | 生成预览二维码（需开发者扫码） | 3/4 |
 | `cli.bat auto-preview --project <路径>` | 自动预览 | 3/4 |
 | `cli.bat upload --project <路径> -v 1.0.0 -d "说明"` | 上传体验版（需开发者确认） | 6 |
@@ -83,7 +83,7 @@ CLI 仅能「触发」动作，**扫码/登录/审核确认仍是开发者的活
 | 项 | 负责人 | 说明 |
 |---|---|---|
 | 确认开发者工具已登录并开启服务端口 | 开发者 | 供后续 CLI 使用 |
-| 开通云开发环境（创建环境，如 `xcoach-prod`） | 开发者 | 控制台「云开发」开通，记录环境 ID |
+| 开通云开发环境（创建环境，如 `mealwise-prod`） | 开发者 | 控制台「云开发」开通，记录环境 ID |
 | 申请订阅消息模板 | 开发者 | 公众平台 → 功能 → 订阅消息，选「饮食打卡/体重记录」类模板，记录 template_id |
 
 **验证点**：环境 ID 与 template_id 回填到本计划 §3 与前端配置。
@@ -92,7 +92,7 @@ CLI 仅能「触发」动作，**扫码/登录/审核确认仍是开发者的活
 
 目标：在开发者工具模拟器里把 `DEV_GUIDE.md` 的完整用户旅程（闪屏→授权→摸底定标→体质录入→每日聊天→Sheet 子流程）全部走通。
 
-- **开发者**：按 `deliverables/frontend/xcoach-miniapp/DEV_GUIDE.md` 第四、五节逐步操作，记录每个失败点。
+- **开发者**：按 `deliverables/frontend/mealwise-miniapp/DEV_GUIDE.md` 第四、五节逐步操作，记录每个失败点。
 - **agent**：收到反馈后修复前端代码；无法在本机重现的（真机/云环境相关）给排查指引。
 - **验证点**：7 个页面全部可达、交互无阻断性报错、Mock 数据正常展示。
 

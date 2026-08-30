@@ -1,0 +1,90 @@
+/* ============================================
+   三餐教练 全局设计令牌（Design Tokens v1.0）
+   配色方案：鼠尾草绿 v2
+   ============================================ */
+
+page {
+  /* ---- Brand Primary: Sage Green ---- */
+  --xc-primary: #4E7A5C;
+  --xc-primary-foreground: #FFFFFF;
+  --xc-primary-50: #EEF5F0;
+  --xc-primary-100: #D6E8DC;
+
+  /* ---- Surfaces ---- */
+  --xc-background: #F8FBF9;
+  --xc-surface: #FFFFFF;
+  --xc-surface-2: #F1F5F2;
+
+  /* ---- Text ---- */
+  --xc-foreground: #1A2620;
+  --xc-muted-foreground: #5C7064;
+  --xc-placeholder: #9AACA0;
+
+  /* ---- Lines & Borders ---- */
+  --xc-border: #DEE6E0;
+  --xc-input: #DEE6E0;
+  --xc-ring: #4E7A5C;
+  --xc-divider: rgba(26, 38, 32, 0.06);
+
+  /* ---- Status / Accent ---- */
+  --xc-state-accent: #C5733A;
+  --xc-state-accent-foreground: #FFFFFF;
+  --xc-state-success: #22C55E;
+  --xc-state-warning: #F59E0B;
+  --xc-state-error: #EF4444;
+
+  /* ---- Radius ---- */
+  --xc-radius-xs: 4rpx;
+  --xc-radius-sm: 8rpx;
+  --xc-radius-md: 12rpx;
+  --xc-radius-lg: 16rpx;
+  --xc-radius-pill: 999rpx;
+
+  /* ---- Shadows ---- */
+  --xc-shadow-1: 0 2rpx 4rpx rgba(26, 38, 32, 0.05);
+  --xc-shadow-2: 0 16rpx 48rpx -16rpx rgba(26, 38, 32, 0.05);
+  --xc-shadow-3: 0 48rpx 120rpx -40rpx rgba(26, 38, 32, 0.05);
+
+  /* ---- Typography ---- */
+  --xc-font-sans: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+
+  /* ---- Layout ---- */
+  --xc-nav-height: 88rpx;
+
+  /* 背景与文字 */
+  background-color: var(--xc-background);
+  color: var(--xc-foreground);
+  font-family: var(--xc-font-sans);
+  font-size: 30rpx;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- 基础工具类 ---- */
+.xc-page {
+  min-height: 100vh;
+  background-color: var(--xc-background);
+}
+
+/* 隐藏滚动条 */
+.xc-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 安全区域 */
+.xc-safe-top {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+.xc-safe-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 单行省略 */
+.xc-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,63 @@
+<!-- 授权登录 + 欢迎引导 -->
+<scroll-view class="auth-page" scroll-y enhanced show-scrollbar="{{false}}">
+  <view class="auth-content">
+
+    <!-- 品牌区 -->
+    <view class="brand-area">
+      <text class="brand-logo">X</text>
+      <text class="brand-name">三餐教练</text>
+      <text class="brand-desc">你的私人减肥教练</text>
+    </view>
+
+    <!-- 欢迎引导 -->
+    <view class="guide-card">
+      <view class="guide-item">
+        <view class="guide-icon">
+          <view class="icon-check">✓</view>
+        </view>
+        <view class="guide-text">
+          <text class="guide-title">每日饮食记录与热量估算</text>
+          <text class="guide-desc">拍张照或一句话，教练帮你估算热量区间</text>
+        </view>
+      </view>
+
+      <view class="guide-item">
+        <view class="guide-icon">
+          <view class="icon-check">✓</view>
+        </view>
+        <view class="guide-text">
+          <text class="guide-title">实时督促与毒舌陪伴</text>
+          <text class="guide-desc">漏报？教练会毒舌提醒你，损事不损人</text>
+        </view>
+      </view>
+
+      <view class="guide-item">
+        <view class="guide-icon">
+          <view class="icon-check">✓</view>
+        </view>
+        <view class="guide-text">
+          <text class="guide-title">渐进式目标管理</text>
+          <text class="guide-desc">从你的现状出发，倒推一个够得着的目标</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 授权按钮区 -->
+    <view class="btn-area">
+      <button class="btn-primary" bindtap="handleLogin">
+        微信授权登录
+      </button>
+      <text class="btn-hint">授权后即可开始你的减肥之旅</text>
+      <text class="btn-skip" bindtap="handleSkip">先看看，暂不授权</text>
+    </view>
+
+    <!-- 底部协议 -->
+    <view class="agreement">
+      <text>登录即表示同意</text>
+      <text class="agreement-link" data-type="用户协议" bindtap="handleAgreement">《用户协议》</text>
+      <text>和</text>
+      <text class="agreement-link" data-type="隐私政策" bindtap="handleAgreement">《隐私政策》</text>
+    </view>
+
+  </view>
+</scroll-view>

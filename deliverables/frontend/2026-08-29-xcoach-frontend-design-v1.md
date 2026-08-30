@@ -1,9 +1,9 @@
-# X教练 前端设计稿 v1.0（定稿）
+# 三餐教练 前端设计稿 v1.0（定稿）
 
 - 文档类型：前端设计交付文档
 - 版本：v1.0（定稿）
 - 日期：2026-08-29
-- 设计稿路径（HTML 原型）：`deliverables/frontend/xcoach-frontend-design/`
+- 设计稿路径（HTML 原型）：`deliverables/frontend/mealwise-frontend-design/`
 - 依赖设计规格：`docs/superpowers/specs/2026-08-28-xcoach-design.md`
 - 依赖配色方案：`docs/superpowers/specs/2026-08-28-xcoach-visual-design-v2.md`
 
@@ -13,7 +13,7 @@
 
 ### 1.1 产品定位
 
-X教练 是一个微信小程序形态的减肥教练，通过纯对话形式帮助用户靠谱减重。MVP 前端为聊天界面 + 极简子流程弹窗，不做复杂可视化。
+三餐教练 是一个微信小程序形态的减肥教练，通过纯对话形式帮助用户靠谱减重。MVP 前端为聊天界面 + 极简子流程弹窗，不做复杂可视化。
 
 ### 1.2 设计原则
 
@@ -93,7 +93,7 @@ X教练 是一个微信小程序形态的减肥教练，通过纯对话形式帮
 ### 3.1 完整用户旅程
 
 ```
-启动闪屏 → 授权登录 → 摸底对话 → 每日聊天
+启动闪屏 → 授权登录 → 每日聊天（单一聊天页，含摸底对话）
                               ├── 体质信息录入（Sheet）
                               ├── 毒舌档位选择（Sheet）
                               └── 订阅消息授权（Sheet）
@@ -105,11 +105,10 @@ X教练 是一个微信小程序形态的减肥教练，通过纯对话形式帮
 |---|---|---|---|---|
 | `page-splash` | 启动闪屏 | `pages/splash.html` | 全屏展示 | 品牌展示 + 静默登录缓冲 |
 | `page-auth-login` | 授权登录 | `pages/auth-login.html` | 全屏 | 欢迎引导 + 微信授权 |
-| `page-chat-onboarding` | Onboarding 摸底定标 | `pages/chat-onboarding.html` | 聊天 | 摸底对话 + 定标确认 |
 | `page-sheet-weight` | 体质信息录入 | `pages/sheet-weight.html` | 底部 Sheet | 性别/年龄段/体重/目标/身高 |
 | `page-sheet-snark` | 毒舌档位选择 | `pages/sheet-snark.html` | 底部 Sheet | 温柔/轻损/辛辣三选一 |
 | `page-sheet-subscribe` | 订阅消息授权 | `pages/sheet-subscribe.html` | 底部 Sheet | 订阅授权 + 降级按钮 |
-| `page-chat-main` | 聊天主流程 | `pages/chat-main.html` | 聊天 | 每日执行中聊天 |
+| `page-chat-main` | 聊天主流程 | `pages/chat-main.html` | 聊天 | 单一聊天页：按 onboarding_state 渲染摸底对话/每日聊天 |
 
 ---
 
@@ -150,7 +149,7 @@ X教练 是一个微信小程序形态的减肥教练，通过纯对话形式帮
 
 **品牌区**（顶部 15% 位置）：
 - "X" 品牌字母：56px，鼠尾草绿，font-weight 700，居中
-- "X教练"：22px，font-weight 700，鼠尾草绿
+- "三餐教练"：22px，font-weight 700，鼠尾草绿
 - "你的私人减肥教练"：14px，`--xc-muted-foreground`
 
 **欢迎引导区**（品牌区下方 40px）：
@@ -177,12 +176,12 @@ X教练 是一个微信小程序形态的减肥教练，通过纯对话形式帮
 
 ---
 
-### 4.3 Onboarding 摸底定标（`chat-onboarding.html`）
+### 4.3 Onboarding 摸底（并入单一聊天页 `chat-main.html`）
 
-**状态**：首次用户摸底对话，展示教练向用户逐项了解基本情况。
+**状态**：摸底对话已并入单一聊天页，按 `onboarding_state` 渲染；首次用户（`new`）进入时展示教练逐项摸底。
 
 **布局**：
-- 顶部：微信小程序导航栏（标题 "X教练"，胶囊按钮占位）
+- 顶部：微信小程序导航栏（标题 "三餐教练"，胶囊按钮占位）
 - 中间：可滚动聊天区域
 - 底部：快速回复按钮栏（sticky）
 
@@ -210,9 +209,11 @@ X教练 是一个微信小程序形态的减肥教练，通过纯对话形式帮
 - 头像：教练为圆形图标（`--xc-primary-50` 底 + `--xc-primary` 图标色），用户无头像
 
 **开发注意**：
+- 首次进入无历史时前端自动触发 `chat.send({ text: '__start__' })`，后端返回并落库摸底开场白
+- 摸底走 LLM 对话线 + 后端状态机主导（`new → profiling → active`），前端不内置本地话术规则
 - 昵称在此环节自然提问获取，不走独立表单
-- 定标目标的预估周期公式由后端计算，前端只展示
-- 快速回复按钮点击后触发 `chat.send` 接口
+- 定标目标的预估周期公式由后端计算，前端只展示；定标完成后端返回 `onboarding_state='active'`，前端更新状态栏并弹体质录入 Sheet
+- 快速回复按钮仅作"快捷输入"（点击即发送对应文案），触发 `chat.send`
 
 ---
 
@@ -340,6 +341,7 @@ X教练 是一个微信小程序形态的减肥教练，通过纯对话形式帮
 - 需考虑 `safe-area-inset-bottom`
 
 **开发注意**：
+- 页面按 `onboarding_state` 渲染：`new/profiling` 显示摸底引导（placeholder"告诉教练你的基本情况"），`active` 显示预算卡 + 催报
 - 输入栏固定底部需配合 `padding-bottom` 避免遮挡最后一条消息
 - 打字动画为前端纯 CSS 模拟，MVP 非流式
 - 预算卡数据由后端 `chat.send` 返回
@@ -433,7 +435,7 @@ border-radius: var(--xc-radius-lg) var(--xc-radius-xs) var(--xc-radius-lg) var(-
 
 ### 7.1 微信小程序适配
 
-- 导航栏：使用微信原生导航栏，标题 "X教练"，设计稿中导航栏为占位示意
+- 导航栏：使用微信原生导航栏，标题 "三餐教练"，设计稿中导航栏为占位示意
 - 胶囊按钮：右上角胶囊按钮为微信原生，设计稿中为占位示意
 - 底部安全区：所有底部固定元素需加 `padding-bottom: env(safe-area-inset-bottom)`
 - 头像：教练头像由开发时配置，使用 `<image>` 组件加载后端 URL
@@ -468,18 +470,17 @@ border-radius: var(--xc-radius-lg) var(--xc-radius-xs) var(--xc-radius-lg) var(-
 ## 8. 设计稿文件结构
 
 ```
-deliverables/frontend/xcoach-frontend-design/
-├── .design                          # 设计画布文件（7 页）
+deliverables/frontend/mealwise-frontend-design/
+├── .design                          # 设计画布文件（6 页）
 ├── colors_and_type.css              # CSS 设计令牌
 ├── runtime-orchestration-summary.json  # 设计编排记录
 └── pages/
     ├── splash.html                  # 启动闪屏
     ├── auth-login.html              # 授权登录
-    ├── chat-onboarding.html         # 摸底定标
     ├── sheet-weight.html            # 体质信息录入
     ├── sheet-snark.html             # 毒舌档位选择
     ├── sheet-subscribe.html         # 订阅消息授权
-    └── chat-main.html               # 聊天主流程
+    └── chat-main.html               # 单一聊天页（摸底/每日）
 ```
 
 ---
@@ -489,3 +490,4 @@ deliverables/frontend/xcoach-frontend-design/
 | 版本 | 日期 | 变更 |
 |---|---|---|
 | v1.0 | 2026-08-29 | 定稿。7 页完整设计稿，覆盖闪屏→授权→摸底→执行全链路。配色方案鼠尾草绿 v2。新增性别/年龄段选择器。昵称改为聊天中自然带出。 |
+| v1.1 | 2026-08-30 | 摸底对话与每日聊天合并为单一聊天页 `chat-main`（按 onboarding_state 渲染，首次进入自动 `__start__` 开场），删除 `chat-onboarding` 页；对应契约 C 增量见总计划 §1.3。 |
