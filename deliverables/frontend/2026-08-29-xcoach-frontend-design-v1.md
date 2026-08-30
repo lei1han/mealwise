@@ -3,7 +3,7 @@
 - 文档类型：前端设计交付文档
 - 版本：v1.0（定稿）
 - 日期：2026-08-29
-- 设计稿路径：`xcoach-frontend-design/`
+- 设计稿路径（HTML 原型）：`deliverables/frontend/xcoach-frontend-design/`
 - 依赖设计规格：`docs/superpowers/specs/2026-08-28-xcoach-design.md`
 - 依赖配色方案：`docs/superpowers/specs/2026-08-28-xcoach-visual-design-v2.md`
 
@@ -468,7 +468,7 @@ border-radius: var(--xc-radius-lg) var(--xc-radius-xs) var(--xc-radius-lg) var(-
 ## 8. 设计稿文件结构
 
 ```
-xcoach-frontend-design/
+deliverables/frontend/xcoach-frontend-design/
 ├── .design                          # 设计画布文件（7 页）
 ├── colors_and_type.css              # CSS 设计令牌
 ├── runtime-orchestration-summary.json  # 设计编排记录

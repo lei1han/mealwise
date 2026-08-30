@@ -24,9 +24,10 @@ X教练：微信小程序减肥教练，人格"亦师亦友 + 一点毒舌"，�
 | `data/` | 跨板块共享数据（食物库基准数据，后端与提示词共用） | 板块2/3 |
 
 - 命名约定：文档 `YYYY-MM-DD-xcoach-<主题>.md`；交付物子目录用英文短横线命名。
-- 已完成迁移：板块2 提示词成品 → `deliverables/prompt/2026-08-28-xcoach-prompts.md`。
-- 待迁移（各板块会话收工时再迁）：
-  - 板块1 前端设计稿现位于 `xcoach-frontend-design/` → 目标 `deliverables/frontend/`。该会话仍在进行中，且其工具清单（`runtime-*.json`）含硬编码绝对路径，迁移会打断修复流程，故暂缓。
+- 已完成迁移：
+  - 板块2 提示词成品 → `deliverables/prompt/2026-08-28-xcoach-prompts.md`。
+  - 板块1 前端设计稿 HTML 原型 → `deliverables/frontend/xcoach-frontend-design/`（2026-08-28，板块 1 会话已收尾；工具产物 `runtime-*.json` 保留为历史快照，其硬编码绝对路径不再用于修复流程）。
+- 待迁移：无。
 
 ## 协作规则
 
