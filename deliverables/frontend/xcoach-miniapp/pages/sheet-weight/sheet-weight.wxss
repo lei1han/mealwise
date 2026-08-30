@@ -1,0 +1,187 @@
+/* 体质信息录入 */
+.sheet-page {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.sheet {
+  position: relative;
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-lg) var(--xc-radius-lg) 0 0;
+  padding: 24rpx 40rpx 64rpx;
+  box-shadow: var(--xc-shadow-3);
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.sheet-handle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24rpx;
+}
+
+.handle-bar {
+  width: 80rpx;
+  height: 8rpx;
+  border-radius: 4rpx;
+  background-color: var(--xc-border);
+}
+
+.sheet-title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--xc-foreground);
+  margin-bottom: 24rpx;
+}
+
+/* 教练提示 */
+.coach-bubble {
+  padding: 24rpx 28rpx;
+  background-color: var(--xc-surface-2);
+  border-radius: var(--xc-radius-md);
+  font-size: 28rpx;
+  color: var(--xc-foreground);
+  margin-bottom: 32rpx;
+}
+
+/* 表单 */
+.form-group {
+  margin-bottom: 28rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+  margin-bottom: 12rpx;
+}
+
+/* 性别 */
+.gender-row {
+  display: flex;
+  gap: 20rpx;
+}
+
+.gender-btn {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background-color: var(--xc-surface-2);
+  color: var(--xc-foreground);
+  font-size: 30rpx;
+  font-weight: 500;
+  border-radius: var(--xc-radius-sm);
+  transition: all 0.2s;
+}
+
+.gender-btn-selected {
+  background-color: var(--xc-primary);
+  color: #FFFFFF;
+}
+
+/* 年龄段 */
+.age-scroll {
+  white-space: nowrap;
+}
+
+.age-row {
+  display: flex;
+  gap: 16rpx;
+}
+
+.age-pill {
+  flex-shrink: 0;
+  padding: 16rpx 32rpx;
+  background-color: var(--xc-surface);
+  color: var(--xc-foreground);
+  font-size: 28rpx;
+  border-radius: var(--xc-radius-pill);
+  border: 2rpx solid var(--xc-border);
+  transition: all 0.2s;
+}
+
+.age-pill-selected {
+  background-color: var(--xc-primary);
+  color: #FFFFFF;
+  border-color: var(--xc-primary);
+}
+
+/* 输入框 */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input {
+  flex: 1;
+  height: 96rpx;
+  padding: 0 32rpx;
+  background-color: var(--xc-surface);
+  border: 2rpx solid var(--xc-input);
+  border-radius: var(--xc-radius-sm);
+  font-size: 30rpx;
+  color: var(--xc-foreground);
+}
+
+.input-unit {
+  position: absolute;
+  right: 24rpx;
+  font-size: 28rpx;
+  color: var(--xc-muted-foreground);
+  pointer-events: none;
+}
+
+/* 按钮 */
+.btn-row {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 40rpx;
+}
+
+.btn-cancel {
+  flex: 1;
+  height: 96rpx;
+  line-height: 96rpx;
+  background-color: var(--xc-surface);
+  color: var(--xc-foreground);
+  font-size: 30rpx;
+  font-weight: 500;
+  border-radius: var(--xc-radius-sm);
+  border: 2rpx solid var(--xc-border);
+  text-align: center;
+}
+
+.btn-cancel::after {
+  border: none;
+}
+
+.btn-save {
+  flex: 1;
+  height: 96rpx;
+  line-height: 96rpx;
+  background-color: var(--xc-primary);
+  color: #FFFFFF;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: var(--xc-radius-sm);
+  border: none;
+  text-align: center;
+}
+
+.btn-save::after {
+  border: none;
+}

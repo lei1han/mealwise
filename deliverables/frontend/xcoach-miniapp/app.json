@@ -1,0 +1,18 @@
+{
+  "pages": [
+    "pages/splash/splash",
+    "pages/auth-login/auth-login",
+    "pages/chat-onboarding/chat-onboarding",
+    "pages/chat-main/chat-main",
+    "pages/sheet-weight/sheet-weight",
+    "pages/sheet-snark/sheet-snark",
+    "pages/sheet-subscribe/sheet-subscribe"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#F8FBF9",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

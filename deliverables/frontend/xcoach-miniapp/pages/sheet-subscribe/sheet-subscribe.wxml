@@ -1,0 +1,38 @@
+<!-- 订阅消息授权 -->
+<view class="sheet-page">
+  <!-- 蒙层 -->
+  <view class="mask" bindtap="handleSkip"></view>
+
+  <!-- Sheet -->
+  <view class="sheet">
+    <view class="sheet-handle">
+      <view class="handle-bar"></view>
+    </view>
+
+    <!-- 教练提示 -->
+    <view class="coach-bubble">
+      <text>每天早上我会提醒你报体重，漏报的话……你懂的。开个订阅通知？</text>
+    </view>
+
+    <!-- 头像占位 -->
+    <view class="avatar-placeholder">
+      <view class="avatar-circle">
+        <text class="avatar-text">教</text>
+      </view>
+    </view>
+
+    <!-- 功能说明 -->
+    <view class="features">
+      <view wx:for="{{features}}" wx:key="index" class="feature-item">
+        <view class="feature-dot">●</view>
+        <text class="feature-text">{{item.text}}</text>
+      </view>
+    </view>
+
+    <!-- 按钮 -->
+    <view class="btn-area">
+      <button class="btn-primary" bindtap="handleSubscribe">开启通知</button>
+      <text class="btn-skip" bindtap="handleSkip">暂时不需要</text>
+    </view>
+  </view>
+</view>

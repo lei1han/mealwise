@@ -1,0 +1,177 @@
+{
+  "data": [
+    {
+      "id": "page-chat-main",
+      "title": "聊天主流程",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787926571000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-f96eadac",
+          "measuredAt": 1787931139914
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/chat-main.html",
+        "interactions": [
+          {
+            "domId": "interaction-id-nomhuj1",
+            "targetPageId": "page-sheet-weight"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-chat-onboarding",
+      "title": "Onboarding 摸底定标",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787926571000,
+      "canvasData": {
+        "x": 0,
+        "y": 372,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 916,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-d3ff1002",
+          "measuredAt": 1787960863563
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/chat-onboarding.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-sheet-weight",
+      "title": "体重/目标录入",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787926571000,
+      "canvasData": {
+        "x": 169,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-200e99e5",
+          "measuredAt": 1787959947869
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/sheet-weight.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-sheet-snark",
+      "title": "毒舌档位选择",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787926571000,
+      "canvasData": {
+        "x": 169,
+        "y": 372,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-75f7aa23",
+          "measuredAt": 1787929681585
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/sheet-snark.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-sheet-subscribe",
+      "title": "订阅消息授权",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787926571000,
+      "canvasData": {
+        "x": 338,
+        "y": 372,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-aaddda5e",
+          "measuredAt": 1787929681585
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/sheet-subscribe.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-splash",
+      "title": "启动闪屏",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787929682000,
+      "canvasData": {
+        "x": 507,
+        "y": 372,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-e68ea215",
+          "measuredAt": 1787931139914
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/splash.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-auth-login",
+      "title": "授权登录",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1787929682000,
+      "canvasData": {
+        "x": 676,
+        "y": 372,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 956,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-75620a15",
+          "measuredAt": 1787931139914
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/auth-login.html",
+        "interactions": []
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "mobile",
+    "projectName": "X教练 前端设计稿",
+    "showEdge": true,
+    "visualEditorEnabled": false
+  }
+}

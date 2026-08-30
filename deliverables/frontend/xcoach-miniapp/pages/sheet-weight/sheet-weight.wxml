@@ -1,0 +1,106 @@
+<!-- 体质信息录入 -->
+<view class="sheet-page">
+  <!-- 蒙层 -->
+  <view class="mask" bindtap="handleCancel"></view>
+
+  <!-- Sheet -->
+  <view class="sheet">
+    <view class="sheet-handle">
+      <view class="handle-bar"></view>
+    </view>
+
+    <text class="sheet-title">体质信息录入</text>
+
+    <!-- 教练提示 -->
+    <view class="coach-bubble">
+      <text>先填一下基本身体信息，我帮你算预算。</text>
+    </view>
+
+    <!-- 性别 -->
+    <view class="form-group">
+      <text class="form-label">性别</text>
+      <view class="gender-row">
+        <view
+          class="gender-btn {{gender === 'male' ? 'gender-btn-selected' : ''}}"
+          data-value="male"
+          bindtap="handleGender"
+        >男</view>
+        <view
+          class="gender-btn {{gender === 'female' ? 'gender-btn-selected' : ''}}"
+          data-value="female"
+          bindtap="handleGender"
+        >女</view>
+      </view>
+    </view>
+
+    <!-- 年龄段 -->
+    <view class="form-group">
+      <text class="form-label">年龄段</text>
+      <scroll-view class="age-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="age-row">
+          <view
+            wx:for="{{ageGroups}}"
+            wx:key="value"
+            class="age-pill {{ageGroup === item.value ? 'age-pill-selected' : ''}}"
+            data-value="{{item.value}}"
+            bindtap="handleAgeGroup"
+          >{{item.label}}</view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 体重 -->
+    <view class="form-group">
+      <text class="form-label">当前体重</text>
+      <view class="input-wrapper">
+        <input
+          class="form-input"
+          type="digit"
+          placeholder="例如 68.0"
+          value="{{weight}}"
+          data-field="weight"
+          bindinput="handleInput"
+        />
+        <text class="input-unit">kg</text>
+      </view>
+    </view>
+
+    <!-- 目标体重 -->
+    <view class="form-group">
+      <text class="form-label">目标体重</text>
+      <view class="input-wrapper">
+        <input
+          class="form-input"
+          type="digit"
+          placeholder="例如 55.0"
+          value="{{targetWeight}}"
+          data-field="targetWeight"
+          bindinput="handleInput"
+        />
+        <text class="input-unit">kg</text>
+      </view>
+    </view>
+
+    <!-- 身高 -->
+    <view class="form-group">
+      <text class="form-label">身高</text>
+      <view class="input-wrapper">
+        <input
+          class="form-input"
+          type="number"
+          placeholder="例如 165"
+          value="{{height}}"
+          data-field="height"
+          bindinput="handleInput"
+        />
+        <text class="input-unit">cm</text>
+      </view>
+    </view>
+
+    <!-- 按钮 -->
+    <view class="btn-row">
+      <button class="btn-cancel" bindtap="handleCancel">取消</button>
+      <button class="btn-save" bindtap="handleSave">保存</button>
+    </view>
+  </view>
+</view>

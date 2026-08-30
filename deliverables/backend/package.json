@@ -1,0 +1,17 @@
+{
+  "name": "xcoach-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "X教练 MVP 后端内核：会话编排 / 契约B解析 / 记忆与定标服务。零第三方依赖，可本地跑通闭环验证；云函数接入层见 src/index.js。",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "setup": "node scripts/setup-db.js",
+    "demo": "node scripts/demo-chat.js",
+    "foods-bench": "node scripts/foods-benchmark.js",
+    "calib": "node scripts/foods-calib-benchmark.js",
+    "test": "node --test"
+  }
+}

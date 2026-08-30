@@ -43,7 +43,7 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 ```json
 {
   "reply_text": "给用户看的聊天内容",
-  "intent": "diet_report | weight_report | mood_talk | goal_setup | other",
+  "intent": "diet_report | weight_report | mood_talk | goal_setup | off_topic | other",
   "extracted": {
     "diet_record": { "meal": "lunch", "items": ["米饭"], "cal_min": 320, "cal_max": 400, "food_refs": ["food:rice"], "confidence": "high" },
     "weight_record": { "weight_kg": 65.2 },
@@ -57,8 +57,9 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 - `diet_record` 仅当本轮汇报饮食时出现：`food_refs` 数组与 `items` 一一对应，库内 `food:xxx`、库外/复合菜 `food:external`；`confidence`（high/medium/low）支撑"低置信度诚实标注"。`is_estimated` 由后端派生：`food_refs` 含 `food:external` 或 `confidence=low` 时为 true，落库 `diet_records.is_estimated`。
 - `weight_record` 仅当报体重时出现；`memory_points` 仅当出现值得长期记忆的新信息时出现，`category` 枚举 `static / dynamic / emotion`。
 - `budget_remaining_kcal` 为整数 kcal，**无法确定时填 `null`**（如定标前闲聊、纯情绪陪聊）；后端以自身预算计算兜底覆盖，不信任模型口径（见后端计划 §6.4）。
+- `off_topic`：用户请求主题外任务/知识（编程、工作、作业、通用问答等）时标记；`extracted` 通常留 `{}`，回复为拒绝并拉回主题（见提示词 §9.2）。
 
-> 契约 A / B / C 均已冻结（B 于 2026-08-28 由提示词板块冻结并回写；记忆去重契约见提示词 §8.3，写入策略见 §1.1）。
+> 契约 A / B / C 均已冻结（B 于 2026-08-28 由提示词板块冻结并回写；同日扩展 intent 新增 `off_topic`——主题外跑题拒绝，见提示词 §9.2；记忆去重契约见提示词 §8.3，写入策略见 §1.1）。
 
 ### 1.3 契约 C：前后端接口（后端产出，前端消费）
 

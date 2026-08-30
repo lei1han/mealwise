@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X教练 - 配色方案对比</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    background: #F5F5F0;
+    color: #2C2C2C;
+    padding: 40px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  .subtitle { color: #888; font-size: 14px; margin-bottom: 8px; }
+  .persona-tag {
+    display: inline-block; font-size: 12px; font-weight: 500; color: #666;
+    background: #EEECE8; padding: 3px 10px; border-radius: 6px; margin-bottom: 36px;
+  }
+  .persona-tag b { color: #444; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: #FFF;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,.08), 0 12px 32px rgba(0,0,0,.06); }
+
+  .card-header {
+    padding: 24px 24px 16px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .card-label {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .5px; opacity: .5; margin-bottom: 4px;
+  }
+  .card-name { font-size: 18px; font-weight: 700; }
+  .card-desc { font-size: 13px; color: #888; margin-top: 2px; line-height: 1.4; }
+
+  .swatches {
+    display: flex; gap: 8px; padding: 0 24px 16px;
+  }
+  .swatch {
+    flex: 1; height: 56px; border-radius: 10px;
+    position: relative; cursor: default;
+    display: flex; align-items: flex-end; justify-content: center;
+    padding-bottom: 6px;
+  }
+  .swatch span {
+    font-size: 10px; font-weight: 600; letter-spacing: .3px;
+    background: rgba(0,0,0,.15); color: #fff; padding: 2px 6px; border-radius: 4px;
+  }
+  .swatch.light span { background: rgba(0,0,0,.06); color: #555; }
+
+  .preview {
+    margin: 0 24px 24px; border-radius: 12px; padding: 16px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .chat-bubble {
+    max-width: 80%; padding: 10px 14px; border-radius: 14px;
+    font-size: 13px; line-height: 1.5;
+  }
+  .bubble-coach {
+    align-self: flex-start; border-bottom-left-radius: 4px;
+  }
+  .bubble-user {
+    align-self: flex-end; border-bottom-right-radius: 4px;
+  }
+
+  .calorie-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 6px;
+    font-size: 11px; font-weight: 600; margin-top: 4px;
+  }
+
+  .preview-actions {
+    display: flex; gap: 8px; margin-top: 6px;
+  }
+  .btn-preview {
+    padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    border: none; cursor: default;
+  }
+  .btn-preview.primary { color: #fff; }
+  .btn-preview.secondary { background: transparent; border: 1.5px solid; }
+
+  .current-badge {
+    display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+    border-radius: 6px; margin-left: 8px; vertical-align: middle;
+  }
+
+  .trait-row {
+    display: flex; gap: 6px; margin-top: 6px;
+  }
+  .trait {
+    font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 500;
+    background: #F0F0F0; color: #777;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>X教练 · 配色方案</h1>
+  <p class="subtitle">围绕「专业 + 内心温暖 + 一点毒舌」的教练人格重新调色</p>
+  <div class="persona-tag">人格关键词：<b>专业</b> · <b>内心温暖</b> · <b>有点毒舌</b></div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const schemes = [
+  {
+    id: 1,
+    name: '深琥珀',
+    desc: '沉稳温暖，成熟有深度。比当前珊瑚橙更克制、更专业，同时保留暖意。',
+    traits: ['专业克制', '暖而不甜', '有分量感'],
+    primary: '#C5752E',
+    p50: '#FFF3E6',
+    p100: '#FDE1C2',
+    bg: '#FFFBF7',
+    surface: '#FFFFFF',
+    surface2: '#F8F4EE',
+    fg: '#2A2018',
+    muted: '#7B6E60',
+    accent: '#D4513B',
+    border: '#EDE6DC',
+  },
+  {
+    id: 2,
+    name: '鼠尾草绿',
+    desc: '专业冷静，天然健康感。柔和而不甜腻，专业中透出温度。',
+    traits: ['专业冷静', '天然健康', '柔和有度'],
+    primary: '#4E7A5C',
+    p50: '#EEF5F0',
+    p100: '#D6E8DC',
+    bg: '#F8FBF9',
+    surface: '#FFFFFF',
+    surface2: '#F1F5F2',
+    fg: '#1A2620',
+    muted: '#5C7064',
+    accent: '#C5733A',
+    border: '#DEE6E0',
+  },
+  {
+    id: 3,
+    name: '石板蓝灰',
+    desc: '高度专业，值得信赖。蓝灰调比纯蓝更有人情味，不冰冷。',
+    traits: ['高度专业', '信任可靠', '有人情味'],
+    primary: '#4A627A',
+    p50: '#EFF3F7',
+    p100: '#DAE2EC',
+    bg: '#F8FAFC',
+    surface: '#FFFFFF',
+    surface2: '#F1F4F8',
+    fg: '#1A222E',
+    muted: '#5C6878',
+    accent: '#C55A3A',
+    border: '#E0E5EC',
+  },
+  {
+    id: 4,
+    name: '陶土红',
+    desc: '内心火热外表沉稳。大地色系有根基感，红色底调带出锐利个性。',
+    traits: ['内心温热', '根基扎实', '个性锐利'],
+    primary: '#B85C40',
+    p50: '#FDF2EE',
+    p100: '#F9DDD4',
+    bg: '#FFFBF9',
+    surface: '#FFFFFF',
+    surface2: '#F8F2EE',
+    fg: '#2A1E18',
+    muted: '#7B6558',
+    accent: '#D4862B',
+    border: '#EDE4DC',
+  },
+  {
+    id: 5,
+    name: '深橄榄',
+    desc: '独特有辨识度，沉稳中带个性。不随大流，有"毒舌教练"的辨识度。',
+    traits: ['独特辨识', '沉稳个性', '不随大流'],
+    primary: '#686E3A',
+    p50: '#F5F6EC',
+    p100: '#E6E8D2',
+    bg: '#FAFBF5',
+    surface: '#FFFFFF',
+    surface2: '#F3F4EC',
+    fg: '#222618',
+    muted: '#6B6E5C',
+    accent: '#C5553A',
+    border: '#E4E6D8',
+  },
+];
+
+function render() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = schemes.map((s, i) => `
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">方案 ${s.id}</div>
+          <div class="card-name">${s.name}</div>
+          <div class="card-desc">${s.desc}</div>
+          <div class="trait-row">
+            ${s.traits.map(t => `<span class="trait">${t}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="swatches">
+        <div class="swatch" style="background:${s.primary}"><span>主色</span></div>
+        <div class="swatch" style="background:${s.p50}"><span class="light">50</span></div>
+        <div class="swatch" style="background:${s.p100}"><span class="light">100</span></div>
+        <div class="swatch" style="background:${s.accent}"><span>强调</span></div>
+        <div class="swatch" style="background:${s.bg}"><span class="light">背景</span></div>
+      </div>
+
+      <div class="preview" style="background:${s.bg};">
+        <div class="chat-bubble bubble-coach" style="background:${s.surface};color:${s.fg};border:1px solid ${s.border};">
+          早上好！今天称体重了吗？<br>
+          <span style="color:${s.muted};font-size:11px;">08:32</span>
+        </div>
+        <div class="chat-bubble bubble-user" style="background:${s.primary};color:#fff;">
+          称了，68.5，比昨天重了0.3 😅
+        </div>
+        <div class="chat-bubble bubble-coach" style="background:${s.surface};color:${s.fg};border:1px solid ${s.border};">
+          正常波动，不用慌。记得中午好好吃饭，别报复性节食。
+          <div class="calorie-tag" style="background:${s.accent};color:#fff;">今日预算剩余 1200 大卡</div>
+        </div>
+        <div class="preview-actions">
+          <button class="btn-preview primary" style="background:${s.primary};">记录饮食</button>
+          <button class="btn-preview secondary" style="color:${s.primary};border-color:${s.border};">聊聊心情</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+render();
+</script>
+</body>
+</html>

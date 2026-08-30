@@ -1,0 +1,27 @@
+{
+  "version": "0.1",
+  "basis": "食物库热量校准数据集。每条为『真实风格餐饮描述 + 人工拆解(food_ref × 份量) + 人工营养参考总热量(anchor_kcal)』。基准脚本按食物库累加估算，与 anchor_kcal 相对偏差在 ±RANGE_PCT(默认 20%) 内为合格。",
+  "note": "覆盖五大类主流组合，份量口径与 foods.json 的 1 拳/1 份一致。anchor_kcal 取通用营养学参考，独立于食物库 kcal 值（用于捕捉库值录入偏差）。待接入真 LLM 后，同一数据集可复用于『从自然语言描述解析命中的命中率』评测。",
+  "cases": [
+    { "desc": "半拳米饭 + 一拳青菜 + 半拳鸡腿肉(去皮)", "foods": [["rice", 0.5], ["greens", 1], ["chicken_thigh", 0.5]], "anchor_kcal": 215 },
+    { "desc": "一拳糙米饭 + 一块清蒸鱼 + 一拳西兰花", "foods": [["brown_rice", 1], ["fish", 1], ["broccoli", 1]], "anchor_kcal": 380 },
+    { "desc": "一碗小米粥 + 一个水煮蛋 + 一杯无糖豆浆", "foods": [["millet_porridge", 1], ["egg", 1], ["soy_milk", 1]], "anchor_kcal": 250 },
+    { "desc": "半拳鸡胸肉 + 一拳玉米 + 一根香蕉", "foods": [["chicken_breast", 0.5], ["corn", 1], ["banana", 1]], "anchor_kcal": 285 },
+    { "desc": "一拳瘦牛肉 + 一拳胡萝卜 + 半拳土豆", "foods": [["beef", 1], ["carrot", 1], ["potato", 0.5]], "anchor_kcal": 270 },
+    { "desc": "半拳虾仁 + 一拳豆腐 + 半拳米饭", "foods": [["shrimp", 0.5], ["tofu", 1], ["rice", 0.5]], "anchor_kcal": 255 },
+    { "desc": "一片全麦面包 + 一片低脂芝士 + 一杯牛奶", "foods": [["whole_wheat_bread", 1], ["cheese_slice", 1], ["milk", 1]], "anchor_kcal": 225 },
+    { "desc": "一拳三文鱼 + 一拳绿叶蔬菜 + 一个红薯", "foods": [["salmon", 1], ["greens", 1], ["sweet_potato", 1]], "anchor_kcal": 360 },
+    { "desc": "一杯无糖酸奶 + 十颗草莓 + 半杯熟燕麦", "foods": [["yogurt", 1], ["strawberry", 1], ["oat", 0.5]], "anchor_kcal": 230 },
+    { "desc": "一个鸡蛋 + 一拳菠菜 + 半拳面条", "foods": [["egg", 1], ["spinach", 1], ["noodles", 0.5]], "anchor_kcal": 210 },
+    { "desc": "一拳鸭肉(去皮) + 一拳卷心菜 + 一个白馒头", "foods": [["duck", 1], ["cabbage", 1], ["bun_plain", 1]], "anchor_kcal": 430 },
+    { "desc": "半拳瘦猪肉 + 一拳蘑菇 + 一个芋头", "foods": [["pork_lean", 0.5], ["mushroom", 1], ["taro", 1]], "anchor_kcal": 240 },
+    { "desc": "一块清蒸鱼 + 一个苹果 + 半拳米饭", "foods": [["fish", 1], ["apple", 1], ["rice", 0.5]], "anchor_kcal": 345 },
+    { "desc": "一拳羊肉(瘦) + 一拳西兰花 + 一个土豆", "foods": [["lamb", 1], ["broccoli", 1], ["potato", 1]], "anchor_kcal": 370 },
+    { "desc": "一拳鱿鱼 + 一个番茄 + 半拳糙米饭", "foods": [["squid", 1], ["tomato", 1], ["brown_rice", 0.5]], "anchor_kcal": 210 },
+    { "desc": "一盘蛤蜊 + 半根黄瓜 + 半拳玉米", "foods": [["clam", 1], ["cucumber", 1], ["corn", 0.5]], "anchor_kcal": 155 },
+    { "desc": "半拳鸡胸肉 + 三个蛋白 + 一杯低脂牛奶", "foods": [["chicken_breast", 0.5], ["egg_white", 1], ["milk", 1]], "anchor_kcal": 205 },
+    { "desc": "一个汉堡 + 一杯无糖奶茶", "foods": [["hamburger", 1], ["milk_tea", 1]], "anchor_kcal": 620 },
+    { "desc": "五个水饺 + 一拳绿叶蔬菜", "foods": [["dumpling", 1], ["greens", 1]], "anchor_kcal": 280 },
+    { "desc": "三块黑巧克力(85%) + 一杯无糖酸奶", "foods": [["chocolate", 1], ["yogurt", 1]], "anchor_kcal": 235 }
+  ]
+}

@@ -1,0 +1,40 @@
+<!-- 毒舌档位选择 -->
+<view class="sheet-page">
+  <!-- 蒙层 -->
+  <view class="mask" bindtap="handleConfirm"></view>
+
+  <!-- Sheet -->
+  <view class="sheet">
+    <view class="sheet-handle">
+      <view class="handle-bar"></view>
+    </view>
+
+    <!-- 教练提示 -->
+    <view class="coach-bubble">
+      <text>我的毒舌程度你可以选，随时可以改。</text>
+    </view>
+
+    <!-- 档位选项 -->
+    <view class="options">
+      <view
+        wx:for="{{levels}}"
+        wx:key="value"
+        class="option {{selected === item.value ? 'option-selected' : ''}}"
+        data-value="{{item.value}}"
+        bindtap="handleSelect"
+      >
+        <view class="option-header">
+          <text class="option-emoji">{{item.emoji}}</text>
+          <text class="option-label">{{item.label}}</text>
+          <view wx:if="{{selected === item.value}}" class="option-check">✓</view>
+        </view>
+        <text class="option-desc">{{item.desc}}</text>
+      </view>
+    </view>
+
+    <!-- 确认按钮 -->
+    <view class="btn-area">
+      <button class="btn-primary" bindtap="handleConfirm">确认选择</button>
+    </view>
+  </view>
+</view>
