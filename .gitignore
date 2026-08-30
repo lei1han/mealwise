@@ -10,6 +10,9 @@ dist/
 build/
 miniprogram_npm/
 
+# 微信开发者工具私有配置
+project.private.config.json
+
 # 日志
 *.log
 
