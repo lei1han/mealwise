@@ -1,9 +1,13 @@
 // 集合 schema 与索引定义（对齐后端计划 §4；云开发建表/布索引时参考）
+
+// 全局配置集合名（无 user_id，由 ConfigService 单独直读，不走按用户的工作集加载）
+export const DEFAULT_CONFIG_COLLECTION = 'app_config';
+
 export const SCHEMA = Object.freeze({
   users: {
-    fields: ['_id', 'user_id', 'nickname', 'gender', 'age_group', 'height_cm', 'current_weight_kg', 'target_weight_kg', 'history_kg', 'onboarding_state', 'profiling_progress', 'onboarding_completed_at', 'last_active_at', 'created_at', 'updated_at'],
+    fields: ['_id', 'user_id', 'nickname', 'gender', 'age_group', 'height_cm', 'current_weight_kg', 'target_weight_kg', 'history_kg', 'target_estimate_weeks', 'onboarding_state', 'profiling_progress', 'onboarding_completed_at', 'last_active_at', 'created_at', 'updated_at', 'snark_level'],
     indexes: [{ name: 'idx_user_id', fields: ['user_id'], unique: true }],
-    note: 'user_id 即 openid 映射；onboarding_completed_at 为执行期起点锚点（写一次）；last_active_at 冗余刷新',
+    note: 'user_id 即 openid 映射；onboarding_completed_at 为执行期起点锚点（写一次）；last_active_at 冗余刷新；snark_level ∈ gentle/light/spicy（2026-09-01 起入库持久化，替代 MVP 代码常量）',
   },
   memories: {
     fields: ['_id', 'user_id', 'category', 'content', 'date', 'source', 'created_at', 'updated_at'],
@@ -34,6 +38,11 @@ export const SCHEMA = Object.freeze({
     fields: ['_id', 'user_id', 'trigger_type', 'channel', 'status', 'sent_at'],
     indexes: [{ name: 'idx_user_sent', fields: ['user_id', 'sent_at'] }],
     note: 'status ∈ sent/delivered/clicked/failed；clicked 不可得则降级 sent/delivered',
+  },
+  app_config: {
+    fields: ['_id', 'key', 'value', 'public', 'description', 'updated_at'],
+    indexes: [],
+    note: '全局配置表（无 user_id），运营在控制台维护；key 语义唯一；public=true 经 app.config.get 暴露给客户端，prompt.* 为内部提示词覆盖（缺省回退代码默认模板）',
   },
 });
 

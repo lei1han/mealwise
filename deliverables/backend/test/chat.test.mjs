@@ -54,3 +54,31 @@ test('降级：mock 抛错/非 JSON 不落坏数据', async () => {
   assert.equal(r.reply_text, '解析失败测试');
   assert.equal(app.db.find('diet_records', (d) => d.user_id === 'u4').length, 0);
 });
+
+test('M3·3 轮多轮会话：同一 app 单例状态跨轮保持、餐次累积、不重置', async () => {
+  const app = freshApp();
+  let r = await app.chat.send({ userId: 'u5', text: '早餐吃了半拳米饭和一把青菜' });
+  assert.equal(r.degraded, false);
+  r = await app.chat.send({ userId: 'u5', text: '晚餐吃了半拳鸡胸肉' });
+  assert.equal(r.degraded, false);
+  r = await app.chat.send({ userId: 'u5', text: '你好，我身高165，女，30岁，目标 58' });
+  assert.equal(r.degraded, false);
+
+  // 跨轮累积：餐次 2 条（早餐+晚餐，未被重置）、双条消息 6 条、用户画像写 User
+  const meals = app.db.find('diet_records', (d) => d.user_id === 'u5').map((d) => d.meal).sort();
+  assert.equal(meals.join(','), 'breakfast,dinner');
+  const msgs = app.db.find('messages', (m) => m.user_id === 'u5');
+  assert.equal(msgs.length, 6); // 每轮 user+assistant
+  const u = app.db.findOne('users', (d) => d.user_id === 'u5');
+  assert.equal(u.gender, 'female');
+});
+
+test('M3·注入非法 JSON 触发降级：degraded:true、回显 LLM 原文、不落坏数据', async () => {
+  // 伪造 LLM 返回非 JSON 纯文本，验证 parser 降级兜底（reply_text 取 LLM 原文，而非用户输入）
+  const raw = '这不是 JSON 而是纯文本兜底';
+  const app = buildApp({ db: new MemoryDB(), llm: { service: 'fake', async complete() { return raw; } } });
+  const r = await app.chat.send({ userId: 'u6', text: '中午吃了半拳米饭' });
+  assert.equal(r.degraded, true);
+  assert.equal(r.reply_text, raw);
+  assert.equal(app.db.find('diet_records', (d) => d.user_id === 'u6').length, 0);
+});
