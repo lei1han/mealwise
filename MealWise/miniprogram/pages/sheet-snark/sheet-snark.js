@@ -28,6 +28,9 @@ Page({
       wx.hideLoading();
       wx.showToast({ title: '已保存', icon: 'success', duration: 1000 });
 
+      // 返回聊天页后由 chat-main 主动追加教练确认消息（与报体重/体质录入同款 pending 机制）
+      wx.setStorageSync('pendingSnarkChange', { snark_level: this.data.selected });
+
       const pages = getCurrentPages();
       const prevPage = pages[pages.length - 2];
       if (prevPage) {

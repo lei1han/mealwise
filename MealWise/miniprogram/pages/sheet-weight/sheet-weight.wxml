@@ -1,4 +1,4 @@
-<!-- 体质信息录入 -->
+体质信息录入
 <view class="sheet-page">
   <!-- 蒙层 -->
   <view class="mask" bindtap="handleCancel"></view>
@@ -9,15 +9,15 @@
       <view class="handle-bar"></view>
     </view>
 
-    <text class="sheet-title">体质信息录入</text>
+    <text class="sheet-title">{{mode === 'weight' ? '报今日体重' : '体质信息录入'}}</text>
 
     <!-- 教练提示 -->
     <view class="coach-bubble">
-      <text>先填一下基本身体信息，我帮你算预算。</text>
+      <text>{{mode === 'weight' ? '今天体重多少公斤？直接填数字就行。' : '先填一下基本身体信息，我帮你算预算。'}}</text>
     </view>
 
-    <!-- 性别 -->
-    <view class="form-group">
+    <!-- 性别（摸底全量才需要） -->
+    <view class="form-group" wx:if="{{mode !== 'weight'}}">
       <text class="form-label">性别</text>
       <view class="gender-row">
         <view
@@ -33,8 +33,8 @@
       </view>
     </view>
 
-    <!-- 年龄段 -->
-    <view class="form-group">
+    <!-- 年龄段（摸底全量才需要） -->
+    <view class="form-group" wx:if="{{mode !== 'weight'}}">
       <text class="form-label">年龄段</text>
       <scroll-view class="age-scroll" scroll-x enhanced show-scrollbar="{{false}}">
         <view class="age-row">
@@ -51,7 +51,7 @@
 
     <!-- 体重 -->
     <view class="form-group">
-      <text class="form-label">当前体重</text>
+      <text class="form-label">{{mode === 'weight' ? '今日体重' : '当前体重'}}</text>
       <view class="input-wrapper">
         <input
           class="form-input"
@@ -65,8 +65,8 @@
       </view>
     </view>
 
-    <!-- 目标体重 -->
-    <view class="form-group">
+    <!-- 目标体重（摸底全量才需要） -->
+    <view class="form-group" wx:if="{{mode !== 'weight'}}">
       <text class="form-label">目标体重</text>
       <view class="input-wrapper">
         <input
@@ -81,8 +81,8 @@
       </view>
     </view>
 
-    <!-- 身高 -->
-    <view class="form-group">
+    <!-- 身高（摸底全量才需要） -->
+    <view class="form-group" wx:if="{{mode !== 'weight'}}">
       <text class="form-label">身高</text>
       <view class="input-wrapper">
         <input

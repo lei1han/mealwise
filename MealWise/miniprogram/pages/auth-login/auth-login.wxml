@@ -44,10 +44,10 @@
 
     <!-- 授权按钮区 -->
     <view class="btn-area">
-      <button class="btn-primary" bindtap="handleLogin">
-        微信授权登录
+      <button class="btn-primary" open-type="getPhoneNumber" bindgetphonenumber="handleLogin" disabled="{{loggingIn}}">
+        {{loggingIn ? '登录中…' : '微信一键登录'}}
       </button>
-      <text class="btn-hint">授权后即可开始你的减肥之旅</text>
+      <text class="btn-hint">授权手机号即可开始你的减肥之旅</text>
       <text class="btn-skip" bindtap="handleSkip">先看看，暂不授权</text>
     </view>
 

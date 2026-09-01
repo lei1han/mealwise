@@ -83,6 +83,14 @@
   color: var(--xc-primary);
 }
 
+/* 教练头像图片（云端配置 coach_avatar_url；与文字占位同尺寸圆形裁切） */
+.avatar-img {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  display: block;
+}
+
 /* 气泡 */
 .msg-bubble {
   max-width: 75%;
@@ -165,6 +173,7 @@
 
 .budget-bar {
   height: 100%;
+  max-width: 100%;
   background-color: var(--xc-state-accent);
   border-radius: 4rpx;
   transition: width 0.5s ease;
@@ -200,53 +209,76 @@
 
 /* 催报卡片 */
 .reminder-card {
+  position: relative;
   display: flex;
-  align-items: center;
-  margin: 0 0 32rpx;
-  padding: 24rpx;
+  flex-direction: column;
+  margin: 0 0 28rpx;
+  padding: 20rpx 24rpx 22rpx;
   background-color: var(--xc-surface);
   border: 2rpx solid var(--xc-state-accent);
   border-radius: var(--xc-radius-md);
   box-shadow: var(--xc-shadow-1);
 }
 
-.reminder-icon {
-  font-size: 48rpx;
-  margin-right: 20rpx;
+.reminder-close {
+  position: absolute;
+  top: 14rpx;
+  right: 18rpx;
+  padding: 4rpx 10rpx;
+  font-size: 30rpx;
+  line-height: 1;
+  color: var(--xc-muted-foreground);
+  z-index: 1;
 }
 
-.reminder-content {
+.reminder-body {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.reminder-icon {
+  flex-shrink: 0;
+  font-size: 44rpx;
+  margin-right: 18rpx;
+  margin-top: 4rpx;
+}
+
+.reminder-main {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+  padding-right: 36rpx;
 }
 
 .reminder-title {
   font-size: 28rpx;
   font-weight: 600;
   color: var(--xc-foreground);
+  line-height: 1.35;
 }
 
 .reminder-desc {
-  margin-top: 4rpx;
-  font-size: 24rpx;
+  margin-top: 6rpx;
+  font-size: 23rpx;
   color: var(--xc-muted-foreground);
+  line-height: 1.45;
 }
 
 .reminder-btn {
-  flex-shrink: 0;
-  padding: 16rpx 24rpx;
+  align-self: flex-end;
+  margin-top: 16rpx;
+  padding: 10rpx 22rpx;
   background-color: var(--xc-state-accent);
   color: #FFFFFF;
-  font-size: 26rpx;
+  font-size: 24rpx;
   font-weight: 600;
   border-radius: var(--xc-radius-sm);
-  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1.2;
-}
-
-.reminder-btn::after {
-  border: none;
 }
 
 .chat-bottom {
@@ -257,47 +289,65 @@
 .input-bar {
   background-color: var(--xc-background);
   border-top: 1rpx solid var(--xc-border);
+  box-shadow: 0 -4rpx 16rpx rgba(26, 38, 32, 0.04);
   flex-shrink: 0;
 }
 
 .input-inner {
   display: flex;
   align-items: center;
-  gap: 16rpx;
-  padding: 16rpx 32rpx;
+  gap: 12rpx;
+  padding: 14rpx 28rpx;
+}
+
+/* 包裹层负责 flex 拉伸（原生 input 直接做 flex 子项不生效） */
+.input-wrap {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: block;
 }
 
 .chat-input {
-  flex: 1;
-  height: 80rpx;
-  padding: 0 24rpx;
+  width: 100%;
+  height: 88rpx;
+  padding: 0 15rpx;
   background-color: var(--xc-surface);
   border: 1rpx solid var(--xc-input);
-  border-radius: var(--xc-radius-sm);
+  border-radius: var(--xc-radius-pill);
   font-size: 30rpx;
   color: var(--xc-foreground);
+  box-sizing: border-box;
+}
+
+.chat-input-ph {
+  color: var(--xc-placeholder);
 }
 
 .send-btn {
-  flex-shrink: 0;
-  width: 120rpx;
-  height: 80rpx;
-  line-height: 80rpx;
-  text-align: center;
-  background-color: var(--xc-surface-2);
-  color: var(--xc-muted-foreground);
+  /* 用 view 承载发送按钮：规避原生 button 默认块级宽度（flex 中会被拉成与输入框均分） */
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96rpx;
+  height: 88rpx;
+  margin: 0;
+  padding: 0;
   font-size: 28rpx;
   font-weight: 600;
-  border-radius: var(--xc-radius-sm);
+  border-radius: var(--xc-radius-pill);
   border: none;
-  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 禁用态（view 无 disabled 属性，用 class 控制） */
+.send-btn-disabled {
+  background-color: var(--xc-primary-50);
+  color: rgba(78, 122, 92, 0.55);
 }
 
 .send-btn-active {
   background-color: var(--xc-primary);
   color: #FFFFFF;
-}
-
-.send-btn::after {
-  border: none;
+  box-shadow: 0 6rpx 16rpx rgba(78, 122, 92, 0.28);
 }

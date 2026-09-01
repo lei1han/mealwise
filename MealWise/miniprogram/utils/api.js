@@ -8,8 +8,22 @@ const Mock = require('./mock.js');
 // 切换标志：true = Mock，false = 真实接口
 const USE_MOCK = true;
 // 白名单内的 action 无视 USE_MOCK 强制走真实云函数（逐个 action 灰度切换用）
-// 已联调通过的真实 action：'chat.send'、'subscribe.report'（2026-08-30 云端测试 + 模拟器走查）
-const REAL_ACTIONS = ['chat.send', 'subscribe.report'];
+// 2026-08-31 后端全量落地：内核 9 个 action 补齐 + 错误码/限流对齐契约，云函数已重新部署，
+// 全部 action 放开真实链路（模拟器走查中；如需回退 Mock，清空此数组即可）
+const REAL_ACTIONS = [
+  'auth.login',
+  'user.state.get',
+  'chat.send',
+  'onboarding.profile.submit',
+  'budget.today',
+  'conversation.current',
+  'conversation.history',
+  'user.profile.get',
+  'user.profile.update',
+  'user.target.update',
+  'subscribe.report',
+  'app.config.get'
+];
 
 /**
  * 判断指定 action 是否走真实云函数
@@ -48,6 +62,16 @@ const API = {
     return callCloudFunction('user.state.get', {});
   },
 
+  /**
+   * 授权登录（auth.login）：手机号 code 换号 + 回填昵称/头像，建或更新用户
+   * @param {object} payload { phoneCode?, nickname?, avatarUrl? } phoneCode 仅在首次授权时传
+   * @returns {object} { is_new, phone, nickname, avatar_url }
+   */
+  async login(payload = {}) {
+    if (!useReal('auth.login')) return Mock.login(payload);
+    return callCloudFunction('auth.login', payload);
+  },
+
   async getProfile() {
     if (!useReal('user.profile.get')) return Mock.getProfile();
     return callCloudFunction('user.profile.get', {});
@@ -55,12 +79,16 @@ const API = {
 
   async updateProfile(fields) {
     if (!useReal('user.profile.update')) return Mock.updateProfile(fields);
-    return callCloudFunction('user.profile.update', { fields });
+    // 契约 C：user.profile.update payload 为 { patch }（白名单字段，snark_level 等后端静默忽略）
+    return callCloudFunction('user.profile.update', { patch: fields });
   },
 
-  async setUserState(state) {
-    if (!useReal('user.state.set')) return Mock.setUserState(state);
-    return callCloudFunction('user.state.set', { state });
+  /**
+   * 提交体质信息（摸底 sheet 保存）：结构化上报后端，产出下一轮对话
+   */
+  async submitBodyInfo(fields) {
+    if (!useReal('onboarding.profile.submit')) return Mock.submitBodyInfo(fields);
+    return callCloudFunction('onboarding.profile.submit', { fields });
   },
 
   /* ==========================================
@@ -74,7 +102,14 @@ const API = {
 
   async getHistory(cursor) {
     if (!useReal('conversation.history')) return Mock.getHistory(cursor);
-    return callCloudFunction('conversation.history', { cursor });
+    const res = await callCloudFunction('conversation.history', { cursor });
+    // 契约 C 返回 { items, next_cursor }，此处归一化为前端既有消费结构 { messages, hasMore, cursor }
+    const items = (res && res.items) || [];
+    return {
+      messages: items.map((m) => ({ role: m.role, text: m.content, time: m.created_at })),
+      hasMore: !!(res && res.next_cursor),
+      cursor: (res && res.next_cursor) || null
+    };
   },
 
   /* ==========================================
@@ -87,15 +122,17 @@ const API = {
   },
 
   /* ==========================================
-     Onboarding
+     全局配置（云端 app_config 公开配置）
      ========================================== */
 
-  getOnboardingFlow() {
-    return Mock.getOnboardingFlow();
-  },
-
-  getOnboardingNext(step, userInput) {
-    return Mock.getOnboardingNext(step, userInput);
+  async getAppConfig() {
+    if (!useReal('app.config.get')) return Mock.getAppConfig();
+    try {
+      return await callCloudFunction('app.config.get', {});
+    } catch (e) {
+      // 云函数未部署新 action / 读取失败：兜底默认配置，不影响聊天页
+      return { coach_avatar_url: '' };
+    }
   },
 
   /* ==========================================

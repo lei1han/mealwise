@@ -6,8 +6,6 @@ App({
   globalData: {
     // 云开发环境 ID
     cloudEnv: 'cloud1-d6gmjs12rfd5c3925',
-    // 用户状态: 'unstarted' | 'onboarding' | 'calibrating' | 'active'
-    userState: 'unstarted',
     // 已登录标识
     isLoggedIn: false,
     // 用户信息
@@ -27,12 +25,10 @@ App({
       });
     }
 
-    // 获取系统信息
-    wx.getSystemInfo({
-      success: (res) => {
-        this.globalData.systemInfo = res;
-      }
-    });
+    // 获取系统信息（wx.getSystemInfo 已废弃，改用 wx.getWindowInfo）
+    this.globalData.systemInfo = wx.getWindowInfo
+      ? wx.getWindowInfo()
+      : wx.getSystemInfoSync();
 
     // 检查登录状态
     const token = wx.getStorageSync('token');

@@ -77,8 +77,11 @@
 .gender-btn {
   flex: 1;
   height: 80rpx;
-  line-height: 80rpx;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
   background-color: var(--xc-surface-2);
   color: var(--xc-foreground);
   font-size: 30rpx;
@@ -155,14 +158,18 @@
 .btn-cancel {
   flex: 1;
   height: 96rpx;
-  line-height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
   background-color: var(--xc-surface);
   color: var(--xc-foreground);
   font-size: 30rpx;
   font-weight: 500;
   border-radius: var(--xc-radius-sm);
   border: 2rpx solid var(--xc-border);
-  text-align: center;
 }
 
 .btn-cancel::after {
@@ -172,14 +179,18 @@
 .btn-save {
   flex: 1;
   height: 96rpx;
-  line-height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
   background-color: var(--xc-primary);
   color: #FFFFFF;
   font-size: 30rpx;
   font-weight: 600;
   border-radius: var(--xc-radius-sm);
   border: none;
-  text-align: center;
 }
 
 .btn-save::after {

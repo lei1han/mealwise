@@ -31,13 +31,8 @@ Page({
   _navigateNext() {
     const token = wx.getStorageSync('token');
     if (token) {
-      // 已授权 → 判断是否完成摸底
-      const state = app.globalData.userState;
-      if (state === 'active') {
-        wx.reLaunch({ url: '/pages/chat-main/chat-main' });
-      } else {
-        wx.reLaunch({ url: '/pages/chat-onboarding/chat-onboarding' });
-      }
+      // 已授权 → 统一进聊天页；摸底/日常由页面按 onboarding_state 自渲染
+      wx.reLaunch({ url: '/pages/chat-main/chat-main' });
     } else {
       wx.redirectTo({ url: '/pages/auth-login/auth-login' });
     }

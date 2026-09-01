@@ -9,11 +9,15 @@ const Mock = {
     return new Promise((resolve) => setTimeout(resolve, ms));
   },
 
-  /** 用户状态 */
-  _userState: 'unstarted',
+  /** 摸底状态机（后端主导，mock 模拟）：new / profiling / active */
+  _onboardingState: 'new',
+  /** 摸底对话轮次（仅 mock 走查用） */
+  _onboardingTurns: 0,
   /** 用户资料 */
   _profile: {
     nickname: '',
+    avatar_url: '',
+    phone: '',
     gender: 'female',
     age_group: '25-34',
     height: 165,
@@ -31,20 +35,31 @@ const Mock = {
   /** 今日预算 */
   _todayBudget: null,
 
+  /** 今日是否已报过体重（mock 走查用，对应 user.state.get 返回 reported_weight_today） */
+  _reportedWeightToday: false,
+
   /* ==========================================
      用户相关
      ========================================== */
 
-  /** 获取用户状态 */
-  async getUserState() {
-    await this._delay(200);
-    return { state: this._userState, profile: this._profile };
+  /** 授权登录（auth.login）：模拟换号 + 回填昵称/头像 */
+  async login({ phoneCode, nickname, avatarUrl } = {}) {
+    await this._delay(300);
+    if (phoneCode) this._profile.phone = this._profile.phone || '138****0000';
+    if (nickname) this._profile.nickname = nickname;
+    if (avatarUrl) this._profile.avatar_url = avatarUrl;
+    return {
+      is_new: !this._profile.phone,
+      phone: this._profile.phone || null,
+      nickname: this._profile.nickname || null,
+      avatar_url: this._profile.avatar_url || null
+    };
   },
 
-  /** 更新用户状态 */
-  async setUserState(state) {
-    await this._delay(100);
-    this._userState = state;
+  /** 获取用户状态（user.state.get） */
+  async getUserState() {
+    await this._delay(200);
+    return { onboarding_state: this._onboardingState, reported_weight_today: this._reportedWeightToday };
   },
 
   /** 获取用户资料 */
@@ -60,24 +75,122 @@ const Mock = {
     return { ...this._profile };
   },
 
+  /**
+   * 提交体质信息（摸底 sheet 保存后调用）：结构化上报后端，并产出下一轮对话
+   * @param {object} fields { gender, age_group, height, initial_weight, target_weight }
+   * @returns {object} 教练确认 + 下一个摸底问题
+   */
+  async submitBodyInfo(fields) {
+    await this._delay(400);
+    if (fields.gender) this._profile.gender = fields.gender;
+    if (fields.age_group) this._profile.age_group = fields.age_group;
+    if (fields.height) this._profile.height = Number(fields.height);
+    if (fields.initial_weight) this._profile.initial_weight = Number(fields.initial_weight);
+    if (fields.target_weight) this._profile.target_weight = Number(fields.target_weight);
+    // sheet 已录入身高/体重/目标，推进摸底到"减肥史"环节，并产出本轮确认对话
+    this._onboardingTurns = 3;
+    return {
+      reply_text:
+        '记下了：' +
+        this._profile.height +
+        'cm，' +
+        this._profile.initial_weight +
+        ' → ' +
+        this._profile.target_weight +
+        'kg。目标有点意思。以前减过几次？上次为什么放弃？',
+      onboarding_state: this._onboardingState,
+      degraded: false
+    };
+  },
+
   /* ==========================================
      聊天相关
      ========================================== */
 
   /**
-   * 发送消息
-   * @param {string} text 用户发送的文字
-   * @returns {object} 教练回复 + 结构化结果
+   * 发送消息（chat.send）
+   * @param {string} text 用户发送的文字；'__start__'（或空文本）为摸底/回归开场
+   * @returns {object} 教练回复 + 结构化结果 + onboarding_state
    */
   async sendMessage(text) {
     await this._delay(800);
 
+    const raw = (text || '').trim();
+
+    // 开场：只落教练消息，状态机不推进
+    if (raw === '__start__' || raw === '') {
+      const reply = this._openingReply();
+      this._messages.push({ role: 'coach', text: reply.reply_text, time: Date.now() });
+      return reply;
+    }
+
     // 根据当前状态和消息内容做 mock 回复
-    const reply = this._generateReply(text);
-    this._messages.push({ role: 'user', text, time: Date.now() });
+    const reply = this._generateReply(raw);
+    // 日常回复补齐契约 C 字段
+    if (reply.onboarding_state == null) reply.onboarding_state = this._onboardingState;
+    if (reply.subscribe_hint == null) reply.subscribe_hint = false;
+    if (reply.degraded == null) reply.degraded = false;
+    this._messages.push({ role: 'user', text: raw, time: Date.now() });
     this._messages.push({ role: 'coach', text: reply.reply_text, time: Date.now() });
 
     return reply;
+  },
+
+  /** 开场白（按状态分发，与后端 OPENING_LINES 对齐） */
+  _openingReply() {
+    const lines = {
+      new: '嗨，我是三餐教练。不教你基础，只盯着你瘦下来。先简单摸个底？',
+      profiling: '咱们接着来，还差一点信息就能给你定标了。',
+      active: '来了？今天体重和吃了啥，记得报。'
+    };
+    return {
+      reply_text: lines[this._onboardingState] || lines.active,
+      intent: 'other',
+      extracted: { memory_points: [] },
+      budget_remaining_kcal: null,
+      degraded: false,
+      subscribe_hint: false,
+      onboarding_state: this._onboardingState
+    };
+  },
+
+  /**
+   * 摸底中的脚本化回复（mock 用固定话术推进，真实环境由后端 LLM + 状态机主导）
+   * @returns {object|null} 摸底期回复；已定标返回 null 走日常回复
+   */
+  _onboardingReply(text) {
+    if (this._onboardingState === 'active') return null;
+
+    this._onboardingTurns += 1;
+    const turn = this._onboardingTurns;
+
+    if (turn === 1) {
+      return { reply_text: '怎么称呼你？', state: 'new' };
+    }
+    if (turn === 2) {
+      this._profile.nickname = text.slice(0, 6);
+      // 本轮正好"问体重"：下发标记，让前端弹出体质信息录入 sheet
+      return {
+        reply_text: '身高、现在体重报一下，目标一起填了，方便我给你算预算。',
+        state: 'profiling',
+        action: 'open_weight_sheet'
+      };
+    }
+    if (turn === 3) {
+      return { reply_text: '减过几次？上次为什么放弃？', state: 'profiling' };
+    }
+    if (turn === 4) {
+      return { reply_text: '了解。想减到多少？我给你算一个够得着的目标。', state: 'profiling' };
+    }
+    // 第 5 轮：报目标体重 → 定标完成
+    const target = (text.match(/[\d.]+/) || [])[0] || '55';
+    this._profile.target_weight = parseFloat(target);
+    this._profile.onboarding_completed = true;
+    return {
+      reply_text:
+        '定了！按每周 0.5kg 的健康速度，我给你算好每日热量预算了。从今天开始记饮食，报体重，我盯着你。',
+      state: 'active'
+    };
   },
 
   /** 获取聊天历史 */
@@ -96,8 +209,27 @@ const Mock = {
   _generateReply(text) {
     const lower = text.toLowerCase().trim();
 
+    // 摸底期：脚本化推进，状态机由"后端"（mock）主导
+    const onboarding = this._onboardingReply(text);
+    if (onboarding) {
+      this._onboardingState = onboarding.state;
+      const reply = {
+        reply_text: onboarding.reply_text,
+        intent: 'other',
+        extracted: { memory_points: [] },
+        budget_remaining_kcal: null,
+        degraded: false,
+        subscribe_hint: false,
+        onboarding_state: this._onboardingState
+      };
+      // 透传摸底回复的可选动作标记（如打开体质录入）
+      if (onboarding.action) reply.action = onboarding.action;
+      return reply;
+    }
+
     // 体重汇报
     if (/[\d.]+.*[k公斤g斤]/.test(lower) || /^[\d.]+$/.test(lower)) {
+      this._reportedWeightToday = true;
       return {
         reply_text: '收到，记下了。今天早饭吃了没？',
         intent: 'weight_report',
@@ -105,7 +237,8 @@ const Mock = {
           weight_record: { weight_kg: 67.8 },
           memory_points: []
         },
-        budget_remaining_kcal: this._profile.daily_calorie_budget || 1450
+        // 剩余预算：与 getTodayBudget.remaining 对齐，供前端挂预算卡
+        budget_remaining_kcal: this._todayBudget ? this._todayBudget.remaining : null
       };
     }
 
@@ -169,80 +302,28 @@ const Mock = {
   },
 
   /* ==========================================
-     Onboarding 预设对话
+     全局配置（对齐 app.config.get 返回结构）
      ========================================== */
 
-  /** 获取摸底对话初始化消息 */
-  getOnboardingFlow() {
-    return [
-      {
-        role: 'coach',
-        text: '嗨，我是 三餐教练。不教你基础，只盯着你瘦下来。先简单摸个底？',
-        quickReplies: null
-      },
-      {
-        role: 'user',
-        text: '好',
-        quickReplies: null
-      },
-      {
-        role: 'coach',
-        text: '怎么称呼你？',
-        quickReplies: null
-      }
-    ];
-  },
-
-  /** 获取教练回复（基于用户回答的下一步） */
-  getOnboardingNext(step, userInput) {
-    const steps = {
-      // step 0: 用户回答了"好"之后 → 问昵称
-      'greeting_ok': {
-        role: 'coach',
-        text: '怎么称呼你？',
-        quickReplies: null
-      },
-      // step 1: 昵称回答后 → 问身高体重
-      'nickname': {
-        role: 'coach',
-        text: '身高、现在体重报一下，不许谎报。',
-        quickReplies: null
-      },
-      // step 2: 身高体重后 → 问减肥史
-      'height_weight': {
-        role: 'coach',
-        text: '减过几次？上次为什么放弃？',
-        quickReplies: null
-      },
-      // step 3: 减肥史后 → 问目标
-      'history': {
-        role: 'coach',
-        text: '了解。想减到多少？我给你算一个够得着的目标。',
-        quickReplies: null
-      },
-      // step 4: 目标后 → 定标
-      'target': {
-        role: 'coach',
-        text: '从 68 到 55，按每周 0.5kg 算，大概 26 周。中间会有平台期，我帮你调整。先确认这个目标？',
-        quickReplies: [
-          { text: '确认目标', type: 'primary', action: 'confirm_goal' },
-          { text: '我想再快一点', type: 'secondary', action: 'faster' },
-          { text: '有点长，能不能短点', type: 'secondary', action: 'shorter' }
-        ]
-      }
-    };
-    return steps[userInput] || null;
+  /** 获取全局公开配置（默认教练头像为空 → 前端回退「教」字占位） */
+  async getAppConfig() {
+    await this._delay(100);
+    return { coach_avatar_url: '' };
   },
 
   /* ==========================================
      重置 Mock 数据
      ========================================== */
   reset() {
-    this._userState = 'unstarted';
+    this._onboardingState = 'new';
+    this._onboardingTurns = 0;
     this._messages = [];
     this._todayBudget = null;
+    this._reportedWeightToday = false;
     this._profile = {
       nickname: '',
+      avatar_url: '',
+      phone: '',
       gender: 'female',
       age_group: '25-34',
       height: 165,
