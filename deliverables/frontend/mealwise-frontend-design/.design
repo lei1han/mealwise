@@ -418,7 +418,16 @@
       },
       "devMetadata": {
         "htmlSrc": "pages/body-data.html",
-        "interactions": []
+        "interactions": [
+          {
+            "domId": "nav-back-profile",
+            "targetPageId": "page-profile-main"
+          },
+          {
+            "domId": "nav-weight-detail-all",
+            "targetPageId": "page-stats-weight-detail"
+          }
+        ]
       }
     },
     {
