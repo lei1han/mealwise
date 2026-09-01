@@ -148,6 +148,13 @@
 
 > 平台约束：微信小程序无法像原生 App 那样后台任意推送，主动督促依赖订阅消息，MVP 阶段需接受"授权 + 有限频次"的限制。
 
+### 6.3 前端数据访问（工具位置）
+
+- 业务主链路统一走 `miniprogram/utils/api.js` → 云函数 `api`（`wx.cloud.callFunction`，服务端注入 `user_id`，见后端计划）。
+- `app.js` 的 `onLaunch` 已按正式 AppID 环境 `wx.cloud.init`（env `cloud1-d6gmjs12rfd5c3925`），前端直连能力已就绪。
+- **调试辅助工具** `miniprogram/utils/db.js`：`getDB()` 懒加载云数据库实例、`query()` 只读条件查询（含排序/limit）、`count()` 统计、`insert()` 受控调试用写。
+  - 该工具**不参与业务调用链**，仅供调试核对数据；直连写入会自动带云开发默认 `_openid`，与契约 `user_id`（存 openid）不同源，故默认只读，写需显式调用。
+
 ---
 
 ## 7. 数据模型（记忆点）
@@ -156,22 +163,25 @@
 
 | 字段 | 说明 |
 |---|---|
-| id | 用户唯一标识 |
-| nickname | 昵称 |
+| user_id | 用户唯一标识（存 openid 映射，云函数服务端注入） |
+| phone | 授权手机号（getPhoneNumber 云调用换取；仅空字段写，不换绑；不参与定标与对话） |
+| nickname | 昵称（授权登录时经 `input type="nickname"` 回填，仅空字段写） |
+| avatar_url | 微信头像云存储 fileID（授权登录时经 `chooseAvatar` 选择并上传云存储换取，仅空字段写） |
 | gender | 性别（male / female） |
 | age_group | 年龄段（18-24 / 25-34 / 35-44 / 45-54 / 55+） |
-| height | 身高 |
-| initial_weight | 初始体重 |
-| target_weight | 目标体重 |
-| estimate_weeks | 预估周期 |
-| daily_calorie_budget | 每日热量预算 |
-| snark_level | 毒舌档位（温柔/轻损/辛辣） |
-| food_restrictions | 饮食禁忌 / 过敏 |
-| dietary_preferences | 饮食偏好 |
-| exercise_condition | 运动条件 |
-| exercise_habits | 运动习惯 |
-| motivation | 减肥动机 |
-| created_at | 创建时间 |
+| height_cm | 身高（cm） |
+| current_weight_kg | 当前体重（kg，最近一次上报） |
+| target_weight_kg | 目标体重（kg） |
+| history_kg | 过往累积体重变化（减肥史量化） |
+| target_estimate_weeks | 预估周期（周），定标转 active 时写入 |
+| onboarding_state | 摸底状态机（new / profiling / target_pending / active / recalibrating） |
+| profiling_progress | 摸底各字段完成标记 |
+| onboarding_completed_at | 定标完成时刻（执行期起点锚点，只写一次） |
+| last_active_at | 最后活跃时刻 |
+| snark_level | 毒舌档位（gentle=温柔 / light=轻损 / spicy=辛辣，2026-09-01 起入库持久化，未设置回退 light） |
+| created_at / updated_at | 创建 / 更新时间 |
+
+> 字段与冻结版 schema 对齐，见后端计划 §4.1。`每日热量预算` 由服务端现场计算不入库；`毒舌档` 原为 MVP 代码常量，**2026-09-01 起入库持久化（用户可调）**，`chat.send` 系统提示词按用户档位组装，提交后教练主动追加确认消息。`phone / avatar_url` **2026-09-01 起由授权登录回填**（`auth.login`：getPhoneNumber 换号 + 头像昵称填写能力，仅空字段写；昵称/头像为微信授权后的用户主动填写值，不再静默获取）。
 
 ### 7.2 memories（关键记忆点）
 
@@ -181,7 +191,10 @@
 | user_id | 所属用户 |
 | category | 类型：static / dynamic / emotion |
 | content | 记忆内容 |
+| date | 记录日期（YYYY-MM-DD，dynamic 按自然日覆盖） |
+| source | 记忆来源（onboarding / chat_extract） |
 | created_at | 记录时间 |
+| updated_at | 更新时间 |
 
 - **static**：性别、年龄段、身高、初始体重、目标、减肥史、禁忌、饮食偏好、运动条件、运动习惯、动机等。
 - **dynamic**：每日体重、每日饮食与热量区间、每日预算、当前小目标。

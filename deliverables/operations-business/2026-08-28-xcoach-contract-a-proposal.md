@@ -34,7 +34,7 @@
 | 日均汇报次数 | `diet_records`/`weight_records` 按日计数 | 可算 | 无（仅需耗时一致性） |
 | 连续汇报天数（streak） | 按 `user_id+日期` 连续区间 | 可算 | 记录表缺精确时间戳会污染跨日边界 |
 | 热量汇报覆盖率 | `diet_records.meal` | 可算 | 无 |
-| 预算达成 | `users.daily_calorie_budget` vs `diet_records` | 可算 | 无（`confidence` 缺失会高估"可信达成"） |
+| 预算达成 | 服务端定标预算 `daily_budget_kcal`（不入库） vs `diet_records` | 可算 | 无（`confidence` 缺失会高估"可信达成"） |
 | 情绪低谷 | `memories.category=emotion` | 可算 | 无（但缺事件时间精度，趋势统计受限） |
 | 流失节点分布 | 各表最新记录时间 vs 当前 | **不可算** | 记录表无精确时间戳、`users` 无 `last_active_at` |
 | 主动督促有效性 | 订阅/触达日志 | **完全缺失** | 无任何订阅授权与触达落库 |

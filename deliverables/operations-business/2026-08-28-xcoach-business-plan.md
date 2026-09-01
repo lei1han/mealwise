@@ -31,7 +31,7 @@
 | 层级 | 指标 | 定义 / 计算口径 |
 |---|---|---|
 | 北极星-1 | 目标体重达成率 | `达成目标体重的用户数` ÷ `完成定标且进入执行期 ≥ N 天（建议 N=28）的用户数` |
-| 北极星-2 | 平均减重达成度 | `mean( (initial_weight − current_weight) / (initial_weight − target_weight) )`，仅统计执行期 ≥ N 天用户 |
+| 北极星-2 | 平均减重达成度 | `mean( (current_weight_kg − target_weight_kg) / (initial − target) )`（初始值取 `weight_records` 最早记录或入队时 `current_weight_kg`），仅统计执行期 ≥ N 天用户 |
 | 过程-1 | 日均汇报次数 | 当日 `diet_record` + `weight_record` 记录条数 ÷ 当日活跃用户数 |
 | 过程-2 | 连续汇报天数（留存代理） | 有任意 diet/weight 记录的自然日连续长度（streak）分布 |
 | 过程-3 | 热量汇报覆盖率 | 当日有 `diet_record` 的餐次 ÷ 应报餐次（3 正餐 + 加餐） |
@@ -45,11 +45,11 @@
 
 | 指标 | 依赖字段 |
 |---|---|
-| 目标达成率 / 达成度 | `users.initial_weight`、`users.target_weight`、`weight_records.体重`（时序） |
+| 目标达成率 / 达成度 | `users.current_weight_kg`、`users.target_weight_kg`、`weight_records.weight_kg`（时序） |
 | 日均汇报次数 | `diet_records`、`weight_records`（按日计数） |
 | 连续汇报天数 | 上述两表按 `user_id + 日期` 去重后求连续区间 |
 | 热量覆盖率 | `diet_records.meal`（breakfast/lunch/dinner/snack）对上应报餐次 |
-| 预算达成 | `users.daily_calorie_budget` vs 当日 `diet_records` 汇总热量 |
+| 预算达成 | 服务端定标公式算得的 `daily_budget_kcal` vs 当日 `diet_records` 汇总热量（不入库，见后端 §10.2） |
 | 情绪低谷 | `memories.category=emotion` 的 `content` 语义标签 |
 | 流失节点 | 各表最新记录时间 vs 当前时间的差值 |
 

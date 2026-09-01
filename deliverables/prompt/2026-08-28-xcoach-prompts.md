@@ -33,9 +33,8 @@
 | `{{age_group}}` | 年龄段 18-24 / 25-34 / 35-44 / 45-54 / 55+ | null |
 | `{{height_cm}}` | 身高 cm | null |
 | `{{current_weight_kg}}` | 最近一次体重 kg | null |
-| `{{initial_weight_kg}}` | 初始体重 kg | null |
 | `{{target_weight_kg}}` | 目标体重 kg | null |
-| `{{estimate_weeks}}` | 预估周期（周） | null |
+| `{{target_estimate_weeks}}` | 预估周期（周） | null |
 | `{{daily_budget_kcal}}` | 今日热量预算 kcal | null |
 | `{{budget_remaining_kcal}}` | 当前剩余预算 kcal（单值，服务端计算，缺省=null） | null |
 | `{{snark_level}}` | 毒舌档位：`温柔 / 轻损 / 辛辣` | `轻损` |
@@ -144,7 +143,7 @@ LLM **每次回复只输出一个合法 JSON 对象**，不再输出任何额外
 - 性别/年龄段：{{gender}} / {{age_group}}（缺省=未知）
 - 身高：{{height_cm}} cm
 - 当前体重：{{current_weight_kg}} kg（缺省=未知）
-- 目标：{{target_weight_kg}} kg，预估 {{estimate_weeks}} 周（缺省=未定标）
+- 目标：{{target_weight_kg}} kg，预估 {{target_estimate_weeks}} 周（缺省=未定标）
 - 今日预算：{{daily_budget_kcal}} kcal，剩余约 {{budget_remaining_kcal}} kcal（缺省=未知）
 - 毒舌档位：{{snark_level}}
 - 当前阶段：{{goal_stage}}
@@ -163,6 +162,18 @@ LLM **每次回复只输出一个合法 JSON 对象**，不再输出任何额外
 ```
 
 > `{{scene_prompt}}` 为空时，主提示词自身即可支撑日常闲聊与饮食/体重汇报的基础意图判断。需要强化某能力时，后端插入对应子提示词（§3–§6）。
+
+### 2.1 三档实测验收留档（2026-09-01，真实 DeepSeek）
+
+同一输入「我今天没管住嘴，半夜偷吃了一整袋薯片」，三档实测回复（本地真实链路，`degraded=false`），作为三档措辞的验收基准：
+
+| 档位 | 实测回复 |
+|---|---|
+| 温柔 | 哎呀，半夜偷吃薯片，被抓包了吧！不过别太自责，偶尔放纵一下很正常。明天记得多喝水，吃点清淡的，咱们继续加油！ |
+| 轻损 | 哎呀，又偷吃薯片！不过别太自责，咱今天多喝水，运动一下，把热量消耗掉。 |
+| 辛辣 | 又偷吃！薯片是半夜的快乐，也是明天的眼泪。别慌，今天多喝水，动一动，把热量还回去。 |
+
+> 档位链路：`users.snark_level`（2026-09-01 起入库持久化）→ `chat.send` 系统提示词「毒舌档位：X」→ LLM 按档措辞。三档均满足"损行为不损人 + 给台阶"的边界约束。
 
 ---
 
