@@ -6,11 +6,12 @@
 
 ```
 MealWise/
-├── miniprogram/          # 小程序前端（7 个页面）
-│   ├── pages/            # splash / auth-login / chat-onboarding / chat-main / sheet-weight / sheet-snark / sheet-subscribe
+├── miniprogram/          # 小程序前端（6 个页面）
+│   ├── pages/            # splash / auth-login / chat-main（摸底+日常合并单页）/ sheet-weight / sheet-snark / sheet-subscribe
 │   ├── utils/
 │   │   ├── api.js        # API 层：Mock 与真实云函数的统一入口（REAL_ACTIONS 白名单灰度）
-│   │   └── mock.js       # 本地 Mock 数据
+│   │   ├── mock.js       # 本地 Mock 数据（模拟后端 onboarding 状态机）
+│   │   └── nav.js        # 自定义导航栏尺寸工具（状态栏/胶囊按钮适配）
 │   ├── app.js            # 云开发初始化（env: cloud1-d6gmjs12rfd5c3925）
 │   ├── app.json
 │   └── app.wxss          # 设计令牌（鼠尾草绿主题）

@@ -1,5 +1,4 @@
-// 内存键值存储：对齐各集合；后续可替换为微信云开发（wx-server-sdk）封装，接口保持。
-// 集合：users / memories / weight_records / diet_records / messages / subscribe_auth / notify_log
+// 内存键值存储：本地/测试用内存态；亦作为 CloudDB 的内存工作集（集合见底部 COLLECTIONS）
 export class MemoryDB {
   constructor() {
     this.colls = new Map();

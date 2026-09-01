@@ -1,16 +1,19 @@
 // 定时督促服务（对齐计划 §9）：漏报判断 → 触达 → 额度扣减 → notify_log
 // 真实发送走微信订阅消息云调用；本地用 dryRun 探针做逻辑校验。
 import { NUDGE_SLOTS } from '../domain/constants.js';
+import { render } from './config.js';
 
+// 督促消息默认模板（占位符模板，可被 app_config 的 prompt.nudge.* 覆盖；字段名对齐 formatSlotTemplate 的 userState）
 const TEMPLATES = Object.freeze({
-  morning_greeting: (u) => `早上好！今早还没称重，上秤后告诉我数字（今日预算 ${u.__budget ?? '未知'} 剩 ${u.__remaining ?? '未知'}）。`,
-  meal_reminder: (u) => `${u.__mealLabel}现在你还没报这一餐，吃完了回来补一句，我帮你算晚上的量。`,
-  evening_summary: (u) => `晚间小结：今天报了 ${u.__reportedMeals} 餐（${u.__sumMin}~${u.__sumMax} 大卡），明天继续。`,
+  morning_greeting: '早上好！今早还没称重，上秤后告诉我数字（今日预算 {budget} 剩 {remaining}）。',
+  meal_reminder: '{meal_label}现在你还没报这一餐，吃完了回来补一句，我帮你算晚上的量。',
+  evening_summary: '晚间小结：今天报了 {reported_meals} 餐（{sum_min}~{sum_max} 大卡），明天继续。',
 });
 
 export class NudgeService {
-  constructor({ db, now = () => new Date() }) {
+  constructor({ db, config, now = () => new Date() }) {
     this.db = db;
+    this.config = config ?? null; // ConfigService：提示词覆盖（无则回退代码默认）
     this.now = now;
   }
 
@@ -82,11 +85,11 @@ export class NudgeService {
       if (!this._shouldNudge(u, meta)) continue;
       result.pushed.push(u.user_id);
 
-      const quota = dryRun ? this._quotaOf(u.user_id) : this._quotaOf(u.user_id);
+      const quota = this._quotaOf(u.user_id);
       if (quota <= 0) {
         result.skippedSansQuota.push(u.user_id);
         if (!dryRun) {
-          this._writeLog(u.user_id, meta.trigger, 'failed'); // 记录漏发（同日不重复）
+          this._writeLog(u.user_id, meta.trigger, 'failed'); // 无额度：记漏发日志
           result.logs += 1;
         }
         continue;
@@ -114,7 +117,22 @@ export class NudgeService {
 
   formatSlotTemplate(slot, userState = {}) {
     const meta = NUDGE_SLOTS.find((s) => s.slot === slot);
-    return TEMPLATES[meta?.trigger === 'morning_greeting' ? 'morning_greeting' : meta?.trigger === 'meal_reminder' ? 'meal_reminder' : 'evening_summary'](userState);
+    const key =
+      meta?.trigger === 'morning_greeting'
+        ? 'morning_greeting'
+        : meta?.trigger === 'meal_reminder'
+          ? 'meal_reminder'
+          : 'evening_summary';
+    const tpl = this.config?.getPrompt(`prompt.nudge.${key}`) ?? TEMPLATES[key];
+    const vars = {
+      budget: userState.__budget ?? '未知',
+      remaining: userState.__remaining ?? '未知',
+      meal_label: userState.__mealLabel ?? '未知',
+      reported_meals: userState.__reportedMeals ?? '未知',
+      sum_min: userState.__sumMin ?? '未知',
+      sum_max: userState.__sumMax ?? '未知',
+    };
+    return render(tpl, vars);
   }
 }
 

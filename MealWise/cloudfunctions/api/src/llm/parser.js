@@ -30,7 +30,7 @@ export function parseRaw(raw, { now = new Date() } = {}) {
     try {
       return validate(JSON.parse(text.slice(start, end + 1)), { raw: text, now });
     } catch {
-      /* fall through to degrade */
+      /* 解析失败 → 走底部降级 */
     }
   }
   return { degraded: true, reply_text: text, intent: 'other', extracted: {}, budget_remaining_kcal: null };

@@ -86,7 +86,7 @@ export class MemoryService {
     return out.join('\n\n');
   }
 
-  // 读取最近的体重记录用于动态
+  // 最近 days 天体重记录（按日期升序）
   latestWeightRecords(userId, days = 7) {
     const cutoff = new Date(Date.now() - days * 864e5).toISOString().slice(0, 10);
     return this.db.find('weight_records', (r) => r.user_id === userId && r.date >= cutoff).sort((a, b) => (a.date < b.date ? -1 : 1));

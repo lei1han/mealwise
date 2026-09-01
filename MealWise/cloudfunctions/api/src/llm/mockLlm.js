@@ -27,7 +27,7 @@ function composeDiet(turn, budgetKcal) {
 }
 
 export function mockComplete({ messages }) {
-  // last message = 用户消息
+  // 仅取最后一条用户消息（mock 不看完整历史）
   const last = messages[messages.length - 1]?.content ?? '';
   const turn = String(last);
 
@@ -74,7 +74,6 @@ export function mockComplete({ messages }) {
 
   const diet = composeDiet(turn, null);
 
-  // intent
   let intent = 'other';
   if (weight && !diet.diet) intent = 'weight_report';
   else if (diet.diet) intent = 'diet_report';

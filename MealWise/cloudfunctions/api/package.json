@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "三餐教练（MealWise）统一云函数入口",
   "main": "index.js",
+  "scripts": {
+    "test": "node --test"
+  },
   "dependencies": {
     "wx-server-sdk": "~2.4.0"
   }

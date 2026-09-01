@@ -27,7 +27,7 @@ export function search(keyword) {
   return RAW.filter((f) => f.name.includes(k) || f.category.includes(k) || f.id.includes(k));
 }
 
-// 供 setup-db 打印
+// 食物库概况（供外部脚本/调试打印）
 export function summary() {
   return { total: RAW.length, byCategory: RAW.reduce((m, f) => ((m[f.category] = (m[f.category] || 0) + 1), m), {}) };
 }
