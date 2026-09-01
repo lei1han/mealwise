@@ -19,3 +19,9 @@ project.private.config.json
 # 系统
 .DS_Store
 Thumbs.db
+
+# 工具自动生成物（不进入版本库）
+.agents/
+.claude/
+.trae/
+skills-lock.json
