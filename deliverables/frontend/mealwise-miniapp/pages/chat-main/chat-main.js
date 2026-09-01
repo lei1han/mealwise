@@ -5,6 +5,8 @@ Page({
   data: {
     messages: [],
     inputText: '',
+    /** 发送按钮是否可用（WXML 表达式不支持函数调用，trim 判断放 JS 里） */
+    canSend: false,
     /** 自定义导航栏尺寸（px） */
     statusBarHeight: 20,
     navBarHeight: 44,
@@ -17,7 +19,9 @@ Page({
     /** 聊天区底部 padding */
     inputBarHeight: 112,
     /** 是否显示催报卡片 */
-    showReminder: false
+    showReminder: false,
+    /** 教练头像（来源：云端 app_config 公开配置 coach_avatar_url；空则回退「教」字占位） */
+    coachAvatarUrl: ''
   },
 
   onLoad() {
@@ -36,12 +40,14 @@ Page({
   async _initChat() {
     wx.showLoading({ title: '加载中...' });
     try {
-      const [budget, history] = await Promise.all([
+      const [budget, history, appConfig] = await Promise.all([
         API.getTodayBudget(),
-        API.getHistory()
+        API.getHistory(),
+        API.getAppConfig().catch(() => ({ coach_avatar_url: '' }))
       ]);
       this.setData({
         budget,
+        coachAvatarUrl: (appConfig && appConfig.coach_avatar_url) || '',
         messages: history.messages.length > 0
           ? history.messages
           : this._getWelcomeMessages(budget)
@@ -65,7 +71,8 @@ Page({
       }
     ];
     if (budget) {
-      msgs[0].budget = budget;
+      const ratio = Number(budget.total) > 0 ? Number(budget.consumed) / Number(budget.total) * 100 : 0;
+      msgs[0].budget = { ...budget, ratioWidth: ratio + '%' };
     }
     msgs.push({
       role: 'user',
@@ -82,7 +89,8 @@ Page({
 
   /** 输入 */
   handleInput(e) {
-    this.setData({ inputText: e.detail.value });
+    const value = e.detail.value;
+    this.setData({ inputText: value, canSend: !!value.trim() });
   },
 
   /** 发送消息 */
@@ -91,17 +99,22 @@ Page({
     if (!text || this.data.coachTyping) return;
 
     const messages = [...this.data.messages, { role: 'user', text }];
-    this.setData({ messages, inputText: '', coachTyping: true });
+    this.setData({ messages, inputText: '', canSend: false, coachTyping: true });
     this._scrollToBottom();
 
     try {
       const reply = await API.sendMessage(text);
+      let msgBudget = null;
+      if (reply.budget_remaining_kcal) {
+        const total = Number(this.data.budget.total) || 0;
+        const consumed = total > 0 ? total - Number(reply.budget_remaining_kcal) : 0;
+        const ratio = total > 0 ? consumed / total * 100 : 0;
+        msgBudget = { ...this.data.budget, remaining: reply.budget_remaining_kcal, ratioWidth: ratio + '%' };
+      }
       messages.push({
         role: 'coach',
         text: reply.reply_text,
-        budget: reply.budget_remaining_kcal
-          ? { ...this.data.budget, remaining: reply.budget_remaining_kcal }
-          : null
+        budget: msgBudget
       });
       this.setData({ messages, coachTyping: false });
     } catch (e) {

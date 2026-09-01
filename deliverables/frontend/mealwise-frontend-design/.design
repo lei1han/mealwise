@@ -14,8 +14,8 @@
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-f96eadac",
-          "measuredAt": 1787931139914
+          "sourceHash": "fnv1a-6b29fb03",
+          "measuredAt": 1788187672880
         }
       },
       "devMetadata": {
@@ -42,8 +42,8 @@
           "version": 1,
           "contentHeight": 916,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-d3ff1002",
-          "measuredAt": 1787960863563
+          "sourceHash": "fnv1a-856a14e0",
+          "measuredAt": 1788187672880
         }
       },
       "devMetadata": {
@@ -65,8 +65,8 @@
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-200e99e5",
-          "measuredAt": 1787959947869
+          "sourceHash": "fnv1a-6849cf6a",
+          "measuredAt": 1788187672880
         }
       },
       "devMetadata": {
@@ -88,8 +88,8 @@
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-75f7aa23",
-          "measuredAt": 1787929681585
+          "sourceHash": "fnv1a-e391ba8a",
+          "measuredAt": 1788187672880
         }
       },
       "devMetadata": {
@@ -111,8 +111,8 @@
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-aaddda5e",
-          "measuredAt": 1787929681585
+          "sourceHash": "fnv1a-0356a8a1",
+          "measuredAt": 1788187672880
         }
       },
       "devMetadata": {
@@ -134,8 +134,8 @@
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-e68ea215",
-          "measuredAt": 1787931139914
+          "sourceHash": "fnv1a-25009d82",
+          "measuredAt": 1788187672880
         }
       },
       "devMetadata": {
@@ -157,20 +157,321 @@
           "version": 1,
           "contentHeight": 956,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-75620a15",
-          "measuredAt": 1787931139914
+          "sourceHash": "fnv1a-47060ce1",
+          "measuredAt": 1788187672880
         }
       },
       "devMetadata": {
         "htmlSrc": "pages/auth-login.html",
         "interactions": []
       }
+    },
+    {
+      "id": "page-chat-main-v2",
+      "title": "聊天页 v2 增强版",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1788270000000,
+      "canvasData": {
+        "x": 845,
+        "y": 372,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-963af5a6",
+          "measuredAt": 1788271442524
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/chat-main-v2.html",
+        "interactions": [
+          {
+            "domId": "nav-progress-to-stats",
+            "targetPageId": "page-stats-main"
+          },
+          {
+            "domId": "nav-tab-stats",
+            "targetPageId": "page-stats-main"
+          },
+          {
+            "domId": "nav-tab-profile",
+            "targetPageId": "page-profile-main"
+          },
+          {
+            "domId": "nav-diet-overview",
+            "targetPageId": "page-sheet-diet-detail"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-stats-main",
+      "title": "数据主页",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1788270000000,
+      "canvasData": {
+        "x": 408,
+        "y": 984,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-69dd5944",
+          "measuredAt": 1788271442524
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/stats-main.html",
+        "interactions": [
+          {
+            "domId": "nav-tab-chat",
+            "targetPageId": "page-chat-main-v2"
+          },
+          {
+            "domId": "nav-tab-profile",
+            "targetPageId": "page-profile-main"
+          },
+          {
+            "domId": "nav-weight-detail",
+            "targetPageId": "page-stats-weight-detail"
+          },
+          {
+            "domId": "nav-calorie-detail",
+            "targetPageId": "page-stats-calorie-detail"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-profile-main",
+      "title": "个人中心",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1788270000000,
+      "canvasData": {
+        "x": 577,
+        "y": 984,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-394dc6a1",
+          "measuredAt": 1788271442524
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/profile-main.html",
+        "interactions": [
+          {
+            "domId": "nav-tab-chat",
+            "targetPageId": "page-chat-main-v2"
+          },
+          {
+            "domId": "nav-tab-stats",
+            "targetPageId": "page-stats-main"
+          },
+          {
+            "domId": "nav-profile-edit",
+            "targetPageId": "page-profile-edit"
+          },
+          {
+            "domId": "nav-target-setting",
+            "targetPageId": "page-target-setting"
+          },
+          {
+            "domId": "nav-body-data",
+            "targetPageId": "page-body-data"
+          },
+          {
+            "domId": "nav-body-data-weight",
+            "targetPageId": "page-body-data"
+          },
+          {
+            "domId": "nav-body-data-gender",
+            "targetPageId": "page-body-data"
+          },
+          {
+            "domId": "nav-snark-sheet",
+            "targetPageId": "page-sheet-snark"
+          },
+          {
+            "domId": "nav-subscribe-sheet",
+            "targetPageId": "page-sheet-subscribe"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-stats-weight-detail",
+      "title": "体重趋势详情",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1788270000000,
+      "canvasData": {
+        "x": 746,
+        "y": 984,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1071,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-1f872adf",
+          "measuredAt": 1788271442524
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/stats-weight-detail.html",
+        "interactions": [
+          {
+            "domId": "nav-back-stats",
+            "targetPageId": "page-stats-main"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-stats-calorie-detail",
+      "title": "热量统计详情",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1788270000000,
+      "canvasData": {
+        "x": 915,
+        "y": 984,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1024,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-b7469779",
+          "measuredAt": 1788271442524
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/stats-calorie-detail.html",
+        "interactions": [
+          {
+            "domId": "nav-back-stats",
+            "targetPageId": "page-stats-main"
+          },
+          {
+            "domId": "nav-diet-detail-breakfast",
+            "targetPageId": "page-sheet-diet-detail"
+          },
+          {
+            "domId": "nav-diet-detail-lunch",
+            "targetPageId": "page-sheet-diet-detail"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-target-setting",
+      "title": "目标管理",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1788270000000,
+      "canvasData": {
+        "x": 1084,
+        "y": 984,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-5539ca8f",
+          "measuredAt": 1788271442524
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/target-setting.html",
+        "interactions": [
+          {
+            "domId": "nav-back-profile",
+            "targetPageId": "page-profile-main"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-body-data",
+      "title": "身体数据",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1788270000000,
+      "canvasData": {
+        "x": 1253,
+        "y": 984,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-3dfe54eb",
+          "measuredAt": 1788271442524
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/body-data.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-profile-edit",
+      "title": "编辑资料",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1788270000000,
+      "canvasData": {
+        "x": 1422,
+        "y": 984,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-b3addb8a",
+          "measuredAt": 1788271442524
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/profile-edit.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-sheet-diet-detail",
+      "title": "饮食详情 Sheet",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1788270000000,
+      "canvasData": {
+        "x": 1591,
+        "y": 984,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 375,
+          "sourceHash": "fnv1a-02f1113d",
+          "measuredAt": 1788271442524
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/sheet-diet-detail.html",
+        "interactions": []
+      }
     }
   ],
   "config": {
-    "autoLayout": true,
+    "autoLayout": false,
     "deviceType": "mobile",
-    "projectName": "X教练 前端设计稿",
+    "projectName": "三餐教练 前端设计稿 v2",
     "showEdge": true,
     "visualEditorEnabled": false
   }

@@ -6,6 +6,8 @@ Page({
   data: {
     messages: [],
     inputText: '',
+    /** 发送按钮是否可用（WXML 表达式不支持函数调用，trim 判断放 JS 里） */
+    canSend: false,
     /** 自定义导航栏尺寸（px） */
     statusBarHeight: 20,
     navBarHeight: 44,
@@ -56,7 +58,8 @@ Page({
 
   /** 输入框内容 */
   handleInput(e) {
-    this.setData({ inputText: e.detail.value });
+    const value = e.detail.value;
+    this.setData({ inputText: value, canSend: !!value.trim() });
   },
 
   /** 发送消息 */
@@ -66,7 +69,7 @@ Page({
 
     // 添加用户消息
     const messages = [...this.data.messages, { role: 'user', text }];
-    this.setData({ messages, inputText: '', coachTyping: true });
+    this.setData({ messages, inputText: '', canSend: false, coachTyping: true });
     this._scrollToBottom();
 
     // 模拟延迟显示教练回复

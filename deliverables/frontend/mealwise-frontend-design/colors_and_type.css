@@ -51,6 +51,47 @@
   --xc-popover-foreground: var(--xc-foreground);
   --xc-muted: var(--xc-surface-2);
   --xc-muted-foreground: var(--xc-muted-foreground);
+
+  /* ===== v2: Charts & Data Viz ===== */
+  --xc-chart-line: var(--xc-primary);
+  --xc-chart-line-secondary: var(--xc-state-accent);
+  --xc-chart-grid: var(--xc-border);
+  --xc-chart-tooltip-bg: var(--xc-foreground);
+  --xc-chart-tooltip-fg: var(--xc-surface);
+  --xc-chart-height-sm: 160px;
+  --xc-chart-height-md: 200px;
+  --xc-chart-height-lg: 240px;
+
+  /* ===== v2: Progress Bars & Rings ===== */
+  --xc-progress-track: var(--xc-surface-2);
+  --xc-progress-fill: var(--xc-primary);
+  --xc-progress-fill-warning: var(--xc-state-warning);
+  --xc-progress-fill-danger: var(--xc-state-error);
+  --xc-progress-bar-height: 4px;
+  --xc-progress-ring-width: 6px;
+
+  /* ===== v2: Tab Bar ===== */
+  --xc-tabbar-bg: var(--xc-surface);
+  --xc-tabbar-active: var(--xc-primary);
+  --xc-tabbar-inactive: var(--xc-muted-foreground);
+  --xc-tabbar-height: 56px;
+
+  /* ===== v2: List & Cell ===== */
+  --xc-list-header: var(--xc-muted-foreground);
+  --xc-list-icon-bg: var(--xc-primary-50);
+  --xc-list-item-height: 48px;
+  --xc-section-gap: 12px;
+  --xc-card-padding: 16px;
+
+  /* ===== v2: Data Typography ===== */
+  --xc-font-size-data-xl: 28px;
+  --xc-font-size-data-lg: 22px;
+  --xc-font-size-data-md: 18px;
+  --xc-font-size-data-sm: 12px;
+  --xc-line-height-tight: 1.2;
+
+  /* ===== v2: Streak / Accent ===== */
+  --xc-streak: #F59E0B;
 }
 
 /* Base typography */

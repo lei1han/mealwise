@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑资料</title>
+    <style id="theme-vars">
+:root {
+  /* ===== Brand Primary: Sage Green ===== */
+  --xc-primary: #4E7A5C;
+  --xc-primary-foreground: #FFFFFF;
+  --xc-primary-50: #EEF5F0;
+  --xc-primary-100: #D6E8DC;
+
+  /* ===== Surfaces ===== */
+  --xc-background: #F8FBF9;
+  --xc-surface: #FFFFFF;
+  --xc-surface-2: #F1F5F2;
+
+  /* ===== Text ===== */
+  --xc-foreground: #1A2620;
+  --xc-muted-foreground: #5C7064;
+  --xc-placeholder: #9AACA0;
+
+  /* ===== Lines & Borders ===== */
+  --xc-border: #DEE6E0;
+  --xc-input: #DEE6E0;
+  --xc-ring: #4E7A5C;
+  --xc-divider: rgba(26, 38, 32, 0.06);
+
+  /* ===== Status / Accent ===== */
+  --xc-state-accent: #C5733A;
+  --xc-state-accent-foreground: #FFFFFF;
+  --xc-state-success: #22C55E;
+  --xc-state-warning: #F59E0B;
+  --xc-state-error: #EF4444;
+
+  /* ===== Radius ===== */
+  --xc-radius-xs: 4px;
+  --xc-radius-sm: 8px;
+  --xc-radius-md: 12px;
+  --xc-radius-lg: 16px;
+  --xc-radius-pill: 999px;
+
+  /* ===== Shadows ===== */
+  --xc-shadow-1: 0 1px 2px rgba(26, 38, 32, 0.05), 0 1px 1px rgba(26, 38, 32, 0.03);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 38, 32, 0.05);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 38, 32, 0.05);
+
+  /* ===== Typography ===== */
+  --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --xc-font-mono: "SF Mono", "Menlo", monospace;
+
+  /* ===== Semantic Aliases ===== */
+  --xc-card: var(--xc-surface);
+  --xc-card-foreground: var(--xc-foreground);
+  --xc-popover: var(--xc-surface);
+  --xc-popover-foreground: var(--xc-foreground);
+  --xc-muted: var(--xc-surface-2);
+  --xc-muted-foreground: var(--xc-muted-foreground);
+}
+
+/* Base typography */
+body {
+  font-family: var(--xc-font-sans);
+  background-color: var(--xc-background);
+  color: var(--xc-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--xc-background);
+    --color-foreground: var(--xc-foreground);
+    --color-card: var(--xc-card);
+    --color-card-foreground: var(--xc-card-foreground);
+    --color-popover: var(--xc-popover);
+    --color-popover-foreground: var(--xc-popover-foreground);
+    --color-primary: var(--xc-primary);
+    --color-primary-foreground: var(--xc-primary-foreground);
+    --color-muted: var(--xc-muted);
+    --color-muted-foreground: var(--xc-muted-foreground);
+    --color-border: var(--xc-border);
+    --color-input: var(--xc-input);
+    --color-ring: var(--xc-ring);
+    --radius-sm: var(--xc-radius-sm);
+    --radius-md: var(--xc-radius-md);
+    --radius-lg: var(--xc-radius-lg);
+  }
+  @layer base {
+    body { background: var(--xc-background); color: var(--xc-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--xc-background); }
+      .text-background { color: var(--xc-background); }
+      .border-background { border-color: var(--xc-background); }
+      .ring-background { --tw-ring-color: var(--xc-background); }
+      .bg-foreground { background-color: var(--xc-foreground); }
+      .text-foreground { color: var(--xc-foreground); }
+      .border-foreground { border-color: var(--xc-foreground); }
+      .ring-foreground { --tw-ring-color: var(--xc-foreground); }
+      .bg-card { background-color: var(--xc-card); }
+      .text-card { color: var(--xc-card); }
+      .border-card { border-color: var(--xc-card); }
+      .ring-card { --tw-ring-color: var(--xc-card); }
+      .bg-card-foreground { background-color: var(--xc-card-foreground); }
+      .text-card-foreground { color: var(--xc-card-foreground); }
+      .border-card-foreground { border-color: var(--xc-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--xc-card-foreground); }
+      .bg-popover { background-color: var(--xc-popover); }
+      .text-popover { color: var(--xc-popover); }
+      .border-popover { border-color: var(--xc-popover); }
+      .ring-popover { --tw-ring-color: var(--xc-popover); }
+      .bg-popover-foreground { background-color: var(--xc-popover-foreground); }
+      .text-popover-foreground { color: var(--xc-popover-foreground); }
+      .border-popover-foreground { border-color: var(--xc-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--xc-popover-foreground); }
+      .bg-primary { background-color: var(--xc-primary); }
+      .text-primary { color: var(--xc-primary); }
+      .border-primary { border-color: var(--xc-primary); }
+      .ring-primary { --tw-ring-color: var(--xc-primary); }
+      .bg-primary-foreground { background-color: var(--xc-primary-foreground); }
+      .text-primary-foreground { color: var(--xc-primary-foreground); }
+      .border-primary-foreground { border-color: var(--xc-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--xc-primary-foreground); }
+      .bg-muted { background-color: var(--xc-muted); }
+      .text-muted { color: var(--xc-muted); }
+      .border-muted { border-color: var(--xc-muted); }
+      .ring-muted { --tw-ring-color: var(--xc-muted); }
+      .bg-muted-foreground { background-color: var(--xc-muted-foreground); }
+      .text-muted-foreground { color: var(--xc-muted-foreground); }
+      .border-muted-foreground { border-color: var(--xc-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--xc-muted-foreground); }
+      .bg-border { background-color: var(--xc-border); }
+      .text-border { color: var(--xc-border); }
+      .border-border { border-color: var(--xc-border); }
+      .ring-border { --tw-ring-color: var(--xc-border); }
+      .bg-input { background-color: var(--xc-input); }
+      .text-input { color: var(--xc-input); }
+      .border-input { border-color: var(--xc-input); }
+      .ring-input { --tw-ring-color: var(--xc-input); }
+      .bg-ring { background-color: var(--xc-ring); }
+      .text-ring { color: var(--xc-ring); }
+      .border-ring { border-color: var(--xc-ring); }
+      .ring-ring { --tw-ring-color: var(--xc-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen bg-background font-sans antialiased">
+  <!-- 自定义导航栏 -->
+  <header class="xc-nav-bar sticky top-0 z-50 bg-background">
+    <div class="xc-status-bar"></div>
+    <div class="xc-nav-content flex items-center justify-between px-4">
+      <button type="button" class="flex h-9 w-9 items-center justify-center rounded-full text-foreground" aria-label="返回" data-dom-id="nav-back-profile">
+        <i data-lucide="chevron-left" class="h-5 w-5"></i>
+      </button>
+      <h1 class="absolute left-1/2 -translate-x-1/2 text-[17px] font-semibold text-foreground">编辑资料</h1>
+      <button type="button" class="text-[15px] font-medium text-primary">保存</button>
+    </div>
+  </header>
+
+  <main class="pb-24">
+    <!-- 头像区域 -->
+    <section class="flex flex-col items-center mt-6 mb-6">
+      <div class="relative">
+        <div class="xc-avatar flex items-center justify-center">
+          <span class="text-[32px] font-semibold text-primary">小</span>
+        </div>
+        <button type="button" class="xc-avatar-camera absolute bottom-0 right-0 flex items-center justify-center" aria-label="更换头像">
+          <i data-lucide="camera" class="h-3.5 w-3.5 text-foreground"></i>
+        </button>
+      </div>
+      <p class="text-[13px] text-muted-foreground mt-2">点击更换头像</p>
+    </section>
+
+    <!-- 表单区域 -->
+    <section class="xc-form-card mx-4">
+      <!-- 昵称 -->
+      <div class="xc-form-item flex items-center justify-between px-4">
+        <span class="text-[14px] text-foreground">昵称</span>
+        <input type="text" value="小绿" class="xc-form-input text-[14px] font-medium text-foreground text-right" />
+      </div>
+      <!-- 性别 -->
+      <div class="xc-form-item xc-form-item-border flex items-center justify-between px-4">
+        <span class="text-[14px] text-foreground">性别</span>
+        <div class="flex items-center gap-1">
+          <span class="text-[14px] text-foreground">女</span>
+          <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground"></i>
+        </div>
+      </div>
+      <!-- 年龄段 -->
+      <div class="xc-form-item xc-form-item-border flex items-center justify-between px-4">
+        <span class="text-[14px] text-foreground">年龄段</span>
+        <div class="flex items-center gap-1">
+          <span class="text-[14px] text-foreground">25-34岁</span>
+          <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground"></i>
+        </div>
+      </div>
+      <!-- 身高 -->
+      <div class="xc-form-item xc-form-item-border flex items-center justify-between px-4">
+        <span class="text-[14px] text-foreground">身高</span>
+        <div class="flex items-center gap-1">
+          <span class="text-[14px] font-medium text-foreground">165</span>
+          <span class="text-[14px] text-foreground">cm</span>
+        </div>
+      </div>
+      <!-- 当前体重 -->
+      <div class="xc-form-item xc-form-item-border flex items-center justify-between px-4">
+        <span class="text-[14px] text-foreground">当前体重</span>
+        <div class="flex items-center gap-1">
+          <span class="text-[14px] font-medium text-primary">61.8</span>
+          <span class="text-[14px] text-foreground">kg</span>
+        </div>
+      </div>
+      <!-- 目标体重 -->
+      <div class="xc-form-item flex items-center justify-between px-4">
+        <span class="text-[14px] text-foreground">目标体重</span>
+        <div class="flex items-center gap-1">
+          <span class="text-[14px] font-medium text-foreground">55.0</span>
+          <span class="text-[14px] text-foreground">kg</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 提示文字 -->
+    <div class="flex items-start gap-1.5 mx-4 mt-3">
+      <i data-lucide="info" class="h-3 w-3 text-muted-foreground mt-0.5 shrink-0"></i>
+      <p class="text-[12px] text-muted-foreground leading-relaxed">身高、体重等身体数据会影响每日热量预算的计算，请确保准确。</p>
+    </div>
+  </main>
+
+  <style id="critical-layout">
+    .xc-nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background-color: var(--xc-background);
+    }
+    .xc-status-bar {
+      height: 44px;
+    }
+    .xc-nav-content {
+      height: 44px;
+    }
+    .xc-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--xc-radius-pill);
+      background-color: var(--xc-primary-50);
+    }
+    .xc-avatar-camera {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--xc-radius-pill);
+      background-color: var(--xc-surface);
+      border: 1px solid var(--xc-border);
+      box-shadow: var(--xc-shadow-1);
+    }
+    .xc-form-card {
+      background-color: var(--xc-surface);
+      border-radius: var(--xc-radius-lg);
+      box-shadow: var(--xc-shadow-1);
+      overflow: hidden;
+    }
+    .xc-form-item {
+      height: 56px;
+    }
+    .xc-form-item-border {
+      border-bottom: 1px solid var(--xc-border);
+    }
+    .xc-form-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      width: auto;
+      min-width: 100px;
+    }
+    .xc-form-input:focus {
+      outline: none;
+    }
+  </style>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

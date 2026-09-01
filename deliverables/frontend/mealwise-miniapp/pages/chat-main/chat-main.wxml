@@ -25,7 +25,8 @@
         <!-- 教练消息 -->
         <view wx:if="{{msg.role === 'coach'}}" class="msg-row msg-coach" id="msg-{{index}}">
           <view class="msg-avatar coach-avatar">
-            <text class="avatar-icon">教</text>
+            <image wx:if="{{coachAvatarUrl}}" class="avatar-img" src="{{coachAvatarUrl}}" mode="aspectFill"></image>
+            <text wx:else class="avatar-icon">教</text>
           </view>
           <view class="msg-bubble msg-bubble-coach">
             <text>{{msg.text}}</text>
@@ -51,7 +52,7 @@
               </view>
               <!-- 进度条 -->
               <view class="budget-progress">
-                <view class="budget-bar" style="width: {{msg.budget.consumed / msg.budget.total * 100}}%"></view>
+                <view class="budget-bar" style="width: {{msg.budget.ratioWidth}}"></view>
               </view>
             </view>
           </view>
@@ -67,18 +68,21 @@
 
       <!-- 催报卡片 -->
       <view wx:if="{{showReminder}}" class="reminder-card">
-        <view class="reminder-icon">⏰</view>
-        <view class="reminder-content">
-          <text class="reminder-title">还没报今天的体重哦</text>
-          <text class="reminder-desc">教练在等你，报完就能开始记录饮食了</text>
+        <view class="reminder-body">
+          <view class="reminder-icon">⏰</view>
+          <view class="reminder-main">
+            <text class="reminder-title">还没报今天的体重哦</text>
+            <text class="reminder-desc">教练在等你，报完就能开始记录饮食了</text>
+            <view class="reminder-btn" bindtap="handleOpenWeight">去报体重</view>
+          </view>
         </view>
-        <button class="reminder-btn" bindtap="handleOpenWeight">去报体重</button>
       </view>
 
       <!-- 教练正在输入 -->
       <view wx:if="{{coachTyping}}" class="msg-row msg-coach">
         <view class="msg-avatar coach-avatar">
-          <text class="avatar-icon">教</text>
+          <image wx:if="{{coachAvatarUrl}}" class="avatar-img" src="{{coachAvatarUrl}}" mode="aspectFill"></image>
+          <text wx:else class="avatar-icon">教</text>
         </view>
         <view class="typing-indicator">
           <view class="typing-dot"></view>
@@ -94,18 +98,22 @@
   <!-- 输入栏 -->
   <view class="input-bar" style="padding-bottom: {{keyboardHeight > 0 ? keyboardHeight + 'px' : 'env(safe-area-inset-bottom)'}}">
     <view class="input-inner">
-      <input
-        class="chat-input"
-        type="text"
-        placeholder="告诉教练你今天吃了什么..."
-        value="{{inputText}}"
-        bindinput="handleInput"
-        bindconfirm="handleSend"
-        confirm-type="send"
-        adjust-position="{{false}}"
-        cursor-spacing="20"
-      />
-      <button class="send-btn {{inputText.trim() ? 'send-btn-active' : ''}}" bindtap="handleSend" disabled="{{!inputText.trim()}}">
+      <!-- 原生 input 在 flex 布局下 flex:1 不生效，需用 view 包裹拉伸 -->
+      <view class="input-wrap">
+        <input
+          class="chat-input"
+          type="text"
+          placeholder="告诉教练你今天吃了什么..."
+          placeholder-class="chat-input-ph"
+          value="{{inputText}}"
+          bindinput="handleInput"
+          bindconfirm="handleSend"
+          confirm-type="send"
+          adjust-position="{{false}}"
+          cursor-spacing="20"
+        />
+      </view>
+      <button class="send-btn {{canSend ? 'send-btn-active' : ''}}" bindtap="handleSend" disabled="{{!canSend}}">
         发送
       </button>
     </view>

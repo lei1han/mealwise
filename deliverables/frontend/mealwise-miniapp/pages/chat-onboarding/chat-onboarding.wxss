@@ -165,45 +165,65 @@
 .input-bar {
   background-color: var(--xc-background);
   border-top: 1rpx solid var(--xc-border);
+  box-shadow: 0 -4rpx 16rpx rgba(26, 38, 32, 0.04);
   flex-shrink: 0;
 }
 
 .input-inner {
   display: flex;
   align-items: center;
-  gap: 16rpx;
-  padding: 16rpx 32rpx;
+  gap: 12rpx;
+  padding: 14rpx 28rpx;
+}
+
+/* 包裹层负责 flex 拉伸（原生 input 直接做 flex 子项不生效） */
+.input-wrap {
+  flex: 1;
+  min-width: 0;
 }
 
 .chat-input {
-  flex: 1;
-  height: 80rpx;
-  padding: 0 24rpx;
+  width: 100%;
+  height: 88rpx;
+  padding: 0 15rpx;
   background-color: var(--xc-surface);
   border: 1rpx solid var(--xc-input);
-  border-radius: var(--xc-radius-sm);
+  border-radius: var(--xc-radius-pill);
   font-size: 30rpx;
   color: var(--xc-foreground);
+  box-sizing: border-box;
+}
+
+.chat-input-ph {
+  color: var(--xc-placeholder);
 }
 
 .send-btn {
   flex-shrink: 0;
-  width: 120rpx;
-  height: 80rpx;
-  line-height: 80rpx;
+  height: 88rpx;
+  min-width: 68rpx;
+  margin: 0;
+  padding: 0 15rpx;
+  line-height: 88rpx;
   text-align: center;
-  background-color: var(--xc-surface-2);
-  color: var(--xc-muted-foreground);
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 600;
-  border-radius: var(--xc-radius-sm);
+  border-radius: var(--xc-radius-pill);
   border: none;
-  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 禁用态：特异性需高于微信内置 button[disabled]，否则会被默认浅灰样式覆盖 */
+.send-btn[disabled] {
+  background-color: var(--xc-primary-50);
+  color: rgba(78, 122, 92, 0.55);
+  opacity: 1;
 }
 
 .send-btn-active {
   background-color: var(--xc-primary);
   color: #FFFFFF;
+  box-shadow: 0 6rpx 16rpx rgba(78, 122, 92, 0.28);
 }
 
 .send-btn::after {

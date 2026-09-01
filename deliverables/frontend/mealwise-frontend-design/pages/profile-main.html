@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <style id="theme-vars">
+:root {
+  /* ===== Brand Primary: Sage Green ===== */
+  --xc-primary: #4E7A5C;
+  --xc-primary-foreground: #FFFFFF;
+  --xc-primary-50: #EEF5F0;
+  --xc-primary-100: #D6E8DC;
+
+  /* ===== Surfaces ===== */
+  --xc-background: #F8FBF9;
+  --xc-surface: #FFFFFF;
+  --xc-surface-2: #F1F5F2;
+
+  /* ===== Text ===== */
+  --xc-foreground: #1A2620;
+  --xc-muted-foreground: #5C7064;
+  --xc-placeholder: #9AACA0;
+
+  /* ===== Lines & Borders ===== */
+  --xc-border: #DEE6E0;
+  --xc-input: #DEE6E0;
+  --xc-ring: #4E7A5C;
+  --xc-divider: rgba(26, 38, 32, 0.06);
+
+  /* ===== Status / Accent ===== */
+  --xc-state-accent: #C5733A;
+  --xc-state-accent-foreground: #FFFFFF;
+  --xc-state-success: #22C55E;
+  --xc-state-warning: #F59E0B;
+  --xc-state-error: #EF4444;
+
+  /* ===== Radius ===== */
+  --xc-radius-xs: 4px;
+  --xc-radius-sm: 8px;
+  --xc-radius-md: 12px;
+  --xc-radius-lg: 16px;
+  --xc-radius-pill: 999px;
+
+  /* ===== Shadows ===== */
+  --xc-shadow-1: 0 1px 2px rgba(26, 38, 32, 0.05), 0 1px 1px rgba(26, 38, 32, 0.03);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 38, 32, 0.05);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 38, 32, 0.05);
+
+  /* ===== Typography ===== */
+  --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --xc-font-mono: "SF Mono", "Menlo", monospace;
+
+  /* ===== Semantic Aliases ===== */
+  --xc-card: var(--xc-surface);
+  --xc-card-foreground: var(--xc-foreground);
+  --xc-popover: var(--xc-surface);
+  --xc-popover-foreground: var(--xc-foreground);
+  --xc-muted: var(--xc-surface-2);
+  --xc-muted-foreground: var(--xc-muted-foreground);
+
+  /* ===== v2 新增 ===== */
+  --xc-streak: #F59E0B;
+  --xc-list-icon-bg: var(--xc-primary-50);
+  --xc-section-gap: 12px;
+  --xc-card-padding: 16px;
+  --xc-progress-track: var(--xc-surface-2);
+  --xc-progress-fill: var(--xc-primary);
+}
+
+/* Base typography */
+body {
+  font-family: var(--xc-font-sans);
+  background-color: var(--xc-background);
+  color: var(--xc-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--xc-background);
+    --color-foreground: var(--xc-foreground);
+    --color-card: var(--xc-card);
+    --color-card-foreground: var(--xc-card-foreground);
+    --color-popover: var(--xc-popover);
+    --color-popover-foreground: var(--xc-popover-foreground);
+    --color-primary: var(--xc-primary);
+    --color-primary-foreground: var(--xc-primary-foreground);
+    --color-muted: var(--xc-muted);
+    --color-muted-foreground: var(--xc-muted-foreground);
+    --color-border: var(--xc-border);
+    --color-input: var(--xc-input);
+    --color-ring: var(--xc-ring);
+    --radius-sm: var(--xc-radius-sm);
+    --radius-md: var(--xc-radius-md);
+    --radius-lg: var(--xc-radius-lg);
+  }
+  @layer base {
+    body { background: var(--xc-background); color: var(--xc-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--xc-background); }
+      .text-background { color: var(--xc-background); }
+      .border-background { border-color: var(--xc-background); }
+      .ring-background { --tw-ring-color: var(--xc-background); }
+      .bg-foreground { background-color: var(--xc-foreground); }
+      .text-foreground { color: var(--xc-foreground); }
+      .border-foreground { border-color: var(--xc-foreground); }
+      .ring-foreground { --tw-ring-color: var(--xc-foreground); }
+      .bg-card { background-color: var(--xc-card); }
+      .text-card { color: var(--xc-card); }
+      .border-card { border-color: var(--xc-card); }
+      .ring-card { --tw-ring-color: var(--xc-card); }
+      .bg-card-foreground { background-color: var(--xc-card-foreground); }
+      .text-card-foreground { color: var(--xc-card-foreground); }
+      .border-card-foreground { border-color: var(--xc-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--xc-card-foreground); }
+      .bg-popover { background-color: var(--xc-popover); }
+      .text-popover { color: var(--xc-popover); }
+      .border-popover { border-color: var(--xc-popover); }
+      .ring-popover { --tw-ring-color: var(--xc-popover); }
+      .bg-popover-foreground { background-color: var(--xc-popover-foreground); }
+      .text-popover-foreground { color: var(--xc-popover-foreground); }
+      .border-popover-foreground { border-color: var(--xc-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--xc-popover-foreground); }
+      .bg-primary { background-color: var(--xc-primary); }
+      .text-primary { color: var(--xc-primary); }
+      .border-primary { border-color: var(--xc-primary); }
+      .ring-primary { --tw-ring-color: var(--xc-primary); }
+      .bg-primary-foreground { background-color: var(--xc-primary-foreground); }
+      .text-primary-foreground { color: var(--xc-primary-foreground); }
+      .border-primary-foreground { border-color: var(--xc-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--xc-primary-foreground); }
+      .bg-muted { background-color: var(--xc-muted); }
+      .text-muted { color: var(--xc-muted); }
+      .border-muted { border-color: var(--xc-muted); }
+      .ring-muted { --tw-ring-color: var(--xc-muted); }
+      .bg-muted-foreground { background-color: var(--xc-muted-foreground); }
+      .text-muted-foreground { color: var(--xc-muted-foreground); }
+      .border-muted-foreground { border-color: var(--xc-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--xc-muted-foreground); }
+      .bg-border { background-color: var(--xc-border); }
+      .text-border { color: var(--xc-border); }
+      .border-border { border-color: var(--xc-border); }
+      .ring-border { --tw-ring-color: var(--xc-border); }
+      .bg-input { background-color: var(--xc-input); }
+      .text-input { color: var(--xc-input); }
+      .border-input { border-color: var(--xc-input); }
+      .ring-input { --tw-ring-color: var(--xc-input); }
+      .bg-ring { background-color: var(--xc-ring); }
+      .text-ring { color: var(--xc-ring); }
+      .border-ring { border-color: var(--xc-ring); }
+      .ring-ring { --tw-ring-color: var(--xc-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="pb-[calc(56px+env(safe-area-inset-bottom))]">
+      <!-- 自定义导航栏 -->
+      <header class="sticky top-0 z-50 border-b border-border bg-background">
+        <div class="pt-[env(safe-area-inset-top)]"></div>
+        <div class="xc-nav flex items-center justify-between px-3">
+          <!-- 左侧无返回按钮（Tab 首页） -->
+          <div class="w-9"></div>
+          <h1 class="text-[17px] font-semibold text-foreground">我的</h1>
+          <!-- 右侧微信胶囊按钮占位 -->
+          <div class="xc-capsule flex items-center rounded-full border border-border bg-card px-1">
+            <button type="button" class="flex h-7 w-7 items-center justify-center rounded-full text-foreground hover:bg-muted">
+              <i data-lucide="more-horizontal" class="h-4 w-4"></i>
+            </button>
+            <span class="h-4 w-px bg-border"></span>
+            <button type="button" class="flex h-7 w-7 items-center justify-center rounded-full text-foreground hover:bg-muted">
+              <i data-lucide="x" class="h-4 w-4"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- 用户信息卡 -->
+      <section class="xc-user-card mx-4 mt-4 p-4 cursor-pointer transition-all duration-200 hover:shadow-[0_8px_24px_-8px_rgba(26,38,32,0.08)] hover:-translate-y-0.5" data-dom-id="nav-profile-edit">
+        <div class="flex items-center gap-3">
+          <!-- 头像 -->
+          <div class="xc-avatar flex h-14 w-14 flex-none items-center justify-center rounded-full">
+            <span class="text-[20px] font-semibold">小</span>
+          </div>
+          <!-- 用户信息 -->
+          <div class="flex-1 min-w-0">
+            <p class="text-[17px] font-semibold text-foreground truncate">小绿</p>
+            <p class="mt-1 text-[13px] text-muted-foreground">目标 55kg · 已减 3.2kg</p>
+            <!-- 进度条 -->
+            <div class="mt-2 h-1 w-full rounded-full bg-muted">
+              <div class="h-full w-[58%] rounded-full xc-progress-fill"></div>
+            </div>
+          </div>
+          <!-- 箭头 -->
+          <i data-lucide="chevron-right" class="h-5 w-5 flex-none text-muted-foreground"></i>
+        </div>
+      </section>
+
+      <!-- 功能列表 -->
+      <div class="mt-4 space-y-3">
+        <!-- 第一组：目标管理 -->
+        <div>
+          <p class="xc-section-title ml-4 mb-2 text-[13px] text-muted-foreground">目标管理</p>
+          <div class="xc-list-card mx-4">
+            <div class="xc-list-item" data-dom-id="nav-target-setting">
+              <div class="xc-list-icon xc-list-icon-primary">
+                <i data-lucide="target" class="h-[18px] w-[18px]"></i>
+              </div>
+              <span class="flex-1 text-[15px] text-foreground">目标体重</span>
+              <span class="text-[15px] text-muted-foreground">55.0 kg</span>
+              <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground ml-1"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 第二组：身体数据 -->
+        <div>
+          <p class="xc-section-title ml-4 mb-2 text-[13px] text-muted-foreground">身体数据</p>
+          <div class="xc-list-card mx-4">
+            <div class="xc-list-item xc-list-item-border" data-dom-id="nav-body-data">
+              <div class="xc-list-icon xc-list-icon-primary">
+                <i data-lucide="ruler" class="h-[18px] w-[18px]"></i>
+              </div>
+              <span class="flex-1 text-[15px] text-foreground">身高</span>
+              <span class="text-[15px] text-muted-foreground">165 cm</span>
+              <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground ml-1"></i>
+            </div>
+            <div class="xc-list-item xc-list-item-border" data-dom-id="nav-body-data-weight">
+              <div class="xc-list-icon xc-list-icon-primary">
+                <i data-lucide="scale" class="h-[18px] w-[18px]"></i>
+              </div>
+              <span class="flex-1 text-[15px] text-foreground">当前体重</span>
+              <span class="text-[15px] text-muted-foreground">61.8 kg</span>
+              <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground ml-1"></i>
+            </div>
+            <div class="xc-list-item" data-dom-id="nav-body-data-gender">
+              <div class="xc-list-icon xc-list-icon-primary">
+                <i data-lucide="user" class="h-[18px] w-[18px]"></i>
+              </div>
+              <span class="flex-1 text-[15px] text-foreground">性别 / 年龄段</span>
+              <span class="text-[15px] text-muted-foreground">女 / 25-34</span>
+              <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground ml-1"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 第三组：偏好设置 -->
+        <div>
+          <p class="xc-section-title ml-4 mb-2 text-[13px] text-muted-foreground">偏好设置</p>
+          <div class="xc-list-card mx-4">
+            <div class="xc-list-item xc-list-item-border" data-dom-id="nav-snark-sheet">
+              <div class="xc-list-icon xc-list-icon-warning">
+                <i data-lucide="flame" class="h-[18px] w-[18px]"></i>
+              </div>
+              <span class="flex-1 text-[15px] text-foreground">毒舌档位</span>
+              <span class="text-[15px] text-muted-foreground">轻损</span>
+              <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground ml-1"></i>
+            </div>
+            <div class="xc-list-item" data-dom-id="nav-subscribe-sheet">
+              <div class="xc-list-icon xc-list-icon-primary">
+                <i data-lucide="bell" class="h-[18px] w-[18px]"></i>
+              </div>
+              <span class="flex-1 text-[15px] text-foreground">通知设置</span>
+              <span class="text-[15px] text-muted-foreground">已开启</span>
+              <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground ml-1"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 第四组：其他 -->
+        <div>
+          <p class="xc-section-title ml-4 mb-2 text-[13px] text-muted-foreground">其他</p>
+          <div class="xc-list-card mx-4">
+            <div class="xc-list-item xc-list-item-border">
+              <div class="xc-list-icon xc-list-icon-primary">
+                <i data-lucide="message-square" class="h-[18px] w-[18px]"></i>
+              </div>
+              <span class="flex-1 text-[15px] text-foreground">给教练反馈</span>
+              <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground ml-1"></i>
+            </div>
+            <div class="xc-list-item">
+              <div class="xc-list-icon xc-list-icon-primary">
+                <i data-lucide="info" class="h-[18px] w-[18px]"></i>
+              </div>
+              <span class="flex-1 text-[15px] text-foreground">关于三餐教练</span>
+              <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground ml-1"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 底部 Tab 栏 -->
+    <footer class="xc-tabbar fixed bottom-0 left-0 right-0 z-40">
+      <div class="xc-tabbar-safe">
+        <div class="xc-tabbar-height flex items-center justify-around">
+          <!-- 聊天 Tab -->
+          <div class="xc-tab-item flex flex-col items-center justify-center gap-0.5" data-dom-id="nav-tab-chat">
+            <i data-lucide="message-circle" class="h-[22px] w-[22px] text-muted-foreground"></i>
+            <span class="text-[10px] text-muted-foreground">聊天</span>
+          </div>
+          <!-- 数据 Tab -->
+          <div class="xc-tab-item flex flex-col items-center justify-center gap-0.5" data-dom-id="nav-tab-stats">
+            <i data-lucide="bar-chart-2" class="h-[22px] w-[22px] text-muted-foreground"></i>
+            <span class="text-[10px] text-muted-foreground">数据</span>
+          </div>
+          <!-- 我的 Tab（选中） -->
+          <div class="xc-tab-item flex flex-col items-center justify-center gap-0.5">
+            <i data-lucide="user" class="h-[22px] w-[22px] text-primary"></i>
+            <span class="text-[10px] text-primary font-medium">我的</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <style id="critical-layout">
+      .xc-nav { height: 44px; }
+      .xc-capsule { height: 32px; }
+      .xc-avatar { background-color: var(--xc-primary-50); color: var(--xc-primary); }
+      .xc-user-card {
+        background-color: var(--xc-surface);
+        border-radius: var(--xc-radius-lg);
+        box-shadow: var(--xc-shadow-1);
+      }
+      .xc-progress-fill {
+        background-color: var(--xc-progress-fill);
+      }
+      .xc-list-card {
+        background-color: var(--xc-surface);
+        border-radius: var(--xc-radius-md);
+        overflow: hidden;
+      }
+      .xc-list-item {
+        display: flex;
+        align-items: center;
+        height: 48px;
+        padding-left: 16px;
+        padding-right: 16px;
+        gap: 12px;
+      }
+      .xc-list-item-border {
+        border-bottom: 1px solid var(--xc-border);
+      }
+      .xc-list-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: var(--xc-radius-md);
+        flex: none;
+      }
+      .xc-list-icon-primary {
+        background-color: var(--xc-list-icon-bg);
+        color: var(--xc-primary);
+      }
+      .xc-list-icon-warning {
+        background-color: var(--xc-primary-50);
+        color: var(--xc-state-warning);
+      }
+      .xc-section-title {
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+      .xc-tabbar {
+        background-color: var(--xc-surface);
+        border-top: 1px solid var(--xc-border);
+      }
+      .xc-tabbar-height {
+        height: 56px;
+      }
+      .xc-tabbar-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      .xc-tab-item {
+        flex: 1;
+        height: 100%;
+      }
+    </style>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

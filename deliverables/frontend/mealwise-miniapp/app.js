@@ -15,12 +15,10 @@ App({
   },
 
   onLaunch() {
-    // 获取系统信息
-    wx.getSystemInfo({
-      success: (res) => {
-        this.globalData.systemInfo = res;
-      }
-    });
+    // 获取系统信息（wx.getSystemInfo 已废弃，改用 wx.getWindowInfo）
+    this.globalData.systemInfo = wx.getWindowInfo
+      ? wx.getWindowInfo()
+      : wx.getSystemInfoSync();
 
     // 检查登录状态
     const token = wx.getStorageSync('token');

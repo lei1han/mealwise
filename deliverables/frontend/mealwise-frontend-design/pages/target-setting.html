@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>目标管理</title>
+    <style id="theme-vars">
+:root {
+  /* ===== Brand Primary: Sage Green ===== */
+  --xc-primary: #4E7A5C;
+  --xc-primary-foreground: #FFFFFF;
+  --xc-primary-50: #EEF5F0;
+  --xc-primary-100: #D6E8DC;
+
+  /* ===== Surfaces ===== */
+  --xc-background: #F8FBF9;
+  --xc-surface: #FFFFFF;
+  --xc-surface-2: #F1F5F2;
+
+  /* ===== Text ===== */
+  --xc-foreground: #1A2620;
+  --xc-muted-foreground: #5C7064;
+  --xc-placeholder: #9AACA0;
+
+  /* ===== Lines & Borders ===== */
+  --xc-border: #DEE6E0;
+  --xc-input: #DEE6E0;
+  --xc-ring: #4E7A5C;
+  --xc-divider: rgba(26, 38, 32, 0.06);
+
+  /* ===== Status / Accent ===== */
+  --xc-state-accent: #C5733A;
+  --xc-state-accent-foreground: #FFFFFF;
+  --xc-state-success: #22C55E;
+  --xc-state-warning: #F59E0B;
+  --xc-state-error: #EF4444;
+
+  /* ===== Radius ===== */
+  --xc-radius-xs: 4px;
+  --xc-radius-sm: 8px;
+  --xc-radius-md: 12px;
+  --xc-radius-lg: 16px;
+  --xc-radius-pill: 999px;
+
+  /* ===== Shadows ===== */
+  --xc-shadow-1: 0 1px 2px rgba(26, 38, 32, 0.05), 0 1px 1px rgba(26, 38, 32, 0.03);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 38, 32, 0.05);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 38, 32, 0.05);
+
+  /* ===== Typography ===== */
+  --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --xc-font-mono: "SF Mono", "Menlo", monospace;
+
+  /* ===== Semantic Aliases ===== */
+  --xc-card: var(--xc-surface);
+  --xc-card-foreground: var(--xc-foreground);
+  --xc-popover: var(--xc-surface);
+  --xc-popover-foreground: var(--xc-foreground);
+  --xc-muted: var(--xc-surface-2);
+  --xc-muted-foreground: var(--xc-muted-foreground);
+
+  /* ===== Progress ===== */
+  --xc-progress-track: var(--xc-surface-2);
+  --xc-progress-fill: var(--xc-primary);
+}
+
+/* Base typography */
+body {
+  font-family: var(--xc-font-sans);
+  background-color: var(--xc-background);
+  color: var(--xc-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--xc-background);
+    --color-foreground: var(--xc-foreground);
+    --color-card: var(--xc-card);
+    --color-card-foreground: var(--xc-card-foreground);
+    --color-popover: var(--xc-popover);
+    --color-popover-foreground: var(--xc-popover-foreground);
+    --color-primary: var(--xc-primary);
+    --color-primary-foreground: var(--xc-primary-foreground);
+    --color-muted: var(--xc-muted);
+    --color-muted-foreground: var(--xc-muted-foreground);
+    --color-border: var(--xc-border);
+    --color-input: var(--xc-input);
+    --color-ring: var(--xc-ring);
+    --radius-sm: var(--xc-radius-sm);
+    --radius-md: var(--xc-radius-md);
+    --radius-lg: var(--xc-radius-lg);
+  }
+  @layer base {
+    body { background: var(--xc-background); color: var(--xc-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--xc-background); }
+      .text-background { color: var(--xc-background); }
+      .border-background { border-color: var(--xc-background); }
+      .ring-background { --tw-ring-color: var(--xc-background); }
+      .bg-foreground { background-color: var(--xc-foreground); }
+      .text-foreground { color: var(--xc-foreground); }
+      .border-foreground { border-color: var(--xc-foreground); }
+      .ring-foreground { --tw-ring-color: var(--xc-foreground); }
+      .bg-card { background-color: var(--xc-card); }
+      .text-card { color: var(--xc-card); }
+      .border-card { border-color: var(--xc-card); }
+      .ring-card { --tw-ring-color: var(--xc-card); }
+      .bg-card-foreground { background-color: var(--xc-card-foreground); }
+      .text-card-foreground { color: var(--xc-card-foreground); }
+      .border-card-foreground { border-color: var(--xc-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--xc-card-foreground); }
+      .bg-popover { background-color: var(--xc-popover); }
+      .text-popover { color: var(--xc-popover); }
+      .border-popover { border-color: var(--xc-popover); }
+      .ring-popover { --tw-ring-color: var(--xc-popover); }
+      .bg-popover-foreground { background-color: var(--xc-popover-foreground); }
+      .text-popover-foreground { color: var(--xc-popover-foreground); }
+      .border-popover-foreground { border-color: var(--xc-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--xc-popover-foreground); }
+      .bg-primary { background-color: var(--xc-primary); }
+      .text-primary { color: var(--xc-primary); }
+      .border-primary { border-color: var(--xc-primary); }
+      .ring-primary { --tw-ring-color: var(--xc-primary); }
+      .bg-primary-foreground { background-color: var(--xc-primary-foreground); }
+      .text-primary-foreground { color: var(--xc-primary-foreground); }
+      .border-primary-foreground { border-color: var(--xc-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--xc-primary-foreground); }
+      .bg-muted { background-color: var(--xc-muted); }
+      .text-muted { color: var(--xc-muted); }
+      .border-muted { border-color: var(--xc-muted); }
+      .ring-muted { --tw-ring-color: var(--xc-muted); }
+      .bg-muted-foreground { background-color: var(--xc-muted-foreground); }
+      .text-muted-foreground { color: var(--xc-muted-foreground); }
+      .border-muted-foreground { border-color: var(--xc-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--xc-muted-foreground); }
+      .bg-border { background-color: var(--xc-border); }
+      .text-border { color: var(--xc-border); }
+      .border-border { border-color: var(--xc-border); }
+      .ring-border { --tw-ring-color: var(--xc-border); }
+      .bg-input { background-color: var(--xc-input); }
+      .text-input { color: var(--xc-input); }
+      .border-input { border-color: var(--xc-input); }
+      .ring-input { --tw-ring-color: var(--xc-input); }
+      .bg-ring { background-color: var(--xc-ring); }
+      .text-ring { color: var(--xc-ring); }
+      .border-ring { border-color: var(--xc-ring); }
+      .ring-ring { --tw-ring-color: var(--xc-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="pb-[calc(80px+env(safe-area-inset-bottom))]">
+      <!-- 自定义导航栏 -->
+      <header class="sticky top-0 z-50 border-b border-border bg-background">
+        <div class="pt-[env(safe-area-inset-top)]"></div>
+        <div class="xc-nav flex items-center justify-between px-3">
+          <!-- 左侧返回按钮 -->
+          <button type="button" class="flex h-9 w-9 items-center justify-center rounded-full text-foreground hover:bg-muted" data-dom-id="nav-back-profile">
+            <i data-lucide="chevron-left" class="h-5 w-5"></i>
+          </button>
+          <h1 class="text-[17px] font-semibold text-foreground">目标管理</h1>
+          <!-- 右侧微信胶囊按钮占位 -->
+          <div class="xc-capsule flex items-center rounded-full border border-border bg-card px-1">
+            <button type="button" class="flex h-7 w-7 items-center justify-center rounded-full text-foreground hover:bg-muted">
+              <i data-lucide="more-horizontal" class="h-4 w-4"></i>
+            </button>
+            <span class="h-4 w-px bg-border"></span>
+            <button type="button" class="flex h-7 w-7 items-center justify-center rounded-full text-foreground hover:bg-muted">
+              <i data-lucide="x" class="h-4 w-4"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- 当前目标卡 -->
+      <section class="xc-target-card mx-4 mt-4 p-4">
+        <p class="text-[13px] text-muted-foreground mb-2">当前目标</p>
+        <p class="text-[24px] font-bold text-primary">55.0 kg</p>
+        <p class="mt-1 text-[14px] text-muted-foreground">当前 61.8 kg</p>
+        <p class="mt-2 text-[14px] text-foreground">还需减重 6.8 kg</p>
+        <p class="mt-1 text-[14px] font-medium" style="color: var(--xc-state-accent);">预估周期约 10 周</p>
+        <!-- 进度条 -->
+        <div class="mt-3 h-[6px] w-full rounded-full xc-progress-track">
+          <div class="h-full rounded-full xc-progress-fill" style="width: 42%;"></div>
+        </div>
+      </section>
+
+      <!-- 修改目标区域 -->
+      <section class="mx-4 mt-4">
+        <h2 class="text-[15px] font-semibold text-foreground mb-3">修改目标</h2>
+        <div>
+          <label class="block text-[14px] text-foreground mb-2">目标体重</label>
+          <div class="xc-input-wrap flex items-center justify-between h-12 px-4 rounded-lg border bg-card">
+            <span class="text-[16px] font-medium text-foreground">55.0</span>
+            <span class="text-[14px] text-muted-foreground">kg</span>
+          </div>
+        </div>
+        <p class="mt-2 text-[12px] text-muted-foreground">健康范围：52.3 ~ 60.5 kg（BMI 18.5~23.9）</p>
+        <!-- 警告提示 -->
+        <div class="xc-warning-tip mt-2 flex items-start gap-2 p-3 rounded-lg">
+          <i data-lucide="info" class="h-4 w-4 flex-none mt-0.5" style="color: var(--xc-state-warning);"></i>
+          <p class="text-[12px]" style="color: var(--xc-state-warning);">目标过低可能影响健康，建议不低于 52.3 kg</p>
+        </div>
+      </section>
+
+      <!-- 教练提示气泡 -->
+      <section class="mx-4 mt-4 mb-24">
+        <div class="flex items-end gap-2.5">
+          <div class="xc-avatar flex h-9 w-9 flex-none items-center justify-center rounded-full">
+            <i data-lucide="user" class="h-5 w-5"></i>
+          </div>
+          <div class="xc-bubble-coach max-w-[80%] px-4 py-3">
+            <p class="text-[14px] leading-relaxed text-foreground">目标可以调，但建议别太激进。每周减 0.3~0.75kg 是可持续的速度，太快容易反弹哦。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 底部固定按钮 -->
+    <footer class="xc-bottom-bar fixed bottom-0 left-0 right-0 z-40">
+      <div class="xc-safe-bottom">
+        <div class="px-4 py-3">
+          <button type="button" class="xc-btn-primary w-full h-12 rounded-lg text-[16px] font-medium text-primary-foreground">
+            保存修改
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <style id="critical-layout">
+      .xc-nav { height: 44px; }
+      .xc-capsule { height: 32px; }
+      .xc-target-card {
+        background-color: var(--xc-surface);
+        border-radius: var(--xc-radius-lg);
+        box-shadow: var(--xc-shadow-1);
+      }
+      .xc-progress-track {
+        background-color: var(--xc-progress-track);
+      }
+      .xc-progress-fill {
+        background-color: var(--xc-progress-fill);
+      }
+      .xc-input-wrap {
+        border-color: var(--xc-border);
+      }
+      .xc-warning-tip {
+        background-color: rgba(245, 158, 11, 0.1);
+      }
+      .xc-avatar {
+        background-color: var(--xc-primary-50);
+        color: var(--xc-primary);
+      }
+      .xc-bubble-coach {
+        background-color: var(--xc-surface);
+        border: 1px solid var(--xc-border);
+        border-radius: var(--xc-radius-lg);
+        border-bottom-left-radius: var(--xc-radius-md);
+      }
+      .xc-bottom-bar {
+        background-color: var(--xc-surface);
+        border-top: 1px solid var(--xc-border);
+      }
+      .xc-safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      .xc-btn-primary {
+        background-color: var(--xc-primary);
+      }
+    </style>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

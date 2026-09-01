@@ -17,7 +17,7 @@
   },
   "operatingMode": "free-explore",
   "renderBlockingErrorCount": 0,
-  "softWarningCount": 5,
+  "softWarningCount": 12,
   "renderBlockingErrors": [],
   "errorSignatures": [],
   "softWarnings": [
@@ -25,19 +25,33 @@
     "[html-head-style] splash.html: found 1 custom <style> block(s) in <head>. The <head> is owned by apply-html-head-contract.mjs; move custom styles before </body> or re-run apply-html-head-contract.mjs <css-path> <html-file> --replace-head to relocate them.",
     "[orchestration-summary] runtime-orchestration-summary.json is missing skillProvenance.name/version/version_source. Version provenance will be reported as observed_unknown by external evaluators.",
     "[mobile-bottom-overlay] pages/chat-main.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-input fixed bottom-0 left-0 right-0 z-40\"",
-    "[mobile-bottom-overlay] pages/splash.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"absolute bottom-10 flex flex-col items-center\""
+    "[mobile-bottom-overlay] pages/splash.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"absolute bottom-10 flex flex-col items-center\"",
+    "[mobile-bottom-overlay] pages/chat-main-v2.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-tabbar fixed bottom-0 left-0 right-0 z-30\"",
+    "[mobile-bottom-overlay] pages/stats-main.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"absolute right-4 bottom-4\"",
+    "[mobile-bottom-overlay] pages/profile-main.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-tabbar fixed bottom-0 left-0 right-0 z-40\"",
+    "[mobile-bottom-overlay] pages/target-setting.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-bottom-bar fixed bottom-0 left-0 right-0 z-40\"",
+    "[mobile-bottom-overlay] pages/body-data.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-bottom-bar fixed bottom-0 left-0 right-0 z-40\"",
+    "[mobile-bottom-overlay] pages/profile-edit.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-avatar-camera absolute bottom-0 right-0 flex items-center justify-center\"",
+    "[mobile-bottom-overlay] pages/sheet-diet-detail.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-sheet fixed bottom-0 left-0 right-0 z-50 flex flex-col\""
   ],
   "repairPlanHints": [],
   "repairActionTable": [],
   "errorCount": 0,
-  "warningCount": 5,
+  "warningCount": 12,
   "errors": [],
   "warnings": [
     "[html-head-style] sheet-weight.html: found 1 custom <style> block(s) in <head>. The <head> is owned by apply-html-head-contract.mjs; move custom styles before </body> or re-run apply-html-head-contract.mjs <css-path> <html-file> --replace-head to relocate them.",
     "[html-head-style] splash.html: found 1 custom <style> block(s) in <head>. The <head> is owned by apply-html-head-contract.mjs; move custom styles before </body> or re-run apply-html-head-contract.mjs <css-path> <html-file> --replace-head to relocate them.",
     "[orchestration-summary] runtime-orchestration-summary.json is missing skillProvenance.name/version/version_source. Version provenance will be reported as observed_unknown by external evaluators.",
     "[mobile-bottom-overlay] pages/chat-main.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-input fixed bottom-0 left-0 right-0 z-40\"",
-    "[mobile-bottom-overlay] pages/splash.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"absolute bottom-10 flex flex-col items-center\""
+    "[mobile-bottom-overlay] pages/splash.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"absolute bottom-10 flex flex-col items-center\"",
+    "[mobile-bottom-overlay] pages/chat-main-v2.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-tabbar fixed bottom-0 left-0 right-0 z-30\"",
+    "[mobile-bottom-overlay] pages/stats-main.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"absolute right-4 bottom-4\"",
+    "[mobile-bottom-overlay] pages/profile-main.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-tabbar fixed bottom-0 left-0 right-0 z-40\"",
+    "[mobile-bottom-overlay] pages/target-setting.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-bottom-bar fixed bottom-0 left-0 right-0 z-40\"",
+    "[mobile-bottom-overlay] pages/body-data.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-bottom-bar fixed bottom-0 left-0 right-0 z-40\"",
+    "[mobile-bottom-overlay] pages/profile-edit.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-avatar-camera absolute bottom-0 right-0 flex items-center justify-center\"",
+    "[mobile-bottom-overlay] pages/sheet-diet-detail.html: bottom fixed/absolute CTA or navigation found. Ensure it has safe-area spacing and does not cover content. Evidence: class=\"xc-sheet fixed bottom-0 left-0 right-0 z-50 flex flex-col\""
   ],
   "validationRunDisciplineStatus": {
     "declared": true,
@@ -54,7 +68,7 @@
   "terminalState": null,
   "nextCheck": {
     "type": "finish-readiness",
-    "command": "node \"c:\\Users\\sclei\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-finish-readiness.mjs\" \"c:\\Code\\weight_loss_coach\\xcoach-frontend-design\" --check=all",
+    "command": "node \"c:\\Users\\sclei\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-finish-readiness.mjs\" \"c:\\Code\\weight_loss_coach\\deliverables\\frontend\\mealwise-frontend-design\" --check=all",
     "fullValidationAllowed": false,
     "reason": "workspace validation passed; run complete finish readiness before final delivery"
   },
@@ -76,12 +90,12 @@
       "reason": "runtime-orchestration-summary.json missing skillProvenance; used skill-release-manifest.json"
     },
     "renderBlockingErrorCount": 0,
-    "softWarningCount": 5,
+    "softWarningCount": 12,
     "renderBlockingErrors": [],
     "repairActionTable": [],
     "nextCheck": {
       "type": "finish-readiness",
-      "command": "node \"c:\\Users\\sclei\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-finish-readiness.mjs\" \"c:\\Code\\weight_loss_coach\\xcoach-frontend-design\" --check=all",
+      "command": "node \"c:\\Users\\sclei\\.trae-cn\\builtin\\design\\default\\skills\\solo-design\\shared-runtime\\deterministic-tooling\\validate-finish-readiness.mjs\" \"c:\\Code\\weight_loss_coach\\deliverables\\frontend\\mealwise-frontend-design\" --check=all",
       "fullValidationAllowed": false,
       "reason": "workspace validation passed; run complete finish readiness before final delivery"
     },
@@ -93,19 +107,28 @@
     ]
   },
   "projectFileHashes": {
-    ".design": "87ac29af6f5914dd18df8cc2b2a495a059729c3efd0522887785eced3aa0ebac",
-    "colors_and_type.css": "2b66fea0c5557273bcdd4f6eda74c9575acedb0d671364caff0de59b098d7002",
+    ".design": "5f1df46f6bf51a5288da48900ad189c2f0775abb17539019c607d07495f4b4df",
+    "colors_and_type.css": "5dd58f12dd2ee2afd5a14c28b8acbd2a4becf454ffb3b9d8282c124d7bf6d327",
     "runtime-orchestration-summary.json": "fe69c9bf9f04bb85f674f808ecbad9d95a698e29921ca7774114eab5851b2abb",
-    "pages/auth-login.html": "67f00d4cf3cb564ae1d349856e691630c11887db4a91f2895ddca11db2899d06",
-    "pages/chat-main.html": "cb30802bd152de40a200d637383f9076825b074594e936ff2e40814b7015561c",
-    "pages/chat-onboarding.html": "8e0bb5307698d05e8d6f374308a044ed1c0fe17f06c7e79fb3148da006cc0c90",
-    "pages/sheet-snark.html": "4cfc87d97662364663909ffeacc64f9ce4601ae5b19efafebd7458c8a125f3ce",
-    "pages/sheet-subscribe.html": "a73bf8bdb80473a23d00abac2e927076c0e921b94f4cb81b14696f2d092fc5c4",
-    "pages/sheet-weight.html": "cacb1946cdc84e7903bde04efa0f525ddaa7a22e87d354ca2b7ce3e4236b0b74",
-    "pages/splash.html": "0205a096582b2bb2b02e52bec85d5f11326cb477d8fc0cc0c65fd7a06b7be5c5"
+    "pages/auth-login.html": "629dabdb22d4dd577a81bec92a11e45df6daf8d8729a6e9364ad4e2ec723fc13",
+    "pages/body-data.html": "1002bfafe37c60d4ed43b631728ca54f3294ba3681e08f515ad1c2b63cedcb94",
+    "pages/chat-main-v2.html": "da9e0e479a533cfd6fc6b1b0ff9b074ae89f7c962ec6446ff5fe5c587d256ff4",
+    "pages/chat-main.html": "d65cbb631f11bf5ff84ab19205c376603fea5f76dcb4aae1878263ac36879228",
+    "pages/chat-onboarding.html": "3b1efa4fefa565538e77a294999e4b3e8fef3c1e3bf9c3d2bc7ecf0d59031d71",
+    "pages/profile-edit.html": "c28918c597fccb2f2435945807b7edfd5329ffd94d51eba0e7c3a2c0a9b66c43",
+    "pages/profile-main.html": "19c09a49de0be61b7c58752c534125e70c270efe46dce0456aa275798f225d50",
+    "pages/sheet-diet-detail.html": "188893cb07bfd59e8aeaf8a6ec17ed1f7306844d5f715a18f5e36ec95e55aa80",
+    "pages/sheet-snark.html": "22d78d6fe00a84f7e507b8c6cadda805430154a718470779bca68061f2f84de6",
+    "pages/sheet-subscribe.html": "caf54ff548f9811af104b45cc620d472e66e5b3480e38d4a8784ba118a37f0ba",
+    "pages/sheet-weight.html": "6c45457cd6e681b9ec9b5f6ecc2efb440dce52817cda9e4681247326c3e90a3f",
+    "pages/splash.html": "b630e6b06a89d9a58e15e174e14d953ad399fea0cb68f62c22c88b7954373481",
+    "pages/stats-calorie-detail.html": "48a81988ac8115bf450785ba36d3afa43e773460e70fa3a9af3d784584598907",
+    "pages/stats-main.html": "bcdf784dbb71e9494e379fee07db630964850134986337b628e0550dcceb5094",
+    "pages/stats-weight-detail.html": "a1ceb20d00ef27d50800e9c1ecb97e7e9e47b8da407543fda5b66504ce92f5ac",
+    "pages/target-setting.html": "456c85eeceac0d067a36050166dff71d06e4fcbc41aba473819034bf49ffc0ca"
   },
-  "designDir": "c:\\Code\\weight_loss_coach\\xcoach-frontend-design",
-  "expectedPages": 7,
+  "designDir": "c:\\Code\\weight_loss_coach\\deliverables\\frontend\\mealwise-frontend-design",
+  "expectedPages": null,
   "requireInteractions": null,
-  "checkedAt": "2026-08-28T23:48:00.850Z"
+  "checkedAt": "2026-09-01T13:55:56.823Z"
 }

@@ -77,6 +77,20 @@ const API = {
   },
 
   /* ==========================================
+     全局配置（云端 app_config 公开配置）
+     ========================================== */
+
+  async getAppConfig() {
+    if (USE_MOCK) return Mock.getAppConfig();
+    try {
+      return await callCloudFunction('app.config.get', {});
+    } catch (e) {
+      // 云函数未部署新 action / 读取失败：兜底默认配置，不影响聊天页
+      return { coach_avatar_url: '' };
+    }
+  },
+
+  /* ==========================================
      Onboarding
      ========================================== */
 

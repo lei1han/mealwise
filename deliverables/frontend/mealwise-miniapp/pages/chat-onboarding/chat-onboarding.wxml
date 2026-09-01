@@ -69,18 +69,22 @@
   <!-- 输入栏 -->
   <view class="input-bar" style="padding-bottom: {{keyboardHeight > 0 ? keyboardHeight + 'px' : 'env(safe-area-inset-bottom)'}}">
     <view class="input-inner">
-      <input
-        class="chat-input"
-        type="text"
-        placeholder="输入你的回复..."
-        value="{{inputText}}"
-        bindinput="handleInput"
-        bindconfirm="handleSend"
-        confirm-type="send"
-        adjust-position="{{false}}"
-        cursor-spacing="20"
-      />
-      <button class="send-btn {{inputText.trim() ? 'send-btn-active' : ''}}" bindtap="handleSend" disabled="{{!inputText.trim()}}">
+      <!-- 原生 input 在 flex 布局下 flex:1 不生效，需用 view 包裹拉伸 -->
+      <view class="input-wrap">
+        <input
+          class="chat-input"
+          type="text"
+          placeholder="输入你的回复..."
+          placeholder-class="chat-input-ph"
+          value="{{inputText}}"
+          bindinput="handleInput"
+          bindconfirm="handleSend"
+          confirm-type="send"
+          adjust-position="{{false}}"
+          cursor-spacing="20"
+        />
+      </view>
+      <button class="send-btn {{canSend ? 'send-btn-active' : ''}}" bindtap="handleSend" disabled="{{!canSend}}">
         发送
       </button>
     </view>

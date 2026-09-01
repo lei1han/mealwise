@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据主页</title>
+    <style id="theme-vars">
+:root {
+  /* ===== Brand Primary: Sage Green ===== */
+  --xc-primary: #4E7A5C;
+  --xc-primary-foreground: #FFFFFF;
+  --xc-primary-50: #EEF5F0;
+  --xc-primary-100: #D6E8DC;
+
+  /* ===== Surfaces ===== */
+  --xc-background: #F8FBF9;
+  --xc-surface: #FFFFFF;
+  --xc-surface-2: #F1F5F2;
+
+  /* ===== Text ===== */
+  --xc-foreground: #1A2620;
+  --xc-muted-foreground: #5C7064;
+  --xc-placeholder: #9AACA0;
+
+  /* ===== Lines & Borders ===== */
+  --xc-border: #DEE6E0;
+  --xc-input: #DEE6E0;
+  --xc-ring: #4E7A5C;
+  --xc-divider: rgba(26, 38, 32, 0.06);
+
+  /* ===== Status / Accent ===== */
+  --xc-state-accent: #C5733A;
+  --xc-state-accent-foreground: #FFFFFF;
+  --xc-state-success: #22C55E;
+  --xc-state-warning: #F59E0B;
+  --xc-state-error: #EF4444;
+
+  /* ===== Radius ===== */
+  --xc-radius-xs: 4px;
+  --xc-radius-sm: 8px;
+  --xc-radius-md: 12px;
+  --xc-radius-lg: 16px;
+  --xc-radius-pill: 999px;
+
+  /* ===== Shadows ===== */
+  --xc-shadow-1: 0 1px 2px rgba(26, 38, 32, 0.05), 0 1px 1px rgba(26, 38, 32, 0.03);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 38, 32, 0.05);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 38, 32, 0.05);
+
+  /* ===== Typography ===== */
+  --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --xc-font-mono: "SF Mono", "Menlo", monospace;
+
+  /* ===== Semantic Aliases ===== */
+  --xc-card: var(--xc-surface);
+  --xc-card-foreground: var(--xc-foreground);
+  --xc-popover: var(--xc-surface);
+  --xc-popover-foreground: var(--xc-foreground);
+  --xc-muted: var(--xc-surface-2);
+  --xc-muted-foreground: var(--xc-muted-foreground);
+
+  /* ===== v2 Chart & Stats Tokens ===== */
+  --xc-chart-line: var(--xc-primary);
+  --xc-chart-grid: var(--xc-border);
+  --xc-progress-track: var(--xc-surface-2);
+  --xc-progress-fill: var(--xc-primary);
+  --xc-streak: #F59E0B;
+  --xc-chart-height-sm: 160px;
+  --xc-section-gap: 12px;
+  --xc-card-padding: 16px;
+  --xc-font-size-data-xl: 28px;
+  --xc-font-size-data-lg: 22px;
+  --xc-line-height-tight: 1.2;
+  --xc-progress-ring-width: 6px;
+}
+
+/* Base typography */
+body {
+  font-family: var(--xc-font-sans);
+  background-color: var(--xc-background);
+  color: var(--xc-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--xc-background);
+    --color-foreground: var(--xc-foreground);
+    --color-card: var(--xc-card);
+    --color-card-foreground: var(--xc-card-foreground);
+    --color-popover: var(--xc-popover);
+    --color-popover-foreground: var(--xc-popover-foreground);
+    --color-primary: var(--xc-primary);
+    --color-primary-foreground: var(--xc-primary-foreground);
+    --color-muted: var(--xc-muted);
+    --color-muted-foreground: var(--xc-muted-foreground);
+    --color-border: var(--xc-border);
+    --color-input: var(--xc-input);
+    --color-ring: var(--xc-ring);
+    --radius-sm: var(--xc-radius-sm);
+    --radius-md: var(--xc-radius-md);
+    --radius-lg: var(--xc-radius-lg);
+  }
+  @layer base {
+    body { background: var(--xc-background); color: var(--xc-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--xc-background); }
+      .text-background { color: var(--xc-background); }
+      .border-background { border-color: var(--xc-background); }
+      .ring-background { --tw-ring-color: var(--xc-background); }
+      .bg-foreground { background-color: var(--xc-foreground); }
+      .text-foreground { color: var(--xc-foreground); }
+      .border-foreground { border-color: var(--xc-foreground); }
+      .ring-foreground { --tw-ring-color: var(--xc-foreground); }
+      .bg-card { background-color: var(--xc-card); }
+      .text-card { color: var(--xc-card); }
+      .border-card { border-color: var(--xc-card); }
+      .ring-card { --tw-ring-color: var(--xc-card); }
+      .bg-card-foreground { background-color: var(--xc-card-foreground); }
+      .text-card-foreground { color: var(--xc-card-foreground); }
+      .border-card-foreground { border-color: var(--xc-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--xc-card-foreground); }
+      .bg-popover { background-color: var(--xc-popover); }
+      .text-popover { color: var(--xc-popover); }
+      .border-popover { border-color: var(--xc-popover); }
+      .ring-popover { --tw-ring-color: var(--xc-popover); }
+      .bg-popover-foreground { background-color: var(--xc-popover-foreground); }
+      .text-popover-foreground { color: var(--xc-popover-foreground); }
+      .border-popover-foreground { border-color: var(--xc-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--xc-popover-foreground); }
+      .bg-primary { background-color: var(--xc-primary); }
+      .text-primary { color: var(--xc-primary); }
+      .border-primary { border-color: var(--xc-primary); }
+      .ring-primary { --tw-ring-color: var(--xc-primary); }
+      .bg-primary-foreground { background-color: var(--xc-primary-foreground); }
+      .text-primary-foreground { color: var(--xc-primary-foreground); }
+      .border-primary-foreground { border-color: var(--xc-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--xc-primary-foreground); }
+      .bg-muted { background-color: var(--xc-muted); }
+      .text-muted { color: var(--xc-muted); }
+      .border-muted { border-color: var(--xc-muted); }
+      .ring-muted { --tw-ring-color: var(--xc-muted); }
+      .bg-muted-foreground { background-color: var(--xc-muted-foreground); }
+      .text-muted-foreground { color: var(--xc-muted-foreground); }
+      .border-muted-foreground { border-color: var(--xc-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--xc-muted-foreground); }
+      .bg-border { background-color: var(--xc-border); }
+      .text-border { color: var(--xc-border); }
+      .border-border { border-color: var(--xc-border); }
+      .ring-border { --tw-ring-color: var(--xc-border); }
+      .bg-input { background-color: var(--xc-input); }
+      .text-input { color: var(--xc-input); }
+      .border-input { border-color: var(--xc-input); }
+      .ring-input { --tw-ring-color: var(--xc-input); }
+      .bg-ring { background-color: var(--xc-ring); }
+      .text-ring { color: var(--xc-ring); }
+      .border-ring { border-color: var(--xc-ring); }
+      .ring-ring { --tw-ring-color: var(--xc-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <!-- 自定义导航栏 -->
+      <header class="sticky top-0 z-50 border-b border-border bg-background">
+        <div class="pt-[env(safe-area-inset-top)]"></div>
+        <div class="xc-nav flex items-center justify-between px-3">
+          <div class="w-9"></div>
+          <h1 class="text-[17px] font-semibold text-foreground">数据</h1>
+          <div class="xc-capsule flex items-center rounded-full border border-border bg-card px-1">
+            <button type="button" class="flex h-7 w-7 items-center justify-center rounded-full text-foreground hover:bg-muted">
+              <i data-lucide="more-horizontal" class="h-4 w-4"></i>
+            </button>
+            <span class="h-4 w-px bg-border"></span>
+            <button type="button" class="flex h-7 w-7 items-center justify-center rounded-full text-foreground hover:bg-muted">
+              <i data-lucide="x" class="h-4 w-4"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- 进度概览卡 -->
+      <section class="xc-card-stats mx-4 mt-4 p-4">
+        <div class="flex items-center justify-between">
+          <div class="flex flex-col">
+            <p class="text-[13px] text-muted-foreground">已减重</p>
+            <p class="mt-0.5 xc-data-xl font-bold text-primary leading-tight">3.2 kg</p>
+            <p class="mt-2 text-[12px] text-muted-foreground">目标 55.0 kg · 当前 61.8 kg</p>
+          </div>
+          <div class="relative" style="width: 72px; height: 72px;">
+            <svg width="72" height="72" viewBox="0 0 72 72">
+              <!-- 轨道 -->
+              <circle cx="36" cy="36" r="30" fill="none" stroke="var(--xc-progress-track)" stroke-width="6" />
+              <!-- 进度环 58% -->
+              <circle cx="36" cy="36" r="30" fill="none" stroke="var(--xc-progress-fill)" stroke-width="6"
+                stroke-linecap="round"
+                stroke-dasharray="188.5"
+                stroke-dashoffset="79.17"
+                transform="rotate(-90 36 36)" />
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="text-[14px] font-semibold text-primary">58%</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 flex items-center gap-1.5">
+          <i data-lucide="clock" class="h-4 w-4 text-muted-foreground"></i>
+          <span class="text-[13px] text-muted-foreground">预计还需 6 周</span>
+        </div>
+      </section>
+
+      <!-- 体重趋势卡 -->
+      <section class="xc-card-stats mx-4 mt-3 p-4 relative" data-dom-id="nav-weight-detail">
+        <div class="flex items-center justify-between">
+          <h2 class="text-[15px] font-semibold text-foreground">体重趋势</h2>
+          <div class="xc-toggle flex rounded-full bg-muted p-0.5">
+            <button class="xc-toggle-active rounded-full px-3 py-1 text-[12px] font-medium">周</button>
+            <button class="xc-toggle-inactive rounded-full px-3 py-1 text-[12px] font-medium">月</button>
+          </div>
+        </div>
+
+        <!-- 折线图 -->
+        <div class="mt-3" style="height: var(--xc-chart-height-sm);">
+          <svg width="100%" height="160" viewBox="0 0 311 160" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="weightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color: var(--xc-primary); stop-opacity: 0.1" />
+                <stop offset="100%" style="stop-color: var(--xc-primary); stop-opacity: 0" />
+              </linearGradient>
+            </defs>
+
+            <!-- Y 轴标签 -->
+            <text x="0" y="12" font-size="11" fill="var(--xc-muted-foreground)" text-anchor="start">65.0</text>
+            <text x="0" y="155" font-size="11" fill="var(--xc-muted-foreground)" text-anchor="start">61.0</text>
+            <text x="311" y="12" font-size="11" fill="var(--xc-muted-foreground)" text-anchor="end">65.0</text>
+            <text x="311" y="155" font-size="11" fill="var(--xc-muted-foreground)" text-anchor="end">61.0</text>
+
+            <!-- 目标体重虚线 (55kg 对应位置，在图表下方外) -->
+            <!-- 55kg 在 61-65 范围外，我们把范围调整为 55-65 来显示目标线 -->
+            <!-- 重新计算：65->0, 55->140, 图表高度用 140px 有效区域 -->
+            <!-- 数据: 65.0, 64.5, 64.2, 63.8, 63.5, 62.8, 61.8 -->
+            <!-- 范围 61-65，跨度 4kg -->
+            <!-- y = 20 + (65 - val) / 4 * 120 -->
+
+            <!-- 目标体重线 55kg - 由于超出范围，我们调整图表范围为 55-65 -->
+            <!-- 用 55-65 范围，10kg 跨度，120px 高度 -->
+            <!-- y = 20 + (65 - val) / 10 * 120 -->
+            <!-- 65.0 -> y=20, 64.5 -> y=26, 64.2 -> y=29.6, 63.8 -> y=34.4, 63.5 -> y=38, 62.8 -> y=46.4, 61.8 -> y=58.4 -->
+            <!-- 55.0 -> y=140 -->
+
+            <!-- 目标体重虚线 55kg -->
+            <line x1="0" y1="140" x2="311" y2="140" stroke="var(--xc-state-accent)" stroke-width="1" stroke-dasharray="4 3" />
+            <text x="290" y="135" font-size="10" fill="var(--xc-state-accent)" text-anchor="end">目标 55</text>
+
+            <!-- 填充区域 -->
+            <path d="M 0,58.4
+                     Q 25.9,58.4 51.8,46.4
+                     Q 77.8,34.4 103.7,38
+                     Q 129.6,41.6 155.5,34.4
+                     Q 181.5,27.2 207.4,29.6
+                     Q 233.3,32 259.3,26
+                     Q 285.2,20 311,20
+                     L 311,160 L 0,160 Z"
+                  fill="url(#weightGradient)" />
+
+            <!-- 平滑折线 -->
+            <!-- 7个点 x: 0, 51.8, 103.7, 155.5, 207.4, 259.3, 311 -->
+            <!-- y 值（55-65 范围）:
+                 65.0 -> 20
+                 64.5 -> 26
+                 64.2 -> 29.6
+                 63.8 -> 34.4
+                 63.5 -> 38
+                 62.8 -> 46.4
+                 61.8 -> 58.4
+                 等等，体重在下降，y应该越来越大（向下）
+                 让我重新算：y = 20 + (65 - val) / 10 * 120
+                 65.0 -> 20 + 0 = 20
+                 64.5 -> 20 + 0.5/10*120 = 20 + 6 = 26
+                 64.2 -> 20 + 0.8/10*120 = 20 + 9.6 = 29.6
+                 63.8 -> 20 + 1.2/10*120 = 20 + 14.4 = 34.4
+                 63.5 -> 20 + 1.5/10*120 = 20 + 18 = 38
+                 62.8 -> 20 + 2.2/10*120 = 20 + 26.4 = 46.4
+                 61.8 -> 20 + 3.2/10*120 = 20 + 38.4 = 58.4
+            -->
+            <path d="M 0,20
+                     Q 25.9,20 51.8,26
+                     Q 77.8,32 103.7,29.6
+                     Q 129.6,27.2 155.5,34.4
+                     Q 181.5,41.6 207.4,38
+                     Q 233.3,34.4 259.3,46.4
+                     Q 285.2,58.4 311,58.4"
+                  fill="none"
+                  stroke="var(--xc-chart-line)"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round" />
+
+            <!-- 数据点 -->
+            <circle cx="0" cy="20" r="4" fill="var(--xc-primary)" />
+            <circle cx="51.8" cy="26" r="4" fill="var(--xc-primary)" />
+            <circle cx="103.7" cy="29.6" r="4" fill="var(--xc-primary)" />
+            <circle cx="155.5" cy="34.4" r="4" fill="var(--xc-primary)" />
+            <circle cx="207.4" cy="38" r="4" fill="var(--xc-primary)" />
+            <circle cx="259.3" cy="46.4" r="4" fill="var(--xc-primary)" />
+            <circle cx="311" cy="58.4" r="4" fill="var(--xc-primary)" />
+          </svg>
+        </div>
+
+        <!-- 底部统计 -->
+        <div class="mt-2 flex items-center justify-between">
+          <div class="flex items-center gap-1">
+            <span class="text-[13px] text-muted-foreground">近 7 天</span>
+            <i data-lucide="arrow-down" class="h-3.5 w-3.5 text-primary"></i>
+            <span class="text-[13px] font-semibold text-primary">1.2 kg</span>
+          </div>
+        </div>
+
+        <!-- chevron-right -->
+        <div class="absolute right-4 bottom-4">
+          <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground"></i>
+        </div>
+      </section>
+
+      <!-- 热量统计卡 -->
+      <section class="xc-card-stats mx-4 mt-3 p-4 relative" data-dom-id="nav-calorie-detail">
+        <div class="flex items-center justify-between">
+          <h2 class="text-[15px] font-semibold text-foreground">本周热量</h2>
+          <span class="text-[13px] text-muted-foreground">平均 1320 kcal/天</span>
+        </div>
+
+        <!-- 7天达标方块 -->
+        <div class="mt-3 flex items-center gap-1.5">
+          <div class="xc-day-dot xc-day-done"></div>
+          <div class="xc-day-dot xc-day-done"></div>
+          <div class="xc-day-dot xc-day-done"></div>
+          <div class="xc-day-dot xc-day-done"></div>
+          <div class="xc-day-dot xc-day-done"></div>
+          <div class="xc-day-dot xc-day-todo"></div>
+          <div class="xc-day-dot xc-day-todo"></div>
+          <span class="ml-1 text-[13px] text-muted-foreground">5/7 天达标</span>
+        </div>
+
+        <!-- 今日饮食 -->
+        <div class="mt-4">
+          <p class="text-[13px] text-muted-foreground mb-2">今日饮食</p>
+          <div class="flex flex-col gap-2">
+            <!-- 早餐 -->
+            <div class="flex items-center gap-2">
+              <span class="w-12 text-[13px] text-foreground">早餐</span>
+              <div class="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+                <div class="h-full rounded-full bg-primary" style="width: 21%; opacity: 0.9;"></div>
+              </div>
+              <span class="w-16 text-right text-[13px] text-foreground">280 kcal</span>
+            </div>
+            <!-- 午餐 -->
+            <div class="flex items-center gap-2">
+              <span class="w-12 text-[13px] text-foreground">午餐</span>
+              <div class="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+                <div class="h-full rounded-full bg-primary" style="width: 35%; opacity: 0.7;"></div>
+              </div>
+              <span class="w-16 text-right text-[13px] text-foreground">450 kcal</span>
+            </div>
+            <!-- 剩余 -->
+            <div class="flex items-center gap-2">
+              <span class="w-12 text-[13px] text-muted-foreground">剩余</span>
+              <div class="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+                <div class="h-full rounded-full bg-surface-2" style="width: 48%;"></div>
+              </div>
+              <span class="w-16 text-right text-[13px] text-muted-foreground">620 kcal</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- chevron-right -->
+        <div class="absolute right-4 bottom-4">
+          <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground"></i>
+        </div>
+      </section>
+
+      <!-- 连续打卡区 -->
+      <section class="xc-streak-card mx-4 mt-3 mb-20 p-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="flame" class="h-5 w-5" style="color: var(--xc-streak);"></i>
+            <span class="text-[15px] font-semibold text-primary">连续汇报 12 天</span>
+          </div>
+          <span class="text-[13px] text-muted-foreground">本周 5 / 7 天</span>
+        </div>
+      </section>
+
+      <!-- 底部 Tab 栏 -->
+      <footer class="xc-tabbar fixed bottom-0 left-0 right-0 z-40">
+        <div class="xc-tabbar-safe">
+          <div class="xc-tabbar-height flex items-center justify-around">
+            <!-- 聊天 -->
+            <button class="xc-tab-item flex flex-col items-center justify-center gap-0.5" data-dom-id="nav-tab-chat">
+              <i data-lucide="message-circle" class="h-6 w-6 text-muted-foreground"></i>
+              <span class="text-[10px] text-muted-foreground">聊天</span>
+            </button>
+            <!-- 数据（选中） -->
+            <button class="xc-tab-item flex flex-col items-center justify-center gap-0.5">
+              <i data-lucide="bar-chart-2" class="h-6 w-6 text-primary"></i>
+              <span class="text-[10px] text-primary font-medium">数据</span>
+            </button>
+            <!-- 我的 -->
+            <button class="xc-tab-item flex flex-col items-center justify-center gap-0.5" data-dom-id="nav-tab-profile">
+              <i data-lucide="user" class="h-6 w-6 text-muted-foreground"></i>
+              <span class="text-[10px] text-muted-foreground">我的</span>
+            </button>
+          </div>
+        </div>
+      </footer>
+    </main>
+    <style id="critical-layout">
+      .xc-nav { height: 44px; }
+      .xc-capsule { height: 32px; }
+      .xc-card-stats {
+        background-color: var(--xc-surface);
+        border-radius: var(--xc-radius-lg);
+        box-shadow: var(--xc-shadow-1);
+      }
+      .xc-data-xl {
+        font-size: var(--xc-font-size-data-xl);
+        line-height: var(--xc-line-height-tight);
+      }
+      .xc-toggle-active {
+        background-color: var(--xc-primary);
+        color: var(--xc-primary-foreground);
+      }
+      .xc-toggle-inactive {
+        color: var(--xc-muted-foreground);
+        background-color: transparent;
+      }
+      .xc-day-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+      }
+      .xc-day-done {
+        background-color: var(--xc-primary);
+      }
+      .xc-day-todo {
+        background-color: var(--xc-surface-2);
+      }
+      .xc-streak-card {
+        background-color: var(--xc-primary-50);
+        border-radius: var(--xc-radius-md);
+      }
+      .xc-tabbar {
+        background-color: var(--xc-surface);
+        border-top: 1px solid var(--xc-border);
+      }
+      .xc-tabbar-height {
+        height: 56px;
+      }
+      .xc-tabbar-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      .xc-tab-item {
+        flex: 1;
+        height: 100%;
+      }
+      .bg-surface-2 {
+        background-color: var(--xc-surface-2);
+      }
+    </style>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

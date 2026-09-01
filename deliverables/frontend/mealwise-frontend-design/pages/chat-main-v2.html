@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天页 v2 增强版</title>
+    <style id="theme-vars">
+:root {
+  /* ===== Brand Primary: Sage Green ===== */
+  --xc-primary: #4E7A5C;
+  --xc-primary-foreground: #FFFFFF;
+  --xc-primary-50: #EEF5F0;
+  --xc-primary-100: #D6E8DC;
+
+  /* ===== Surfaces ===== */
+  --xc-background: #F8FBF9;
+  --xc-surface: #FFFFFF;
+  --xc-surface-2: #F1F5F2;
+
+  /* ===== Text ===== */
+  --xc-foreground: #1A2620;
+  --xc-muted-foreground: #5C7064;
+  --xc-placeholder: #9AACA0;
+
+  /* ===== Lines & Borders ===== */
+  --xc-border: #DEE6E0;
+  --xc-input: #DEE6E0;
+  --xc-ring: #4E7A5C;
+  --xc-divider: rgba(26, 38, 32, 0.06);
+
+  /* ===== Status / Accent ===== */
+  --xc-state-accent: #C5733A;
+  --xc-state-accent-foreground: #FFFFFF;
+  --xc-state-success: #22C55E;
+  --xc-state-warning: #F59E0B;
+  --xc-state-error: #EF4444;
+
+  /* ===== Radius ===== */
+  --xc-radius-xs: 4px;
+  --xc-radius-sm: 8px;
+  --xc-radius-md: 12px;
+  --xc-radius-lg: 16px;
+  --xc-radius-pill: 999px;
+
+  /* ===== Shadows ===== */
+  --xc-shadow-1: 0 1px 2px rgba(26, 38, 32, 0.05), 0 1px 1px rgba(26, 38, 32, 0.03);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 38, 32, 0.05);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 38, 32, 0.05);
+
+  /* ===== Typography ===== */
+  --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --xc-font-mono: "SF Mono", "Menlo", monospace;
+
+  /* ===== Semantic Aliases ===== */
+  --xc-card: var(--xc-surface);
+  --xc-card-foreground: var(--xc-foreground);
+  --xc-popover: var(--xc-surface);
+  --xc-popover-foreground: var(--xc-foreground);
+  --xc-muted: var(--xc-surface-2);
+  --xc-muted-foreground: var(--xc-muted-foreground);
+
+  /* ===== v2 Progress Bar ===== */
+  --xc-progress-track: var(--xc-surface-2);
+  --xc-progress-fill: var(--xc-primary);
+  --xc-progress-fill-warning: var(--xc-state-warning);
+  --xc-progress-fill-danger: var(--xc-state-error);
+  --xc-progress-bar-height: 4px;
+}
+
+/* Base typography */
+body {
+  font-family: var(--xc-font-sans);
+  background-color: var(--xc-background);
+  color: var(--xc-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--xc-background);
+    --color-foreground: var(--xc-foreground);
+    --color-card: var(--xc-card);
+    --color-card-foreground: var(--xc-card-foreground);
+    --color-popover: var(--xc-popover);
+    --color-popover-foreground: var(--xc-popover-foreground);
+    --color-primary: var(--xc-primary);
+    --color-primary-foreground: var(--xc-primary-foreground);
+    --color-muted: var(--xc-muted);
+    --color-muted-foreground: var(--xc-muted-foreground);
+    --color-border: var(--xc-border);
+    --color-input: var(--xc-input);
+    --color-ring: var(--xc-ring);
+    --radius-sm: var(--xc-radius-sm);
+    --radius-md: var(--xc-radius-md);
+    --radius-lg: var(--xc-radius-lg);
+  }
+  @layer base {
+    body { background: var(--xc-background); color: var(--xc-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--xc-background); }
+      .text-background { color: var(--xc-background); }
+      .border-background { border-color: var(--xc-background); }
+      .ring-background { --tw-ring-color: var(--xc-background); }
+      .bg-foreground { background-color: var(--xc-foreground); }
+      .text-foreground { color: var(--xc-foreground); }
+      .border-foreground { border-color: var(--xc-foreground); }
+      .ring-foreground { --tw-ring-color: var(--xc-foreground); }
+      .bg-card { background-color: var(--xc-card); }
+      .text-card { color: var(--xc-card); }
+      .border-card { border-color: var(--xc-card); }
+      .ring-card { --tw-ring-color: var(--xc-card); }
+      .bg-card-foreground { background-color: var(--xc-card-foreground); }
+      .text-card-foreground { color: var(--xc-card-foreground); }
+      .border-card-foreground { border-color: var(--xc-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--xc-card-foreground); }
+      .bg-popover { background-color: var(--xc-popover); }
+      .text-popover { color: var(--xc-popover); }
+      .border-popover { border-color: var(--xc-popover); }
+      .ring-popover { --tw-ring-color: var(--xc-popover); }
+      .bg-popover-foreground { background-color: var(--xc-popover-foreground); }
+      .text-popover-foreground { color: var(--xc-popover-foreground); }
+      .border-popover-foreground { border-color: var(--xc-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--xc-popover-foreground); }
+      .bg-primary { background-color: var(--xc-primary); }
+      .text-primary { color: var(--xc-primary); }
+      .border-primary { border-color: var(--xc-primary); }
+      .ring-primary { --tw-ring-color: var(--xc-primary); }
+      .bg-primary-foreground { background-color: var(--xc-primary-foreground); }
+      .text-primary-foreground { color: var(--xc-primary-foreground); }
+      .border-primary-foreground { border-color: var(--xc-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--xc-primary-foreground); }
+      .bg-muted { background-color: var(--xc-muted); }
+      .text-muted { color: var(--xc-muted); }
+      .border-muted { border-color: var(--xc-muted); }
+      .ring-muted { --tw-ring-color: var(--xc-muted); }
+      .bg-muted-foreground { background-color: var(--xc-muted-foreground); }
+      .text-muted-foreground { color: var(--xc-muted-foreground); }
+      .border-muted-foreground { border-color: var(--xc-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--xc-muted-foreground); }
+      .bg-border { background-color: var(--xc-border); }
+      .text-border { color: var(--xc-border); }
+      .border-border { border-color: var(--xc-border); }
+      .ring-border { --tw-ring-color: var(--xc-border); }
+      .bg-input { background-color: var(--xc-input); }
+      .text-input { color: var(--xc-input); }
+      .border-input { border-color: var(--xc-input); }
+      .ring-input { --tw-ring-color: var(--xc-input); }
+      .bg-ring { background-color: var(--xc-ring); }
+      .text-ring { color: var(--xc-ring); }
+      .border-ring { border-color: var(--xc-ring); }
+      .ring-ring { --tw-ring-color: var(--xc-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <!-- ===== 自定义导航栏（v2 精简版） ===== -->
+      <header class="sticky top-0 z-50 border-b border-border bg-surface">
+        <div class="pt-[env(safe-area-inset-top)]"></div>
+        <div class="xc-nav flex items-center justify-between px-4">
+          <!-- 左侧占位（Tab 首页无返回按钮） -->
+          <div class="w-8"></div>
+          <!-- 中间标题 -->
+          <h1 class="text-[17px] font-semibold text-foreground">三餐教练</h1>
+          <!-- 右侧：更多按钮 + 微信胶囊 -->
+          <div class="flex items-center gap-2">
+            <button type="button" class="xc-more-btn flex items-center justify-center rounded-full bg-surface-2 text-muted-foreground hover:bg-muted">
+              <i data-lucide="more-horizontal" class="h-4 w-4"></i>
+            </button>
+            <div class="xc-capsule flex items-center rounded-full border border-border bg-surface px-1">
+              <button type="button" class="flex h-7 w-7 items-center justify-center rounded-full text-foreground hover:bg-muted">
+                <i data-lucide="more-horizontal" class="h-4 w-4"></i>
+              </button>
+              <span class="h-4 w-px bg-border"></span>
+              <button type="button" class="flex h-7 w-7 items-center justify-center rounded-full text-foreground hover:bg-muted">
+                <i data-lucide="x" class="h-4 w-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ===== 今日进度条（v2 新增，sticky） ===== -->
+      <section id="progress-bar" class="xc-progress-sticky z-40 cursor-pointer" data-dom-id="nav-progress-to-stats">
+        <div class="flex items-baseline justify-between">
+          <span class="text-[13px] text-muted-foreground">今日还可吃</span>
+          <span class="text-[12px] font-medium text-primary">晚餐前还有余量</span>
+        </div>
+        <div class="mt-1 flex items-end justify-between">
+          <span class="text-[20px] font-bold text-primary">约 620 大卡</span>
+        </div>
+        <div class="xc-progress-track mt-2 h-1 w-full overflow-hidden rounded-full">
+          <div class="xc-progress-fill h-full rounded-full" style="width: 58%;"></div>
+        </div>
+      </section>
+
+      <!-- ===== 聊天区域 ===== -->
+      <section id="chat-thread" class="xc-chat-area flex flex-col gap-4 overflow-y-auto px-4 py-4">
+        <!-- 教练消息 -->
+        <div class="flex items-end gap-2.5">
+          <div class="xc-avatar flex h-9 w-9 flex-none items-center justify-center rounded-full">
+            <i data-lucide="user" class="h-5 w-5"></i>
+          </div>
+          <div class="xc-bubble-coach max-w-[76%] px-4 py-3">
+            <p class="text-[15px] leading-relaxed">中午吃了什么？用拳头比划就行。</p>
+          </div>
+        </div>
+
+        <!-- 用户消息 -->
+        <div class="flex justify-end">
+          <div class="xc-bubble-user max-w-[76%] px-4 py-3">
+            <p class="text-[15px] leading-relaxed">半拳米饭、一拳青菜、半拳鸡腿肉</p>
+          </div>
+        </div>
+
+        <!-- 教练消息（含高亮） -->
+        <div class="flex items-end gap-2.5">
+          <div class="xc-avatar flex h-9 w-9 flex-none items-center justify-center rounded-full">
+            <i data-lucide="user" class="h-5 w-5"></i>
+          </div>
+          <div class="xc-bubble-coach max-w-[76%] px-4 py-3">
+            <p class="text-[15px] leading-relaxed">这餐大概 <span class="font-semibold text-accent">320~400</span> 大卡，鸡腿肉选得不错，蛋白质够了；米饭半拳刚刚好。今天早餐 280，加上这顿，离预算还剩约 620，下午别点奶茶了啊。</p>
+          </div>
+        </div>
+
+        <!-- 打字指示器 -->
+        <div id="typing-indicator" class="flex items-end gap-2.5">
+          <div class="xc-avatar flex h-9 w-9 flex-none items-center justify-center rounded-full">
+            <i data-lucide="user" class="h-5 w-5"></i>
+          </div>
+          <div class="xc-bubble-coach flex h-10 items-center gap-1 px-3">
+            <span class="xc-typing-dot h-2 w-2 rounded-full bg-muted-foreground"></span>
+            <span class="xc-typing-dot h-2 w-2 rounded-full bg-muted-foreground"></span>
+            <span class="xc-typing-dot h-2 w-2 rounded-full bg-muted-foreground"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 今日饮食概览（v2 新增，可折叠） ===== -->
+      <section id="meal-overview" class="xc-meal-overview cursor-pointer" data-dom-id="nav-diet-overview">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-1.5 text-[13px]">
+            <span class="text-muted-foreground">早餐</span>
+            <span class="font-semibold text-primary">280</span>
+            <span class="text-muted-foreground">·</span>
+            <span class="text-muted-foreground">午餐</span>
+            <span class="font-semibold text-primary">400</span>
+            <span class="text-muted-foreground">·</span>
+            <span class="text-muted-foreground">晚餐</span>
+            <span class="text-muted-foreground">--</span>
+            <span class="text-muted-foreground">·</span>
+            <span class="text-muted-foreground">加餐</span>
+            <span class="text-muted-foreground">--</span>
+          </div>
+          <button type="button" class="flex h-6 w-6 items-center justify-center text-muted-foreground">
+            <i data-lucide="chevron-up" class="h-4 w-4"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== 底部输入栏 ===== -->
+      <footer id="input-bar" class="xc-input fixed left-0 right-0 z-40">
+        <div class="flex items-center gap-2 px-3 py-2">
+          <button type="button" class="flex h-9 w-9 flex-none items-center justify-center rounded-full text-muted-foreground hover:bg-muted">
+            <i data-lucide="mic" class="h-5 w-5"></i>
+          </button>
+          <div class="relative flex-1">
+            <input type="text" class="h-10 w-full rounded-full border border-input bg-surface px-4 text-[15px] text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" placeholder="用一拳/半拳描述...">
+          </div>
+          <button type="button" class="xc-send flex h-9 w-9 flex-none items-center justify-center rounded-full">
+            <i data-lucide="send" class="h-5 w-5"></i>
+          </button>
+        </div>
+      </footer>
+
+      <!-- ===== 底部 Tab 栏（v2 新增） ===== -->
+      <nav id="tab-bar" class="xc-tabbar fixed bottom-0 left-0 right-0 z-30">
+        <div class="flex h-14 items-center justify-around">
+          <!-- 聊天（选中态） -->
+          <button type="button" class="xc-tab-item flex flex-col items-center justify-center gap-0.5">
+            <i data-lucide="message-circle" class="h-6 w-6"></i>
+            <span class="text-[10px] font-medium">聊天</span>
+          </button>
+          <!-- 数据 -->
+          <button type="button" class="xc-tab-item xc-tab-inactive flex flex-col items-center justify-center gap-0.5" data-dom-id="nav-tab-stats">
+            <i data-lucide="bar-chart-2" class="h-6 w-6"></i>
+            <span class="text-[10px] font-medium">数据</span>
+          </button>
+          <!-- 我的 -->
+          <button type="button" class="xc-tab-item xc-tab-inactive flex flex-col items-center justify-center gap-0.5" data-dom-id="nav-tab-profile">
+            <i data-lucide="user" class="h-6 w-6"></i>
+            <span class="text-[10px] font-medium">我的</span>
+          </button>
+        </div>
+        <div class="xc-tabbar-safe"></div>
+      </nav>
+    </main>
+    <style id="critical-layout">
+      /* 导航栏 */
+      .xc-nav { height: 44px; }
+      .xc-capsule { height: 32px; }
+      .xc-more-btn { height: 32px; width: 32px; }
+
+      /* 进度条 sticky */
+      .xc-progress-sticky {
+        position: sticky;
+        top: calc(44px + env(safe-area-inset-top));
+        background-color: var(--xc-surface);
+        border-bottom: 1px solid var(--xc-border);
+        padding: 10px 16px;
+        z-index: 40;
+      }
+      .xc-progress-track {
+        height: var(--xc-progress-bar-height);
+        background-color: var(--xc-progress-track);
+        border-radius: var(--xc-radius-pill);
+      }
+      .xc-progress-fill {
+        background-color: var(--xc-progress-fill);
+        border-radius: var(--xc-radius-pill);
+        transition: width 0.3s ease;
+      }
+
+      /* 聊天区域 */
+      .xc-chat-area {
+        padding-bottom: calc(120px + env(safe-area-inset-bottom));
+      }
+      .xc-avatar {
+        background-color: var(--xc-primary-50);
+        color: var(--xc-primary);
+      }
+      .xc-bubble-coach {
+        background-color: var(--xc-surface);
+        color: var(--xc-foreground);
+        border: 1px solid var(--xc-border);
+        border-radius: var(--xc-radius-lg);
+        border-bottom-left-radius: var(--xc-radius-md);
+        box-shadow: var(--xc-shadow-1);
+      }
+      .xc-bubble-user {
+        background-color: var(--xc-primary);
+        color: var(--xc-primary-foreground);
+        border-radius: var(--xc-radius-lg);
+        border-bottom-right-radius: var(--xc-radius-md);
+      }
+      .text-accent {
+        color: var(--xc-state-accent);
+      }
+
+      /* 打字指示器动画 */
+      @keyframes xc-bounce {
+        0%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-4px); }
+      }
+      .xc-typing-dot {
+        animation: xc-bounce 1.4s infinite ease-in-out both;
+      }
+      .xc-typing-dot:nth-child(1) { animation-delay: -0.32s; }
+      .xc-typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+      /* 今日饮食概览 */
+      .xc-meal-overview {
+        position: fixed;
+        left: 0;
+        right: 0;
+        background-color: var(--xc-surface);
+        border-top: 1px solid var(--xc-border);
+        padding: 12px 16px;
+        z-index: 35;
+        bottom: calc(56px + 56px + env(safe-area-inset-bottom));
+      }
+
+      /* 输入栏 */
+      .xc-input {
+        background-color: var(--xc-surface);
+        border-top: 1px solid var(--xc-border);
+        bottom: calc(56px + env(safe-area-inset-bottom));
+      }
+      .xc-send {
+        background-color: var(--xc-primary);
+        color: var(--xc-primary-foreground);
+      }
+
+      /* Tab 栏 */
+      .xc-tabbar {
+        background-color: var(--xc-surface);
+        border-top: 1px solid var(--xc-border);
+      }
+      .xc-tabbar-safe {
+        height: env(safe-area-inset-bottom);
+      }
+      .xc-tab-item {
+        flex: 1;
+        height: 100%;
+        color: var(--xc-primary);
+      }
+      .xc-tab-inactive {
+        color: var(--xc-muted-foreground);
+      }
+
+      /* 页面背景 */
+      main {
+        background-color: var(--xc-background);
+        min-height: 100vh;
+      }
+    </style>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
