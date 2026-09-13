@@ -1,35 +1,35 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>编辑资料</title>
+    <title>饮食详情</title>
     <style id="theme-vars">
 :root {
-  /* ===== Brand Primary: Sage Green ===== */
-  --xc-primary: #4E7A5C;
+  /* ===== Brand Primary: Mint Macaron ===== */
+  --xc-primary: #7CB89E;
   --xc-primary-foreground: #FFFFFF;
-  --xc-primary-50: #EEF5F0;
-  --xc-primary-100: #D6E8DC;
+  --xc-primary-50: #EDF6F2;
+  --xc-primary-100: #D4EBE0;
 
   /* ===== Surfaces ===== */
-  --xc-background: #F8FBF9;
+  --xc-background: #F6FBF8;
   --xc-surface: #FFFFFF;
-  --xc-surface-2: #F1F5F2;
+  --xc-surface-2: #EFF6F2;
 
   /* ===== Text ===== */
-  --xc-foreground: #1A2620;
-  --xc-muted-foreground: #5C7064;
-  --xc-placeholder: #9AACA0;
+  --xc-foreground: #1A2822;
+  --xc-muted-foreground: #5E7066;
+  --xc-placeholder: #9AAFA2;
 
   /* ===== Lines & Borders ===== */
-  --xc-border: #DEE6E0;
-  --xc-input: #DEE6E0;
-  --xc-ring: #4E7A5C;
-  --xc-divider: rgba(26, 38, 32, 0.06);
+  --xc-border: #DCE6E0;
+  --xc-input: #DCE6E0;
+  --xc-ring: #7CB89E;
+  --xc-divider: rgba(26, 40, 34, 0.06);
 
   /* ===== Status / Accent ===== */
-  --xc-state-accent: #C5733A;
+  --xc-state-accent: #D4754A;
   --xc-state-accent-foreground: #FFFFFF;
   --xc-state-success: #22C55E;
   --xc-state-warning: #F59E0B;
@@ -43,9 +43,9 @@
   --xc-radius-pill: 999px;
 
   /* ===== Shadows ===== */
-  --xc-shadow-1: 0 1px 2px rgba(26, 38, 32, 0.05), 0 1px 1px rgba(26, 38, 32, 0.03);
-  --xc-shadow-2: 0 8px 24px -8px rgba(26, 38, 32, 0.05);
-  --xc-shadow-3: 0 24px 60px -20px rgba(26, 38, 32, 0.05);
+  --xc-shadow-1: 0 1px 2px rgba(26, 40, 34, 0.04), 0 1px 1px rgba(26, 40, 34, 0.02);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 40, 34, 0.04);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 40, 34, 0.04);
 
   /* ===== Typography ===== */
   --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
@@ -167,137 +167,116 @@ body {
       }
     </style>
 </head>
-<body class="min-h-screen bg-background font-sans antialiased">
-  <!-- 自定义导航栏 -->
-  <header class="xc-nav-bar sticky top-0 z-50 bg-background">
-    <div class="xc-status-bar"></div>
-    <div class="xc-nav-content flex items-center justify-between px-4">
-      <button type="button" class="flex h-9 w-9 items-center justify-center rounded-full text-foreground" aria-label="返回" data-dom-id="nav-back-profile">
-        <i data-lucide="chevron-left" class="h-5 w-5"></i>
+<body class="min-h-screen font-sans antialiased">
+  <!-- 半透明遮罩背景 -->
+  <div class="xc-overlay fixed inset-0 z-40"></div>
+
+  <!-- 底部 Sheet 面板 -->
+  <div class="xc-sheet fixed bottom-0 left-0 right-0 z-50 flex flex-col">
+    <!-- 顶部拖拽条 -->
+    <div class="xc-sheet-handle mx-auto mt-2 mb-3"></div>
+
+    <!-- 标题行 -->
+    <div class="flex items-center justify-between px-4">
+      <h2 class="text-[17px] font-semibold text-foreground">午餐</h2>
+      <span class="text-[13px] text-muted-foreground">12:15</span>
+    </div>
+
+    <!-- 分割线 -->
+    <div class="xc-divider mx-4 my-3"></div>
+
+    <!-- 食物明细区域 -->
+    <div class="px-4">
+      <p class="text-[13px] text-muted-foreground mb-2">食物明细</p>
+      <div class="xc-food-list">
+        <!-- 食物项 1 -->
+        <div class="xc-food-item flex items-center">
+          <div class="flex items-center gap-2 flex-1">
+            <span class="text-[20px]">🍚</span>
+            <span class="text-[14px] text-foreground">米饭</span>
+          </div>
+          <span class="text-[13px] text-muted-foreground mx-4">半拳</span>
+          <span class="text-[14px] font-medium text-foreground">约 120 大卡</span>
+        </div>
+        <!-- 食物项 2 -->
+        <div class="xc-food-item xc-food-item-border flex items-center">
+          <div class="flex items-center gap-2 flex-1">
+            <span class="text-[20px]">🥩</span>
+            <span class="text-[14px] text-foreground">牛肉</span>
+          </div>
+          <span class="text-[13px] text-muted-foreground mx-4">一拳</span>
+          <span class="text-[14px] font-medium text-foreground">约 250 大卡</span>
+        </div>
+        <!-- 食物项 3 -->
+        <div class="xc-food-item xc-food-item-border flex items-center">
+          <div class="flex items-center gap-2 flex-1">
+            <span class="text-[20px]">🥬</span>
+            <span class="text-[14px] text-foreground">青菜</span>
+          </div>
+          <span class="text-[13px] text-muted-foreground mx-4">一拳</span>
+          <span class="text-[14px] font-medium text-foreground">约 50 大卡</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 合计行 -->
+    <div class="flex items-center justify-between px-4 mt-3">
+      <span class="text-[14px] font-semibold text-foreground">合计</span>
+      <span class="text-[16px] font-bold xc-text-accent">约 380~480 大卡</span>
+    </div>
+
+    <!-- 原始描述区域 -->
+    <div class="xc-desc-box mx-4 mt-4 p-3">
+      <p class="text-[12px] text-muted-foreground mb-1">原始描述</p>
+      <p class="text-[14px] text-foreground">半拳米饭、一拳牛肉、一拳青菜</p>
+    </div>
+
+    <!-- 底部按钮 -->
+    <div class="px-4 pt-4 pb-4 xc-safe-bottom">
+      <button type="button" class="xc-btn-primary w-full h-11 rounded-lg text-[15px] font-semibold text-primary-foreground" data-dom-id="nav-close-diet-sheet">
+        关闭
       </button>
-      <h1 class="absolute left-1/2 -translate-x-1/2 text-[17px] font-semibold text-foreground">编辑资料</h1>
-      <button type="button" class="text-[15px] font-medium text-primary">保存</button>
     </div>
-  </header>
-
-  <main class="pb-24">
-    <!-- 头像区域 -->
-    <section class="flex flex-col items-center mt-6 mb-6">
-      <div class="relative">
-        <div class="xc-avatar flex items-center justify-center">
-          <span class="text-[32px] font-semibold text-primary">小</span>
-        </div>
-        <button type="button" class="xc-avatar-camera absolute bottom-0 right-0 flex items-center justify-center" aria-label="更换头像">
-          <i data-lucide="camera" class="h-3.5 w-3.5 text-foreground"></i>
-        </button>
-      </div>
-      <p class="text-[13px] text-muted-foreground mt-2">点击更换头像</p>
-    </section>
-
-    <!-- 表单区域 -->
-    <section class="xc-form-card mx-4">
-      <!-- 昵称 -->
-      <div class="xc-form-item flex items-center justify-between px-4">
-        <span class="text-[14px] text-foreground">昵称</span>
-        <input type="text" value="小绿" class="xc-form-input text-[14px] font-medium text-foreground text-right" />
-      </div>
-      <!-- 性别 -->
-      <div class="xc-form-item xc-form-item-border flex items-center justify-between px-4">
-        <span class="text-[14px] text-foreground">性别</span>
-        <div class="flex items-center gap-1">
-          <span class="text-[14px] text-foreground">女</span>
-          <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground"></i>
-        </div>
-      </div>
-      <!-- 年龄段 -->
-      <div class="xc-form-item xc-form-item-border flex items-center justify-between px-4">
-        <span class="text-[14px] text-foreground">年龄段</span>
-        <div class="flex items-center gap-1">
-          <span class="text-[14px] text-foreground">25-34岁</span>
-          <i data-lucide="chevron-right" class="h-4 w-4 text-muted-foreground"></i>
-        </div>
-      </div>
-      <!-- 身高 -->
-      <div class="xc-form-item xc-form-item-border flex items-center justify-between px-4">
-        <span class="text-[14px] text-foreground">身高</span>
-        <div class="flex items-center gap-1">
-          <span class="text-[14px] font-medium text-foreground">165</span>
-          <span class="text-[14px] text-foreground">cm</span>
-        </div>
-      </div>
-      <!-- 当前体重 -->
-      <div class="xc-form-item xc-form-item-border flex items-center justify-between px-4">
-        <span class="text-[14px] text-foreground">当前体重</span>
-        <div class="flex items-center gap-1">
-          <span class="text-[14px] font-medium text-primary">61.8</span>
-          <span class="text-[14px] text-foreground">kg</span>
-        </div>
-      </div>
-      <!-- 目标体重 -->
-      <div class="xc-form-item flex items-center justify-between px-4">
-        <span class="text-[14px] text-foreground">目标体重</span>
-        <div class="flex items-center gap-1">
-          <span class="text-[14px] font-medium text-foreground">55.0</span>
-          <span class="text-[14px] text-foreground">kg</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- 提示文字 -->
-    <div class="flex items-start gap-1.5 mx-4 mt-3">
-      <i data-lucide="info" class="h-3 w-3 text-muted-foreground mt-0.5 shrink-0"></i>
-      <p class="text-[12px] text-muted-foreground leading-relaxed">身高、体重等身体数据会影响每日热量预算的计算，请确保准确。</p>
-    </div>
-  </main>
+  </div>
 
   <style id="critical-layout">
-    .xc-nav-bar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background-color: var(--xc-background);
+    .xc-overlay {
+      background-color: rgba(0, 0, 0, 0.4);
     }
-    .xc-status-bar {
+    .xc-sheet {
+      background-color: var(--xc-surface);
+      border-radius: var(--xc-radius-lg) var(--xc-radius-lg) 0 0;
+      box-shadow: var(--xc-shadow-3);
+      max-height: 60vh;
+    }
+    .xc-sheet-handle {
+      width: 36px;
+      height: 4px;
+      border-radius: var(--xc-radius-pill);
+      background-color: var(--xc-border);
+    }
+    .xc-divider {
+      height: 1px;
+      background-color: var(--xc-border);
+    }
+    .xc-food-item {
       height: 44px;
     }
-    .xc-nav-content {
-      height: 44px;
+    .xc-food-item-border {
+      border-bottom: 1px solid var(--xc-divider);
     }
-    .xc-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: var(--xc-radius-pill);
-      background-color: var(--xc-primary-50);
+    .xc-desc-box {
+      background-color: var(--xc-surface-2);
+      border-radius: var(--xc-radius-sm);
     }
-    .xc-avatar-camera {
-      width: 28px;
-      height: 28px;
-      border-radius: var(--xc-radius-pill);
-      background-color: var(--xc-surface);
-      border: 1px solid var(--xc-border);
-      box-shadow: var(--xc-shadow-1);
+    .xc-text-accent {
+      color: var(--xc-state-accent);
     }
-    .xc-form-card {
-      background-color: var(--xc-surface);
-      border-radius: var(--xc-radius-lg);
-      box-shadow: var(--xc-shadow-1);
-      overflow: hidden;
+    .xc-btn-primary {
+      background-color: var(--xc-primary);
     }
-    .xc-form-item {
-      height: 56px;
-    }
-    .xc-form-item-border {
-      border-bottom: 1px solid var(--xc-border);
-    }
-    .xc-form-input {
-      background: transparent;
-      border: none;
-      outline: none;
-      width: auto;
-      min-width: 100px;
-    }
-    .xc-form-input:focus {
-      outline: none;
+    .xc-safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom);
     }
   </style>
   <script>lucide.createIcons();</script>

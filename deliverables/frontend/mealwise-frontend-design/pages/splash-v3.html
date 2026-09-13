@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>启动闪屏</title>
+    <style id="theme-vars">
+:root {
+  /* ===== Brand Primary: Mint Macaron ===== */
+  --xc-primary: #7CB89E;
+  --xc-primary-foreground: #FFFFFF;
+  --xc-primary-50: #EDF6F2;
+  --xc-primary-100: #D4EBE0;
+
+  /* ===== Surfaces ===== */
+  --xc-background: #F6FBF8;
+  --xc-surface: #FFFFFF;
+  --xc-surface-2: #EFF6F2;
+
+  /* ===== Text ===== */
+  --xc-foreground: #1A2822;
+  --xc-muted-foreground: #5E7066;
+  --xc-placeholder: #9AAFA2;
+
+  /* ===== Lines & Borders ===== */
+  --xc-border: #DCE6E0;
+  --xc-input: #DCE6E0;
+  --xc-ring: #7CB89E;
+  --xc-divider: rgba(26, 40, 34, 0.06);
+
+  /* ===== Status / Accent ===== */
+  --xc-state-accent: #D4754A;
+  --xc-state-accent-foreground: #FFFFFF;
+  --xc-state-success: #22C55E;
+  --xc-state-warning: #F59E0B;
+  --xc-state-error: #EF4444;
+
+  /* ===== Radius ===== */
+  --xc-radius-xs: 4px;
+  --xc-radius-sm: 8px;
+  --xc-radius-md: 12px;
+  --xc-radius-lg: 16px;
+  --xc-radius-pill: 999px;
+
+  /* ===== Shadows ===== */
+  --xc-shadow-1: 0 1px 2px rgba(26, 40, 34, 0.04), 0 1px 1px rgba(26, 40, 34, 0.02);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 40, 34, 0.04);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 40, 34, 0.04);
+
+  /* ===== Typography ===== */
+  --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --xc-font-mono: "SF Mono", "Menlo", monospace;
+
+  /* ===== Semantic Aliases ===== */
+  --xc-card: var(--xc-surface);
+  --xc-card-foreground: var(--xc-foreground);
+  --xc-popover: var(--xc-surface);
+  --xc-popover-foreground: var(--xc-foreground);
+  --xc-muted: var(--xc-surface-2);
+  --xc-muted-foreground: var(--xc-muted-foreground);
+}
+    </style>
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; }
+body {
+  font-family: var(--xc-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Splash Layout */
+.splash-container {
+  width: 100%;
+  height: 100vh;
+  background-color: var(--xc-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.splash-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -48px;
+}
+
+.splash-logo-mark {
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--xc-primary-foreground);
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.splash-logo-sub {
+  font-size: 15px;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.splash-tagline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.splash-tagline-main {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--xc-primary-foreground);
+}
+
+.splash-tagline-sub {
+  font-size: 12px;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.splash-loading {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.splash-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.splash-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--xc-primary-foreground);
+}
+
+.splash-dot.d1 { animation: dot-bounce 1.4s ease-in-out infinite; }
+.splash-dot.d2 { animation: dot-bounce 1.4s ease-in-out 0.2s infinite; }
+.splash-dot.d3 { animation: dot-bounce 1.4s ease-in-out 0.4s infinite; }
+
+.splash-loading-text {
+  font-size: 12px;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@keyframes dot-bounce {
+  0%, 60%, 100% { transform: scale(1); opacity: 0.4; }
+  30% { transform: scale(1.3); opacity: 1; }
+}
+    </style>
+</head>
+<body>
+    <div class="splash-container">
+        <div class="splash-logo">
+            <div class="splash-logo-mark">M</div>
+            <div class="splash-logo-sub">你的私人减肥教练</div>
+        </div>
+
+        <div class="splash-tagline">
+            <div class="splash-tagline-main">靠谱地瘦下来</div>
+            <div class="splash-tagline-sub">专业 · 陪伴 · 一点毒舌</div>
+        </div>
+
+        <div class="splash-loading">
+            <div class="splash-dots">
+                <span class="splash-dot d1"></span>
+                <span class="splash-dot d2"></span>
+                <span class="splash-dot d3"></span>
+            </div>
+            <div class="splash-loading-text">加载中...</div>
+        </div>
+    </div>
+</body>
+</html>

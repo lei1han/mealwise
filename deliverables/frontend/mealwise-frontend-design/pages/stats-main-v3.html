@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN" class="light">
 <head>
     <meta charset="UTF-8">
@@ -6,30 +6,30 @@
     <title>数据主页</title>
     <style id="theme-vars">
 :root {
-  /* ===== Brand Primary: Sage Green ===== */
-  --xc-primary: #4E7A5C;
+  /* ===== Brand Primary: Mint Macaron ===== */
+  --xc-primary: #7CB89E;
   --xc-primary-foreground: #FFFFFF;
-  --xc-primary-50: #EEF5F0;
-  --xc-primary-100: #D6E8DC;
+  --xc-primary-50: #EDF6F2;
+  --xc-primary-100: #D4EBE0;
 
   /* ===== Surfaces ===== */
-  --xc-background: #F8FBF9;
+  --xc-background: #F6FBF8;
   --xc-surface: #FFFFFF;
-  --xc-surface-2: #F1F5F2;
+  --xc-surface-2: #EFF6F2;
 
   /* ===== Text ===== */
-  --xc-foreground: #1A2620;
-  --xc-muted-foreground: #5C7064;
-  --xc-placeholder: #9AACA0;
+  --xc-foreground: #1A2822;
+  --xc-muted-foreground: #5E7066;
+  --xc-placeholder: #9AAFA2;
 
   /* ===== Lines & Borders ===== */
-  --xc-border: #DEE6E0;
-  --xc-input: #DEE6E0;
-  --xc-ring: #4E7A5C;
-  --xc-divider: rgba(26, 38, 32, 0.06);
+  --xc-border: #DCE6E0;
+  --xc-input: #DCE6E0;
+  --xc-ring: #7CB89E;
+  --xc-divider: rgba(26, 40, 34, 0.06);
 
   /* ===== Status / Accent ===== */
-  --xc-state-accent: #C5733A;
+  --xc-state-accent: #D4754A;
   --xc-state-accent-foreground: #FFFFFF;
   --xc-state-success: #22C55E;
   --xc-state-warning: #F59E0B;
@@ -43,9 +43,9 @@
   --xc-radius-pill: 999px;
 
   /* ===== Shadows ===== */
-  --xc-shadow-1: 0 1px 2px rgba(26, 38, 32, 0.05), 0 1px 1px rgba(26, 38, 32, 0.03);
-  --xc-shadow-2: 0 8px 24px -8px rgba(26, 38, 32, 0.05);
-  --xc-shadow-3: 0 24px 60px -20px rgba(26, 38, 32, 0.05);
+  --xc-shadow-1: 0 1px 2px rgba(26, 40, 34, 0.04), 0 1px 1px rgba(26, 40, 34, 0.02);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 40, 34, 0.04);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 40, 34, 0.04);
 
   /* ===== Typography ===== */
   --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
@@ -411,28 +411,6 @@ body {
         </div>
       </section>
 
-      <!-- 底部 Tab 栏 -->
-      <footer class="xc-tabbar fixed bottom-0 left-0 right-0 z-40">
-        <div class="xc-tabbar-safe">
-          <div class="xc-tabbar-height flex items-center justify-around">
-            <!-- 聊天 -->
-            <button class="xc-tab-item flex flex-col items-center justify-center gap-0.5" data-dom-id="nav-tab-chat">
-              <i data-lucide="message-circle" class="h-6 w-6 text-muted-foreground"></i>
-              <span class="text-[10px] text-muted-foreground">聊天</span>
-            </button>
-            <!-- 数据（选中） -->
-            <button class="xc-tab-item flex flex-col items-center justify-center gap-0.5">
-              <i data-lucide="bar-chart-2" class="h-6 w-6 text-primary"></i>
-              <span class="text-[10px] text-primary font-medium">数据</span>
-            </button>
-            <!-- 我的 -->
-            <button class="xc-tab-item flex flex-col items-center justify-center gap-0.5" data-dom-id="nav-tab-profile">
-              <i data-lucide="user" class="h-6 w-6 text-muted-foreground"></i>
-              <span class="text-[10px] text-muted-foreground">我的</span>
-            </button>
-          </div>
-        </div>
-      </footer>
     </main>
     <style id="critical-layout">
       .xc-nav { height: 44px; }
@@ -468,20 +446,6 @@ body {
       .xc-streak-card {
         background-color: var(--xc-primary-50);
         border-radius: var(--xc-radius-md);
-      }
-      .xc-tabbar {
-        background-color: var(--xc-surface);
-        border-top: 1px solid var(--xc-border);
-      }
-      .xc-tabbar-height {
-        height: 56px;
-      }
-      .xc-tabbar-safe {
-        padding-bottom: env(safe-area-inset-bottom);
-      }
-      .xc-tab-item {
-        flex: 1;
-        height: 100%;
       }
       .bg-surface-2 {
         background-color: var(--xc-surface-2);

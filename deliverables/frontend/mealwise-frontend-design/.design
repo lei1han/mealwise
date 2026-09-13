@@ -1,487 +1,342 @@
 {
   "data": [
     {
-      "id": "page-chat-main",
-      "title": "聊天主流程",
+      "id": "page-splash-v3",
       "type": "page",
-      "version": 1,
-      "createdAt": 1787926571000,
+      "title": "启动闪屏",
       "canvasData": {
         "x": 0,
-        "y": 0,
+        "y": 2281,
+        "width": 375,
+        "height": 812,
         "group": 0,
         "layoutSnapshot": {
           "version": 1,
-          "contentHeight": 900,
+          "contentHeight": 812,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-6b29fb03",
-          "measuredAt": 1788187672880
+          "sourceHash": "fnv1a-cfc67b9b",
+          "measuredAt": 1788356601474
         }
       },
+      "version": 1,
+      "createdAt": 1788356278794,
       "devMetadata": {
-        "htmlSrc": "pages/chat-main.html",
-        "interactions": [
-          {
-            "domId": "interaction-id-nomhuj1",
-            "targetPageId": "page-sheet-weight"
-          }
-        ]
+        "htmlSrc": "pages/splash-v3.html",
+        "viewportWidth": 375,
+        "viewportHeight": 812,
+        "deviceFrame": "iphone-14"
       }
     },
     {
-      "id": "page-chat-onboarding",
-      "title": "Onboarding 摸底定标",
+      "id": "page-auth-login-v3",
       "type": "page",
-      "version": 1,
-      "createdAt": 1787926571000,
-      "canvasData": {
-        "x": 0,
-        "y": 372,
-        "group": 0,
-        "layoutSnapshot": {
-          "version": 1,
-          "contentHeight": 916,
-          "viewportWidth": 375,
-          "sourceHash": "fnv1a-856a14e0",
-          "measuredAt": 1788187672880
-        }
-      },
-      "devMetadata": {
-        "htmlSrc": "pages/chat-onboarding.html",
-        "interactions": []
-      }
-    },
-    {
-      "id": "page-sheet-weight",
-      "title": "体重/目标录入",
-      "type": "page",
-      "version": 1,
-      "createdAt": 1787926571000,
+      "title": "授权登录",
       "canvasData": {
         "x": 169,
-        "y": 0,
+        "y": 2281,
+        "width": 375,
+        "height": 812,
         "group": 0,
         "layoutSnapshot": {
           "version": 1,
-          "contentHeight": 900,
+          "contentHeight": 812,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-6849cf6a",
-          "measuredAt": 1788187672880
+          "sourceHash": "fnv1a-280574b9",
+          "measuredAt": 1788360099639
         }
       },
+      "version": 1,
+      "createdAt": 1788356278794,
       "devMetadata": {
-        "htmlSrc": "pages/sheet-weight.html",
-        "interactions": []
+        "htmlSrc": "pages/auth-login-v3.html",
+        "viewportWidth": 375,
+        "viewportHeight": 812,
+        "deviceFrame": "iphone-14"
       }
     },
     {
-      "id": "page-sheet-snark",
-      "title": "毒舌档位选择",
+      "id": "page-sheet-snark-v3",
       "type": "page",
-      "version": 1,
-      "createdAt": 1787926571000,
-      "canvasData": {
-        "x": 169,
-        "y": 372,
-        "group": 0,
-        "layoutSnapshot": {
-          "version": 1,
-          "contentHeight": 900,
-          "viewportWidth": 375,
-          "sourceHash": "fnv1a-e391ba8a",
-          "measuredAt": 1788187672880
-        }
-      },
-      "devMetadata": {
-        "htmlSrc": "pages/sheet-snark.html",
-        "interactions": []
-      }
-    },
-    {
-      "id": "page-sheet-subscribe",
-      "title": "订阅消息授权",
-      "type": "page",
-      "version": 1,
-      "createdAt": 1787926571000,
+      "title": "毒舌档位选择 Sheet",
       "canvasData": {
         "x": 338,
-        "y": 372,
+        "y": 2281,
+        "width": 375,
+        "height": 812,
         "group": 0,
         "layoutSnapshot": {
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-0356a8a1",
-          "measuredAt": 1788187672880
+          "sourceHash": "fnv1a-00000000",
+          "measuredAt": 1788356278794
         }
       },
+      "version": 1,
+      "createdAt": 1788356278794,
       "devMetadata": {
-        "htmlSrc": "pages/sheet-subscribe.html",
-        "interactions": []
+        "htmlSrc": "pages/sheet-snark-v3.html",
+        "viewportWidth": 375,
+        "viewportHeight": 812,
+        "deviceFrame": "iphone-14"
       }
     },
     {
-      "id": "page-splash",
-      "title": "启动闪屏",
+      "id": "page-sheet-subscribe-v3",
       "type": "page",
-      "version": 1,
-      "createdAt": 1787929682000,
+      "title": "订阅消息授权 Sheet",
       "canvasData": {
         "x": 507,
-        "y": 372,
+        "y": 2281,
+        "width": 375,
+        "height": 812,
         "group": 0,
         "layoutSnapshot": {
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-25009d82",
-          "measuredAt": 1788187672880
+          "sourceHash": "fnv1a-00000000",
+          "measuredAt": 1788356278794
         }
       },
+      "version": 1,
+      "createdAt": 1788356278794,
       "devMetadata": {
-        "htmlSrc": "pages/splash.html",
-        "interactions": []
+        "htmlSrc": "pages/sheet-subscribe-v3.html",
+        "viewportWidth": 375,
+        "viewportHeight": 812,
+        "deviceFrame": "iphone-14"
       }
     },
     {
-      "id": "page-auth-login",
-      "title": "授权登录",
+      "id": "page-chat-main-v3",
+      "title": "聊天页",
       "type": "page",
       "version": 1,
-      "createdAt": 1787929682000,
+      "createdAt": 1788274993770,
       "canvasData": {
-        "x": 676,
-        "y": 372,
+        "x": 0,
+        "y": 0,
         "group": 0,
-        "layoutSnapshot": {
-          "version": 1,
-          "contentHeight": 956,
-          "viewportWidth": 375,
-          "sourceHash": "fnv1a-47060ce1",
-          "measuredAt": 1788187672880
-        }
-      },
-      "devMetadata": {
-        "htmlSrc": "pages/auth-login.html",
-        "interactions": []
-      }
-    },
-    {
-      "id": "page-chat-main-v2",
-      "title": "聊天页 v2 增强版",
-      "type": "page",
-      "version": 1,
-      "createdAt": 1788270000000,
-      "canvasData": {
-        "x": 845,
-        "y": 372,
-        "group": 1,
         "layoutSnapshot": {
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-963af5a6",
-          "measuredAt": 1788271442524
+          "sourceHash": "fnv1a-6fde0213",
+          "measuredAt": 1788360099639
         }
       },
       "devMetadata": {
-        "htmlSrc": "pages/chat-main-v2.html",
+        "htmlSrc": "pages/chat-main-v3.html",
         "interactions": [
           {
             "domId": "nav-progress-to-stats",
-            "targetPageId": "page-stats-main"
+            "targetPageId": "page-stats-main-v3"
           },
           {
             "domId": "nav-tab-stats",
-            "targetPageId": "page-stats-main"
+            "targetPageId": "page-stats-main-v3"
           },
           {
             "domId": "nav-tab-profile",
-            "targetPageId": "page-profile-main"
+            "targetPageId": "page-profile-main-v3"
           },
           {
             "domId": "nav-diet-overview",
-            "targetPageId": "page-sheet-diet-detail"
+            "targetPageId": "page-sheet-diet-detail-v3"
           }
         ]
       }
     },
     {
-      "id": "page-stats-main",
+      "id": "page-stats-main-v3",
       "title": "数据主页",
       "type": "page",
       "version": 1,
-      "createdAt": 1788270000000,
+      "createdAt": 1788274993776,
       "canvasData": {
-        "x": 408,
-        "y": 984,
-        "group": 1,
+        "x": 0,
+        "y": 372,
+        "group": 0,
         "layoutSnapshot": {
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-69dd5944",
-          "measuredAt": 1788271442524
+          "sourceHash": "fnv1a-2ad30f37",
+          "measuredAt": 1788360276228
         }
       },
       "devMetadata": {
-        "htmlSrc": "pages/stats-main.html",
+        "htmlSrc": "pages/stats-main-v3.html",
         "interactions": [
           {
             "domId": "nav-tab-chat",
-            "targetPageId": "page-chat-main-v2"
+            "targetPageId": "page-chat-main-v3"
           },
           {
             "domId": "nav-tab-profile",
-            "targetPageId": "page-profile-main"
+            "targetPageId": "page-profile-main-v3"
           },
           {
             "domId": "nav-weight-detail",
-            "targetPageId": "page-stats-weight-detail"
-          },
-          {
-            "domId": "nav-calorie-detail",
-            "targetPageId": "page-stats-calorie-detail"
+            "targetPageId": "page-stats-weight-detail-v3"
           }
         ]
       }
     },
     {
-      "id": "page-profile-main",
+      "id": "page-profile-main-v3",
       "title": "个人中心",
       "type": "page",
       "version": 1,
-      "createdAt": 1788270000000,
+      "createdAt": 1788274993777,
       "canvasData": {
-        "x": 577,
-        "y": 984,
-        "group": 1,
+        "x": 169,
+        "y": 0,
+        "group": 0,
         "layoutSnapshot": {
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-394dc6a1",
-          "measuredAt": 1788271442524
+          "sourceHash": "fnv1a-37f205d0",
+          "measuredAt": 1788360276228
         }
       },
       "devMetadata": {
-        "htmlSrc": "pages/profile-main.html",
+        "htmlSrc": "pages/profile-main-v3.html",
         "interactions": [
           {
             "domId": "nav-tab-chat",
-            "targetPageId": "page-chat-main-v2"
+            "targetPageId": "page-chat-main-v3"
           },
           {
             "domId": "nav-tab-stats",
-            "targetPageId": "page-stats-main"
+            "targetPageId": "page-stats-main-v3"
           },
           {
             "domId": "nav-profile-edit",
-            "targetPageId": "page-profile-edit"
+            "targetPageId": "page-profile-edit-v3"
           },
           {
             "domId": "nav-target-setting",
-            "targetPageId": "page-target-setting"
-          },
-          {
-            "domId": "nav-body-data",
-            "targetPageId": "page-body-data"
-          },
-          {
-            "domId": "nav-body-data-weight",
-            "targetPageId": "page-body-data"
-          },
-          {
-            "domId": "nav-body-data-gender",
-            "targetPageId": "page-body-data"
-          },
-          {
-            "domId": "nav-snark-sheet",
-            "targetPageId": "page-sheet-snark"
-          },
-          {
-            "domId": "nav-subscribe-sheet",
-            "targetPageId": "page-sheet-subscribe"
+            "targetPageId": "page-target-setting-v3"
           }
         ]
       }
     },
     {
-      "id": "page-stats-weight-detail",
+      "id": "page-stats-weight-detail-v3",
       "title": "体重趋势详情",
       "type": "page",
       "version": 1,
-      "createdAt": 1788270000000,
+      "createdAt": 1788274993777,
       "canvasData": {
-        "x": 746,
-        "y": 984,
-        "group": 1,
+        "x": 0,
+        "y": 1488,
+        "group": 0,
         "layoutSnapshot": {
           "version": 1,
           "contentHeight": 1071,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-1f872adf",
-          "measuredAt": 1788271442524
+          "sourceHash": "fnv1a-f60e84af",
+          "measuredAt": 1788356601474
         }
       },
       "devMetadata": {
-        "htmlSrc": "pages/stats-weight-detail.html",
+        "htmlSrc": "pages/stats-weight-detail-v3.html",
         "interactions": [
           {
             "domId": "nav-back-stats",
-            "targetPageId": "page-stats-main"
+            "targetPageId": "page-stats-main-v3"
           }
         ]
       }
     },
     {
-      "id": "page-stats-calorie-detail",
-      "title": "热量统计详情",
-      "type": "page",
-      "version": 1,
-      "createdAt": 1788270000000,
-      "canvasData": {
-        "x": 915,
-        "y": 984,
-        "group": 1,
-        "layoutSnapshot": {
-          "version": 1,
-          "contentHeight": 1024,
-          "viewportWidth": 375,
-          "sourceHash": "fnv1a-b7469779",
-          "measuredAt": 1788271442524
-        }
-      },
-      "devMetadata": {
-        "htmlSrc": "pages/stats-calorie-detail.html",
-        "interactions": [
-          {
-            "domId": "nav-back-stats",
-            "targetPageId": "page-stats-main"
-          },
-          {
-            "domId": "nav-diet-detail-breakfast",
-            "targetPageId": "page-sheet-diet-detail"
-          },
-          {
-            "domId": "nav-diet-detail-lunch",
-            "targetPageId": "page-sheet-diet-detail"
-          }
-        ]
-      }
-    },
-    {
-      "id": "page-target-setting",
+      "id": "page-target-setting-v3",
       "title": "目标管理",
       "type": "page",
       "version": 1,
-      "createdAt": 1788270000000,
+      "createdAt": 1788274993777,
       "canvasData": {
-        "x": 1084,
-        "y": 984,
-        "group": 1,
+        "x": 0,
+        "y": 1116,
+        "group": 0,
         "layoutSnapshot": {
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-5539ca8f",
-          "measuredAt": 1788271442524
+          "sourceHash": "fnv1a-f7d9c5fd",
+          "measuredAt": 1788356601474
         }
       },
       "devMetadata": {
-        "htmlSrc": "pages/target-setting.html",
+        "htmlSrc": "pages/target-setting-v3.html",
         "interactions": [
           {
             "domId": "nav-back-profile",
-            "targetPageId": "page-profile-main"
+            "targetPageId": "page-profile-main-v3"
           }
         ]
       }
     },
     {
-      "id": "page-body-data",
-      "title": "身体数据",
-      "type": "page",
-      "version": 1,
-      "createdAt": 1788270000000,
-      "canvasData": {
-        "x": 1253,
-        "y": 984,
-        "group": 1,
-        "layoutSnapshot": {
-          "version": 1,
-          "contentHeight": 900,
-          "viewportWidth": 375,
-          "sourceHash": "fnv1a-3dfe54eb",
-          "measuredAt": 1788271442524
-        }
-      },
-      "devMetadata": {
-        "htmlSrc": "pages/body-data.html",
-        "interactions": [
-          {
-            "domId": "nav-back-profile",
-            "targetPageId": "page-profile-main"
-          },
-          {
-            "domId": "nav-weight-detail-all",
-            "targetPageId": "page-stats-weight-detail"
-          }
-        ]
-      }
-    },
-    {
-      "id": "page-profile-edit",
+      "id": "page-profile-edit-v3",
       "title": "编辑资料",
       "type": "page",
       "version": 1,
-      "createdAt": 1788270000000,
+      "createdAt": 1788274993779,
       "canvasData": {
-        "x": 1422,
-        "y": 984,
-        "group": 1,
+        "x": 0,
+        "y": 744,
+        "group": 0,
         "layoutSnapshot": {
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-b3addb8a",
-          "measuredAt": 1788271442524
+          "sourceHash": "fnv1a-94ed63b8",
+          "measuredAt": 1788356601474
         }
       },
       "devMetadata": {
-        "htmlSrc": "pages/profile-edit.html",
-        "interactions": []
+        "htmlSrc": "pages/profile-edit-v3.html",
+        "interactions": [
+          {
+            "domId": "nav-back-profile",
+            "targetPageId": "page-profile-main-v3"
+          }
+        ]
       }
     },
     {
-      "id": "page-sheet-diet-detail",
+      "id": "page-sheet-diet-detail-v3",
       "title": "饮食详情 Sheet",
       "type": "page",
       "version": 1,
-      "createdAt": 1788270000000,
+      "createdAt": 1788274993779,
       "canvasData": {
-        "x": 1591,
-        "y": 984,
-        "group": 1,
+        "x": 0,
+        "y": 1909,
+        "group": 0,
         "layoutSnapshot": {
           "version": 1,
           "contentHeight": 900,
           "viewportWidth": 375,
-          "sourceHash": "fnv1a-02f1113d",
-          "measuredAt": 1788271442524
+          "sourceHash": "fnv1a-2c7711ef",
+          "measuredAt": 1788359688501
         }
       },
       "devMetadata": {
-        "htmlSrc": "pages/sheet-diet-detail.html",
+        "htmlSrc": "pages/sheet-diet-detail-v3.html",
         "interactions": []
       }
     }
   ],
   "config": {
-    "autoLayout": false,
+    "autoLayout": true,
     "deviceType": "mobile",
-    "projectName": "三餐教练 前端设计稿 v2",
-    "showEdge": true,
+    "projectName": "三餐教练 v3 薄荷马卡龙",
+    "showEdge": false,
     "visualEditorEnabled": false
   }
 }

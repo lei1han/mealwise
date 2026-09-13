@@ -3,33 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>聊天页 v2 增强版</title>
+    <title>聊天页 v3 薄荷马卡龙</title>
     <style id="theme-vars">
 :root {
-  /* ===== Brand Primary: Sage Green ===== */
-  --xc-primary: #4E7A5C;
+  /* ===== Brand Primary: Mint Macaron ===== */
+  --xc-primary: #7CB89E;
   --xc-primary-foreground: #FFFFFF;
-  --xc-primary-50: #EEF5F0;
-  --xc-primary-100: #D6E8DC;
+  --xc-primary-50: #EDF6F2;
+  --xc-primary-100: #D4EBE0;
 
   /* ===== Surfaces ===== */
-  --xc-background: #F8FBF9;
+  --xc-background: #F6FBF8;
   --xc-surface: #FFFFFF;
-  --xc-surface-2: #F1F5F2;
+  --xc-surface-2: #EFF6F2;
 
   /* ===== Text ===== */
-  --xc-foreground: #1A2620;
-  --xc-muted-foreground: #5C7064;
-  --xc-placeholder: #9AACA0;
+  --xc-foreground: #1A2822;
+  --xc-muted-foreground: #5E7066;
+  --xc-placeholder: #9AAFA2;
 
   /* ===== Lines & Borders ===== */
-  --xc-border: #DEE6E0;
-  --xc-input: #DEE6E0;
-  --xc-ring: #4E7A5C;
-  --xc-divider: rgba(26, 38, 32, 0.06);
+  --xc-border: #DCE6E0;
+  --xc-input: #DCE6E0;
+  --xc-ring: #7CB89E;
+  --xc-divider: rgba(26, 40, 34, 0.06);
 
   /* ===== Status / Accent ===== */
-  --xc-state-accent: #C5733A;
+  --xc-state-accent: #D4754A;
   --xc-state-accent-foreground: #FFFFFF;
   --xc-state-success: #22C55E;
   --xc-state-warning: #F59E0B;
@@ -43,9 +43,9 @@
   --xc-radius-pill: 999px;
 
   /* ===== Shadows ===== */
-  --xc-shadow-1: 0 1px 2px rgba(26, 38, 32, 0.05), 0 1px 1px rgba(26, 38, 32, 0.03);
-  --xc-shadow-2: 0 8px 24px -8px rgba(26, 38, 32, 0.05);
-  --xc-shadow-3: 0 24px 60px -20px rgba(26, 38, 32, 0.05);
+  --xc-shadow-1: 0 1px 2px rgba(26, 40, 34, 0.04), 0 1px 1px rgba(26, 40, 34, 0.02);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 40, 34, 0.04);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 40, 34, 0.04);
 
   /* ===== Typography ===== */
   --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
@@ -280,42 +280,57 @@ body {
         </div>
       </section>
 
-      <!-- ===== 底部输入栏 ===== -->
+      <!-- ===== 底部输入栏（服务号模式） ===== -->
       <footer id="input-bar" class="xc-input fixed left-0 right-0 z-40">
         <div class="flex items-center gap-2 px-3 py-2">
-          <button type="button" class="flex h-9 w-9 flex-none items-center justify-center rounded-full text-muted-foreground hover:bg-muted">
-            <i data-lucide="mic" class="h-5 w-5"></i>
+          <!-- 左侧切换按钮：键盘 / 菜单 切换 -->
+          <button type="button" class="xc-toggle-btn flex h-9 w-9 flex-none items-center justify-center rounded-full text-muted-foreground hover:bg-muted transition-colors" id="input-toggle-btn" aria-label="切换输入模式">
+            <i data-lucide="grid-2x2" class="h-5 w-5" id="toggle-icon"></i>
           </button>
+          <!-- 输入框 -->
           <div class="relative flex-1">
-            <input type="text" class="h-10 w-full rounded-full border border-input bg-surface px-4 text-[15px] text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" placeholder="用一拳/半拳描述...">
+            <input type="text" class="h-10 w-full rounded-full border border-input bg-surface px-4 text-[15px] text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" placeholder="告诉教练你今天吃了什么、体重多少...">
           </div>
+          <!-- 发送按钮 -->
           <button type="button" class="xc-send flex h-9 w-9 flex-none items-center justify-center rounded-full">
             <i data-lucide="send" class="h-5 w-5"></i>
           </button>
         </div>
       </footer>
 
-      <!-- ===== 底部 Tab 栏（v2 新增） ===== -->
-      <nav id="tab-bar" class="xc-tabbar fixed bottom-0 left-0 right-0 z-30">
-        <div class="flex h-14 items-center justify-around">
-          <!-- 聊天（选中态） -->
-          <button type="button" class="xc-tab-item flex flex-col items-center justify-center gap-0.5">
-            <i data-lucide="message-circle" class="h-6 w-6"></i>
-            <span class="text-[10px] font-medium">聊天</span>
+      <!-- ===== 功能菜单面板（默认隐藏，点击切换按钮后展开） ===== -->
+      <div id="menu-panel" class="xc-menu-panel fixed left-0 right-0 z-45">
+        <div class="grid grid-cols-4 gap-4 px-6 py-5">
+          <!-- 数据统计 -->
+          <button class="xc-menu-item flex flex-col items-center gap-2" data-dom-id="nav-tab-stats">
+            <div class="xc-menu-icon flex h-12 w-12 items-center justify-center rounded-2xl">
+              <i data-lucide="bar-chart-2" class="h-6 w-6"></i>
+            </div>
+            <span class="text-[12px] text-foreground">数据统计</span>
           </button>
-          <!-- 数据 -->
-          <button type="button" class="xc-tab-item xc-tab-inactive flex flex-col items-center justify-center gap-0.5" data-dom-id="nav-tab-stats">
-            <i data-lucide="bar-chart-2" class="h-6 w-6"></i>
-            <span class="text-[10px] font-medium">数据</span>
+          <!-- 目标管理 -->
+          <button class="xc-menu-item flex flex-col items-center gap-2">
+            <div class="xc-menu-icon flex h-12 w-12 items-center justify-center rounded-2xl">
+              <i data-lucide="target" class="h-6 w-6"></i>
+            </div>
+            <span class="text-[12px] text-foreground">目标管理</span>
           </button>
-          <!-- 我的 -->
-          <button type="button" class="xc-tab-item xc-tab-inactive flex flex-col items-center justify-center gap-0.5" data-dom-id="nav-tab-profile">
-            <i data-lucide="user" class="h-6 w-6"></i>
-            <span class="text-[10px] font-medium">我的</span>
+          <!-- 身体数据 -->
+          <button class="xc-menu-item flex flex-col items-center gap-2">
+            <div class="xc-menu-icon flex h-12 w-12 items-center justify-center rounded-2xl">
+              <i data-lucide="activity" class="h-6 w-6"></i>
+            </div>
+            <span class="text-[12px] text-foreground">身体数据</span>
+          </button>
+          <!-- 个人中心 -->
+          <button class="xc-menu-item flex flex-col items-center gap-2" data-dom-id="nav-tab-profile">
+            <div class="xc-menu-icon flex h-12 w-12 items-center justify-center rounded-2xl">
+              <i data-lucide="user" class="h-6 w-6"></i>
+            </div>
+            <span class="text-[12px] text-foreground">个人中心</span>
           </button>
         </div>
-        <div class="xc-tabbar-safe"></div>
-      </nav>
+      </div>
     </main>
     <style id="critical-layout">
       /* 导航栏 */
@@ -345,7 +360,7 @@ body {
 
       /* 聊天区域 */
       .xc-chat-area {
-        padding-bottom: calc(120px + env(safe-area-inset-bottom));
+        padding-bottom: calc(80px + env(safe-area-inset-bottom));
       }
       .xc-avatar {
         background-color: var(--xc-primary-50);
@@ -389,35 +404,47 @@ body {
         border-top: 1px solid var(--xc-border);
         padding: 12px 16px;
         z-index: 35;
-        bottom: calc(56px + 56px + env(safe-area-inset-bottom));
+        bottom: calc(56px + env(safe-area-inset-bottom));
       }
 
-      /* 输入栏 */
+      /* 输入栏（服务号模式） */
       .xc-input {
         background-color: var(--xc-surface);
         border-top: 1px solid var(--xc-border);
-        bottom: calc(56px + env(safe-area-inset-bottom));
+        bottom: calc(env(safe-area-inset-bottom));
       }
       .xc-send {
         background-color: var(--xc-primary);
         color: var(--xc-primary-foreground);
       }
+      .xc-toggle-btn {
+        background-color: var(--xc-surface-2);
+      }
 
-      /* Tab 栏 */
-      .xc-tabbar {
-        background-color: var(--xc-surface);
+      /* 功能菜单面板 */
+      .xc-menu-panel {
+        background-color: var(--xc-surface-2);
         border-top: 1px solid var(--xc-border);
+        bottom: calc(56px + env(safe-area-inset-bottom));
+        display: none;
       }
-      .xc-tabbar-safe {
-        height: env(safe-area-inset-bottom);
+      .xc-menu-panel.xc-menu-open {
+        display: block;
       }
-      .xc-tab-item {
-        flex: 1;
-        height: 100%;
+      .xc-menu-icon {
+        background-color: var(--xc-surface);
         color: var(--xc-primary);
+        box-shadow: var(--xc-shadow-1);
       }
-      .xc-tab-inactive {
-        color: var(--xc-muted-foreground);
+      .xc-menu-item {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+      }
+      .xc-menu-item:hover .xc-menu-icon {
+        transform: scale(1.05);
+        transition: transform 0.2s;
       }
 
       /* 页面背景 */
@@ -427,5 +454,40 @@ body {
       }
     </style>
     <script>lucide.createIcons();</script>
+    <script>
+      // 切换输入模式：键盘 <-> 菜单
+      (function() {
+        const toggleBtn = document.getElementById('input-toggle-btn');
+        const toggleIcon = document.getElementById('toggle-icon');
+        const menuPanel = document.getElementById('menu-panel');
+        const mealOverview = document.getElementById('meal-overview');
+        let isMenuOpen = false;
+
+        toggleBtn.addEventListener('click', function() {
+          isMenuOpen = !isMenuOpen;
+          if (isMenuOpen) {
+            // 打开菜单模式
+            menuPanel.classList.add('xc-menu-open');
+            toggleIcon.setAttribute('data-lucide', 'keyboard');
+            // 饮食概览上移
+            if (mealOverview) {
+              mealOverview.style.bottom = 'calc(56px + 140px + env(safe-area-inset-bottom))';
+            }
+          } else {
+            // 回到键盘输入模式
+            menuPanel.classList.remove('xc-menu-open');
+            toggleIcon.setAttribute('data-lucide', 'grid-2x2');
+            // 饮食概览归位
+            if (mealOverview) {
+              mealOverview.style.bottom = '';
+            }
+          }
+          // 重新渲染图标
+          if (window.lucide) {
+            lucide.createIcons();
+          }
+        });
+      })();
+    </script>
 </body>
 </html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X教练 - 配色方案对比 (v4 低饱和暖调)</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    background: #F5F5F0;
+    color: #2C2C2C;
+    padding: 40px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  .subtitle { color: #888; font-size: 14px; margin-bottom: 6px; }
+  .persona-tag {
+    display: inline-block; font-size: 12px; font-weight: 500; color: #666;
+    background: #EEECE8; padding: 3px 10px; border-radius: 6px; margin-bottom: 6px;
+  }
+  .persona-tag b { color: #444; }
+  .design-tags {
+    display: flex; gap: 8px; margin-bottom: 36px; flex-wrap: wrap;
+  }
+  .design-tag {
+    font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 500;
+    border: 1px solid #DDD9D2; color: #888; background: #FFFDFB;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: #FFF;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,.08), 0 12px 32px rgba(0,0,0,.06); }
+
+  .card-header {
+    padding: 24px 24px 16px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .card-label {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .5px; opacity: .5; margin-bottom: 4px;
+  }
+  .card-name { font-size: 18px; font-weight: 700; }
+  .card-desc { font-size: 13px; color: #888; margin-top: 2px; line-height: 1.4; }
+
+  .swatches {
+    display: flex; gap: 8px; padding: 0 24px 16px;
+  }
+  .swatch {
+    flex: 1; height: 56px; border-radius: 10px;
+    position: relative; cursor: default;
+    display: flex; align-items: flex-end; justify-content: center;
+    padding-bottom: 6px;
+  }
+  .swatch span {
+    font-size: 10px; font-weight: 600; letter-spacing: .3px;
+    background: rgba(0,0,0,.15); color: #fff; padding: 2px 6px; border-radius: 4px;
+  }
+  .swatch.light span { background: rgba(0,0,0,.06); color: #555; }
+
+  .preview {
+    margin: 0 24px 24px; border-radius: 12px; padding: 16px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .chat-bubble {
+    max-width: 80%; padding: 10px 14px; border-radius: 14px;
+    font-size: 13px; line-height: 1.5;
+  }
+  .bubble-coach {
+    align-self: flex-start; border-bottom-left-radius: 4px;
+  }
+  .bubble-user {
+    align-self: flex-end; border-bottom-right-radius: 4px;
+  }
+
+  .calorie-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 6px;
+    font-size: 11px; font-weight: 600; margin-top: 4px;
+  }
+
+  .preview-actions {
+    display: flex; gap: 8px; margin-top: 6px;
+  }
+  .btn-preview {
+    padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    border: none; cursor: default;
+  }
+  .btn-preview.primary { color: #fff; }
+  .btn-preview.secondary { background: transparent; border: 1.5px solid; }
+
+  .trait-row {
+    display: flex; gap: 6px; margin-top: 6px;
+  }
+  .trait {
+    font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 500;
+    background: #F0F0F0; color: #777;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>X教练 · 配色方案 v4</h1>
+  <p class="subtitle">低饱和度暖色调 · 圆润纤细 · 干净柔和舒适</p>
+  <div class="persona-tag">人格关键词：<b>专业</b> · <b>内心温暖</b> · <b>有点毒舌</b></div>
+  <div class="design-tags">
+    <span class="design-tag">低饱和度</span>
+    <span class="design-tag">暖色调</span>
+    <span class="design-tag">圆润纤细</span>
+    <span class="design-tag">干净柔和</span>
+    <span class="design-tag">舒适感</span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const schemes = [
+  {
+    id: 1,
+    name: '杏仁奶',
+    desc: '温润如玉，不争不抢。暖米棕调，像一杯温热的杏仁奶，安静地陪伴。',
+    traits: ['温润如玉', '不争不抢', '安静陪伴'],
+    primary: '#C4A882',
+    p50: '#F7F2EA',
+    p100: '#EDE2D0',
+    bg: '#FBFAF6',
+    surface: '#FFFFFF',
+    surface2: '#F5F2EA',
+    fg: '#2A2418',
+    muted: '#7A7060',
+    accent: '#D4754A',
+    border: '#E8E2D4',
+  },
+  {
+    id: 2,
+    name: '蜜桃茶',
+    desc: '柔和亲切，像下午茶时光。暖粉橘调，温度刚好，让人不自觉放下防备。',
+    traits: ['柔和亲切', '温度刚好', '放下防备'],
+    primary: '#D4AA8C',
+    p50: '#FBF3EC',
+    p100: '#F5E2D4',
+    bg: '#FCF9F6',
+    surface: '#FFFFFF',
+    surface2: '#F8F2EC',
+    fg: '#2A2018',
+    muted: '#7A6858',
+    accent: '#D4754A',
+    border: '#EAE0D8',
+  },
+  {
+    id: 3,
+    name: '玫瑰雾',
+    desc: '温柔克制，有呼吸感。灰粉调，像晨雾中的玫瑰，柔软但不甜腻。',
+    traits: ['温柔克制', '有呼吸感', '柔软不甜'],
+    primary: '#C49598',
+    p50: '#F9F0F0',
+    p100: '#F0DCDC',
+    bg: '#FCF9F8',
+    surface: '#FFFFFF',
+    surface2: '#F8F2F0',
+    fg: '#2A1E1E',
+    muted: '#7A6262',
+    accent: '#D4754A',
+    border: '#EAE0DE',
+  },
+  {
+    id: 4,
+    name: '焦糖奶',
+    desc: '温暖醇厚，有安全感。暖金棕调，像焦糖融入热牛奶，沉稳中带着甜。',
+    traits: ['温暖醇厚', '有安全感', '沉稳带甜'],
+    primary: '#C49A6C',
+    p50: '#F8F0E6',
+    p100: '#EDDEC8',
+    bg: '#FCFAF5',
+    surface: '#FFFFFF',
+    surface2: '#F6F2EA',
+    fg: '#2A2218',
+    muted: '#7A6C58',
+    accent: '#D4754A',
+    border: '#EAE2D4',
+  },
+  {
+    id: 5,
+    name: '燕麦色',
+    desc: '极致中性，宁静不打扰。暖灰米调，像一碗温热的燕麦粥，自然舒适。',
+    traits: ['极致中性', '宁静不打扰', '自然舒适'],
+    primary: '#C0B098',
+    p50: '#F6F2EA',
+    p100: '#EBE2D2',
+    bg: '#FAF8F4',
+    surface: '#FFFFFF',
+    surface2: '#F4F0E8',
+    fg: '#262218',
+    muted: '#706858',
+    accent: '#D4754A',
+    border: '#E6E2D6',
+  },
+];
+
+function render() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = schemes.map((s, i) => `
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">方案 ${s.id}</div>
+          <div class="card-name">${s.name}</div>
+          <div class="card-desc">${s.desc}</div>
+          <div class="trait-row">
+            ${s.traits.map(t => `<span class="trait">${t}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="swatches">
+        <div class="swatch" style="background:${s.primary}"><span>主色</span></div>
+        <div class="swatch" style="background:${s.p50}"><span class="light">50</span></div>
+        <div class="swatch" style="background:${s.p100}"><span class="light">100</span></div>
+        <div class="swatch" style="background:${s.accent}"><span>强调</span></div>
+        <div class="swatch" style="background:${s.bg}"><span class="light">背景</span></div>
+      </div>
+
+      <div class="preview" style="background:${s.bg};">
+        <div class="chat-bubble bubble-coach" style="background:${s.surface};color:${s.fg};border:1px solid ${s.border};">
+          早上好！今天称体重了吗？<br>
+          <span style="color:${s.muted};font-size:11px;">08:32</span>
+        </div>
+        <div class="chat-bubble bubble-user" style="background:${s.primary};color:#fff;">
+          称了，68.5，比昨天重了0.3
+        </div>
+        <div class="chat-bubble bubble-coach" style="background:${s.surface};color:${s.fg};border:1px solid ${s.border};">
+          正常波动，不用慌。该吃吃，别报复性节食。
+          <div class="calorie-tag" style="background:${s.accent};color:#fff;">今日预算剩余 1200 大卡</div>
+        </div>
+        <div class="preview-actions">
+          <button class="btn-preview primary" style="background:${s.primary};">记录饮食</button>
+          <button class="btn-preview secondary" style="color:${s.primary};border-color:${s.border};">聊聊心情</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+render();
+</script>
+</body>
+</html>

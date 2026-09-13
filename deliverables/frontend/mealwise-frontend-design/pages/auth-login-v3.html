@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>授权登录</title>
+    <style id="theme-vars">
+:root {
+  /* ===== Brand Primary: Mint Macaron ===== */
+  --xc-primary: #7CB89E;
+  --xc-primary-foreground: #FFFFFF;
+  --xc-primary-50: #EDF6F2;
+  --xc-primary-100: #D4EBE0;
+
+  /* ===== Surfaces ===== */
+  --xc-background: #F6FBF8;
+  --xc-surface: #FFFFFF;
+  --xc-surface-2: #EFF6F2;
+
+  /* ===== Text ===== */
+  --xc-foreground: #1A2822;
+  --xc-muted-foreground: #5E7066;
+  --xc-placeholder: #9AAFA2;
+
+  /* ===== Lines & Borders ===== */
+  --xc-border: #DCE6E0;
+  --xc-input: #DCE6E0;
+  --xc-ring: #7CB89E;
+  --xc-divider: rgba(26, 40, 34, 0.06);
+
+  /* ===== Status / Accent ===== */
+  --xc-state-accent: #D4754A;
+  --xc-state-accent-foreground: #FFFFFF;
+  --xc-state-success: #22C55E;
+  --xc-state-warning: #F59E0B;
+  --xc-state-error: #EF4444;
+
+  /* ===== Radius ===== */
+  --xc-radius-xs: 4px;
+  --xc-radius-sm: 8px;
+  --xc-radius-md: 12px;
+  --xc-radius-lg: 16px;
+  --xc-radius-pill: 999px;
+
+  /* ===== Shadows ===== */
+  --xc-shadow-1: 0 1px 2px rgba(26, 40, 34, 0.04), 0 1px 1px rgba(26, 40, 34, 0.02);
+  --xc-shadow-2: 0 8px 24px -8px rgba(26, 40, 34, 0.04);
+  --xc-shadow-3: 0 24px 60px -20px rgba(26, 40, 34, 0.04);
+
+  /* ===== Typography ===== */
+  --xc-font-sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --xc-font-mono: "SF Mono", "Menlo", monospace;
+
+  /* ===== Semantic Aliases ===== */
+  --xc-card: var(--xc-surface);
+  --xc-card-foreground: var(--xc-foreground);
+  --xc-popover: var(--xc-surface);
+  --xc-popover-foreground: var(--xc-foreground);
+  --xc-muted: var(--xc-surface-2);
+  --xc-muted-foreground: var(--xc-muted-foreground);
+}
+    </style>
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; }
+body {
+  font-family: var(--xc-font-sans);
+  background-color: var(--xc-background);
+  color: var(--xc-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Auth Page Layout */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--xc-background);
+}
+
+/* Brand Section */
+.auth-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15vh;
+}
+
+.auth-brand-logo {
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--xc-primary);
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.auth-brand-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 12px;
+  color: var(--xc-primary);
+}
+
+.auth-brand-sub {
+  font-size: 14px;
+  margin-top: 4px;
+  color: var(--xc-muted-foreground);
+}
+
+/* Feature Card */
+.auth-features {
+  margin: 40px 16px 0;
+}
+
+.auth-feature-card {
+  background-color: var(--xc-card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--xc-shadow-1);
+}
+
+.auth-feature-item {
+  display: flex;
+  gap: 12px;
+}
+
+.auth-feature-item + .auth-feature-item {
+  margin-top: 20px;
+}
+
+.auth-feature-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--xc-primary);
+}
+
+.auth-feature-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--xc-foreground);
+  line-height: 1.4;
+}
+
+.auth-feature-desc {
+  font-size: 13px;
+  color: var(--xc-muted-foreground);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+/* Spacer */
+.auth-spacer {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Button Section */
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px;
+  margin-bottom: 30vh;
+}
+
+.auth-btn-primary {
+  width: 100%;
+  height: 48px;
+  border-radius: 8px;
+  background-color: var(--xc-primary);
+  color: var(--xc-primary-foreground);
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.auth-btn-primary:hover { opacity: 0.9; }
+.auth-btn-primary:active { opacity: 0.8; }
+
+.auth-btn-hint {
+  font-size: 12px;
+  color: var(--xc-muted-foreground);
+  margin-top: 12px;
+}
+
+.auth-btn-secondary {
+  font-size: 13px;
+  color: var(--xc-primary);
+  margin-top: 24px;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+
+.auth-btn-secondary:hover { opacity: 0.8; }
+
+/* Footer */
+.auth-footer {
+  text-align: center;
+  padding-bottom: 32px;
+}
+
+.auth-footer-text {
+  font-size: 11px;
+  color: var(--xc-placeholder);
+}
+
+.auth-footer-link {
+  color: var(--xc-primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Inline SVG icon */
+.icon-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+        <!-- 品牌区 -->
+        <div class="auth-brand">
+            <div class="auth-brand-logo">M</div>
+            <div class="auth-brand-title">三餐教练</div>
+            <div class="auth-brand-sub">你的私人减肥教练</div>
+        </div>
+
+        <!-- 功能亮点 -->
+        <div class="auth-features">
+            <div class="auth-feature-card">
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="auth-feature-title">每日饮食记录与热量估算</div>
+                        <div class="auth-feature-desc">拍张照或一句话，教练帮你估算热量区间</div>
+                    </div>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="auth-feature-title">实时督促与毒舌陪伴</div>
+                        <div class="auth-feature-desc">漏报？教练会毒舌提醒你，损事不损人</div>
+                    </div>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="auth-feature-title">渐进式目标管理</div>
+                        <div class="auth-feature-desc">从你的现状出发，倒推一个够得着的目标</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 弹性空间 -->
+        <div class="auth-spacer"></div>
+
+        <!-- 授权按钮区 -->
+        <div class="auth-buttons">
+            <button class="auth-btn-primary">微信授权登录</button>
+            <div class="auth-btn-hint">授权后即可开始你的减肥之旅</div>
+            <button class="auth-btn-secondary">先看看，暂不授权</button>
+        </div>
+
+        <!-- 底部协议 -->
+        <div class="auth-footer">
+            <div class="auth-footer-text">
+                登录即表示同意
+                <span class="auth-footer-link">《用户协议》</span>
+                和
+                <span class="auth-footer-link">《隐私政策》</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
