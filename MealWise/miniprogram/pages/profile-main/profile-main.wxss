@@ -1,0 +1,249 @@
+/* 个人中心页样式：仅依赖全局 --xc-* 变量，不硬编码颜色（#FFFFFF 白字允许） */
+.xc-page {
+  min-height: 100vh;
+  background-color: var(--xc-background);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ========== 自定义导航栏 ========== */
+.nav-bar {
+  background-color: var(--xc-surface);
+  border-bottom: 1rpx solid var(--xc-border);
+}
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+}
+.nav-left { width: 120rpx; }
+.nav-back { font-size: 32rpx; color: var(--xc-primary); }
+.nav-title { font-size: 34rpx; font-weight: 600; color: var(--xc-foreground); }
+.nav-right { width: 120rpx; }
+
+/* ========== 用户信息卡 ========== */
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin: 24rpx;
+  padding: 32rpx;
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-lg);
+  box-shadow: var(--xc-shadow-1);
+}
+.avatar {
+  flex: none;
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 50%;
+  background-color: var(--xc-primary-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.avatar-img { width: 100%; height: 100%; }
+.avatar-text {
+  font-size: 44rpx;
+  font-weight: 600;
+  color: var(--xc-primary);
+}
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+.user-name-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+.user-name {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.user-snark {
+  flex: none;
+  font-size: 22rpx;
+  color: var(--xc-primary);
+  background-color: var(--xc-primary-50);
+  border-radius: var(--xc-radius-pill);
+  padding: 4rpx 16rpx;
+}
+.user-bio {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.user-bio-ph { color: var(--xc-placeholder); }
+.edit-btn {
+  flex: none;
+  padding: 12rpx 28rpx;
+  font-size: 26rpx;
+  color: var(--xc-primary);
+  border: 1rpx solid var(--xc-primary);
+  border-radius: var(--xc-radius-pill);
+}
+
+/* ========== 数据概览：三个圆形进度环 ========== */
+.rings-card {
+  display: flex;
+  align-items: stretch;
+  margin: 0 24rpx 24rpx;
+  padding: 32rpx 16rpx 24rpx;
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-lg);
+  box-shadow: var(--xc-shadow-1);
+}
+.ring-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 进度环几何（双半圆 + 旋转）：
+   环盒 S=156rpx，环厚约 17rpx（中心白圆直径 122rpx）。
+   左右两个半环遮罩（clip 裁出左/右半圆），各自内部一个左半圆填充盘，
+   绕圆心旋转即可扫出对应角度的扇形进度。 */
+.ring {
+  position: relative;
+  width: 156rpx;
+  height: 156rpx;
+  border-radius: 50%;
+  background-color: var(--xc-progress-track);
+  overflow: hidden;
+}
+.half {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 156rpx;
+  height: 156rpx;
+  border-radius: 50%;
+}
+/* 右半环遮罩：只显示右半圆 */
+.half-right { clip: rect(0rpx, 156rpx, 156rpx, 78rpx); }
+/* 左半环遮罩：只显示左半圆 */
+.half-left { clip: rect(0rpx, 78rpx, 156rpx, 0rpx); }
+/* 填充盘：左半圆填充，绕圆心旋转 */
+.fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 156rpx;
+  height: 156rpx;
+  border-radius: 50%;
+  background-color: var(--xc-progress-fill);
+  clip: rect(0rpx, 78rpx, 156rpx, 0rpx);
+  transform-origin: 78rpx 78rpx;
+}
+/* 中心白圆：抠出环孔，同时承载数值 */
+.ring-center {
+  position: absolute;
+  top: 17rpx;
+  left: 17rpx;
+  width: 122rpx;
+  height: 122rpx;
+  border-radius: 50%;
+  background-color: var(--xc-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.ring-value {
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--xc-foreground);
+}
+.ring-unit {
+  margin-top: 2rpx;
+  font-size: 20rpx;
+  color: var(--xc-muted-foreground);
+}
+.ring-label {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* ========== 连续打卡 ========== */
+.streak-card {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin: 0 24rpx 24rpx;
+  padding: 24rpx 32rpx;
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-md);
+  box-shadow: var(--xc-shadow-1);
+}
+.streak-icon { font-size: 36rpx; color: var(--xc-state-accent); }
+.streak-text {
+  font-size: 28rpx;
+  color: var(--xc-foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ========== 功能列表 ========== */
+.function-section { margin-bottom: 32rpx; }
+.section-title {
+  display: block;
+  margin: 0 32rpx 14rpx;
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+}
+.list-card {
+  margin: 0 24rpx;
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-md);
+  overflow: hidden;
+  box-shadow: var(--xc-shadow-1);
+}
+.list-item {
+  display: flex;
+  align-items: center;
+  height: var(--xc-list-item-height);
+  padding: 0 32rpx;
+  gap: 24rpx;
+}
+.list-item-border { border-bottom: 1rpx solid var(--xc-border); }
+.list-icon {
+  flex: none;
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: var(--xc-radius-md);
+  background-color: var(--xc-list-icon-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+.list-text {
+  flex: 1;
+  font-size: 30rpx;
+  color: var(--xc-foreground);
+}
+.list-value {
+  font-size: 28rpx;
+  color: var(--xc-muted-foreground);
+}
+.list-arrow {
+  font-size: 36rpx;
+  color: var(--xc-muted-foreground);
+  line-height: 1;
+}
+
+.page-gap { height: 24rpx; }

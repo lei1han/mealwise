@@ -1,0 +1,119 @@
+<view class="xc-page">
+  <!-- 自定义导航栏：左上返回按钮、居中标题、右侧空位避让胶囊按钮 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px">
+    <view class="nav-content" style="height: {{navBarHeight}}px; padding-right: {{menuPaddingRight}}px">
+      <view class="nav-left" bindtap="handleBack">
+        <text class="nav-back icon">{{icons.chevronLeft}} 返回</text>
+      </view>
+      <text class="nav-title">数据统计</text>
+      <view class="nav-right"></view>
+    </view>
+  </view>
+
+  <view class="page-body">
+    <!-- 概览卡片：当前体重 / 目标体重 / 已减重 / BMI -->
+    <view class="card overview-card">
+      <view class="overview-item">
+        <view class="overview-value">
+          <text>{{summary.current_weight}}</text>
+          <text class="unit">kg</text>
+        </view>
+        <view class="overview-label">当前体重</view>
+      </view>
+      <view class="overview-item">
+        <view class="overview-value">
+          <text>{{summary.target_weight}}</text>
+          <text class="unit">kg</text>
+        </view>
+        <view class="overview-label">目标体重</view>
+      </view>
+      <view class="overview-item">
+        <view class="overview-value">
+          <text class="value-down">↓{{summary.weight_lost}}</text>
+          <text class="unit">kg</text>
+        </view>
+        <view class="overview-label">已减重</view>
+      </view>
+      <view class="overview-item">
+        <view class="overview-value">
+          <text>{{summary.bmi}}</text>
+        </view>
+        <view class="overview-label">BMI</view>
+      </view>
+    </view>
+
+    <!-- 连续打卡卡片 -->
+    <view class="card streak-card">
+      <view class="streak-flame"></view>
+      <view class="streak-text">
+        <text>已连续打卡</text>
+        <text class="streak-num">{{streak.current}}</text>
+        <text>天</text>
+      </view>
+      <view class="streak-sub" wx:if="{{streak.longest}}">最长 {{streak.longest}} 天</view>
+    </view>
+
+    <!-- 体重趋势卡片 -->
+    <view class="card">
+      <view class="card-header">
+        <text class="card-title">体重趋势</text>
+        <view class="seg">
+          <view class="seg-item {{weightRange === '7d' ? 'seg-active' : ''}}" data-range="7d" bindtap="onRangeChange">近7天</view>
+          <view class="seg-item {{weightRange === '30d' ? 'seg-active' : ''}}" data-range="30d" bindtap="onRangeChange">近30天</view>
+        </view>
+      </view>
+
+      <!-- 折线图：canvas 2d -->
+      <view class="chart-box" wx:if="{{weightChartReady && weightHistory.length >= 2}}">
+        <canvas type="2d" id="weightChart" class="chart-canvas"></canvas>
+      </view>
+      <!-- 降级 / 空数据占位 -->
+      <view class="chart-empty" wx:else>暂无体重记录</view>
+
+      <!-- 图下小统计 -->
+      <view class="chart-stats" wx:if="{{summary.max_weight}}">
+        <view class="chart-stat">
+          <text class="chart-stat-label">最高</text>
+          <text class="chart-stat-value">{{summary.max_weight}}kg</text>
+        </view>
+        <view class="chart-stat">
+          <text class="chart-stat-label">最低</text>
+          <text class="chart-stat-value">{{summary.min_weight}}kg</text>
+        </view>
+        <view class="chart-stat">
+          <text class="chart-stat-label">平均</text>
+          <text class="chart-stat-value">{{summary.avg_weight}}kg</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 热量趋势卡片：近 7 天 摄入 vs 预算 -->
+    <view class="card">
+      <view class="card-header">
+        <text class="card-title">热量趋势</text>
+        <text class="card-sub">近 7 天摄入 vs 预算</text>
+      </view>
+
+      <view class="chart-legend">
+        <view class="legend-item"><view class="legend-dot legend-intake"></view><text class="legend-text">摄入</text></view>
+        <view class="legend-item"><view class="legend-line"></view><text class="legend-text">预算</text></view>
+      </view>
+
+      <!-- 柱状图：canvas 2d -->
+      <view class="chart-box" wx:if="{{calorieChartReady && calorieTrend.length}}">
+        <canvas type="2d" id="calorieChart" class="chart-canvas"></canvas>
+      </view>
+      <!-- 降级 / 空数据占位 -->
+      <view class="chart-empty" wx:else>暂无热量记录</view>
+    </view>
+
+    <!-- 查看体重趋势详情入口 -->
+    <view class="card entry-card" bindtap="goWeightDetail">
+      <text class="entry-text">查看体重趋势详情</text>
+      <text class="entry-chevron icon">{{icons.chevronRight}}</text>
+    </view>
+
+    <!-- 颜色探针：用于把设计 token 的 var(--xc-*) 真值读给 canvas 使用 -->
+    <view id="chart-colors-probe" class="chart-colors-probe"></view>
+  </view>
+</view>

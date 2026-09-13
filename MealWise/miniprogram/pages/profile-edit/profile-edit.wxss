@@ -1,0 +1,185 @@
+/* 编辑资料页样式：仅依赖全局 --xc-* 变量，不硬编码颜色（#FFFFFF 白字允许） */
+.xc-page {
+  min-height: 100vh;
+  background-color: var(--xc-background);
+}
+
+/* ========== 自定义导航栏 ========== */
+.nav-bar {
+  background-color: var(--xc-surface);
+  border-bottom: 1rpx solid var(--xc-border);
+}
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+}
+.nav-left { width: 120rpx; }
+.nav-back { font-size: 32rpx; color: var(--xc-primary); }
+.nav-title { font-size: 34rpx; font-weight: 600; color: var(--xc-foreground); }
+.nav-right {
+  width: 120rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.nav-save { font-size: 32rpx; font-weight: 500; color: var(--xc-primary); }
+
+/* ========== 页面主体 ========== */
+.page-body {
+  padding: 16rpx 24rpx calc(180rpx + env(safe-area-inset-bottom));
+}
+
+/* ========== 头像上传区 ========== */
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 32rpx 0;
+}
+.avatar {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background-color: var(--xc-primary-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.avatar-img { width: 100%; height: 100%; }
+.avatar-text {
+  font-size: 64rpx;
+  font-weight: 600;
+  color: var(--xc-primary);
+}
+.avatar-tip {
+  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* ========== 表单项（分组卡片） ========== */
+.form-card {
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-lg);
+  box-shadow: var(--xc-shadow-1);
+  overflow: hidden;
+}
+.form-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 112rpx;
+  padding: 0 32rpx;
+}
+.form-item-border { border-bottom: 1rpx solid var(--xc-border); }
+.item-label {
+  flex: none;
+  font-size: 30rpx;
+  color: var(--xc-foreground);
+}
+.item-input {
+  flex: 1;
+  margin-left: 32rpx;
+  text-align: right;
+  font-size: 30rpx;
+  color: var(--xc-foreground);
+}
+.item-placeholder { color: var(--xc-placeholder); }
+.item-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: 32rpx;
+}
+.item-unit {
+  flex: none;
+  margin-left: 12rpx;
+  font-size: 28rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* 性别 pill 选择器 */
+.gender-pills {
+  display: flex;
+  gap: 16rpx;
+}
+.gender-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96rpx;
+  height: 64rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: var(--xc-muted-foreground);
+  background-color: var(--xc-surface);
+  border: 2rpx solid var(--xc-border);
+  border-radius: var(--xc-radius-pill);
+}
+.gender-pill-active {
+  color: #FFFFFF;
+  background-color: var(--xc-primary);
+  border-color: var(--xc-primary);
+}
+
+/* 出生日期选择器 */
+.picker-value {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 30rpx;
+  color: var(--xc-foreground);
+}
+.picker-placeholder { color: var(--xc-placeholder); }
+.picker-arrow {
+  font-size: 36rpx;
+  color: var(--xc-muted-foreground);
+  line-height: 1;
+}
+
+/* ========== 提示文字 ========== */
+.hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  margin-top: 24rpx;
+}
+.hint-icon { font-size: 24rpx; color: var(--xc-muted-foreground); line-height: 1.4; }
+.hint-text {
+  flex: 1;
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+  line-height: 1.5;
+}
+
+/* ========== 底部保存按钮 ========== */
+.save-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background-color: var(--xc-surface);
+  border-top: 1rpx solid var(--xc-border);
+  padding: 20rpx 24rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  box-shadow: var(--xc-shadow-1);
+}
+.save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96rpx;
+  border-radius: var(--xc-radius-sm);
+  background-color: var(--xc-primary);
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+/* 页面底部占位，避免内容被固定按钮遮挡 */
+.save-spacer { height: 40rpx; }

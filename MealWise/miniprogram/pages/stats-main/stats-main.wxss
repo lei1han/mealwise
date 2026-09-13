@@ -1,0 +1,237 @@
+/* 数据统计（数据主页）样式：仅依赖全局 --xc-* 变量，不硬编码颜色 */
+.xc-page {
+  min-height: 100vh;
+  background-color: var(--xc-background);
+}
+.nav-bar {
+  background-color: var(--xc-surface);
+  border-bottom: 1rpx solid var(--xc-border);
+}
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+}
+.nav-left { width: 120rpx; }
+.nav-back { font-size: 32rpx; color: var(--xc-primary); }
+.nav-title { font-size: 34rpx; font-weight: 600; color: var(--xc-foreground); }
+.nav-right { width: 120rpx; }
+
+.page-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  padding: 24rpx 24rpx 48rpx;
+}
+
+/* ---- 通用卡片 ---- */
+.card {
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-lg);
+  padding: var(--xc-card-padding);
+  box-shadow: var(--xc-shadow-1);
+}
+
+/* ---- 概览卡片 ---- */
+.overview-card {
+  display: flex;
+}
+.overview-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.overview-value {
+  font-size: var(--xc-font-size-data-lg);
+  line-height: var(--xc-line-height-tight);
+  color: var(--xc-foreground);
+  font-weight: 600;
+}
+.overview-value .unit {
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+  font-weight: 400;
+}
+.value-down {
+  color: var(--xc-state-accent);
+}
+.overview-label {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* ---- 连续打卡卡片 ---- */
+.streak-card {
+  display: flex;
+  align-items: center;
+  background-color: var(--xc-primary-50);
+  border-radius: var(--xc-radius-md);
+  padding: 24rpx 28rpx;
+}
+.streak-flame {
+  width: 28rpx;
+  height: 36rpx;
+  margin-right: 16rpx;
+  /* 火苗：用强调色圆点 + 三角形近似，保持无图标依赖 */
+  background-color: var(--xc-streak);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+}
+.streak-text {
+  font-size: 28rpx;
+  color: var(--xc-foreground);
+}
+.streak-num {
+  margin: 0 6rpx;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--xc-streak);
+}
+.streak-sub {
+  margin-left: auto;
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* ---- 卡片头部（标题 + 分段控件）---- */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+}
+.card-sub {
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* ---- 分段控件（pill） ---- */
+.seg {
+  display: flex;
+  background-color: var(--xc-surface-2);
+  border-radius: var(--xc-radius-pill);
+  padding: 4rpx;
+}
+.seg-item {
+  padding: 6rpx 24rpx;
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+  border-radius: var(--xc-radius-pill);
+}
+.seg-active {
+  background-color: var(--xc-primary);
+  color: var(--xc-primary-foreground);
+}
+
+/* ---- 图表容器 ---- */
+.chart-box {
+  margin-top: 20rpx;
+  width: 100%;
+  height: 320rpx;
+}
+.chart-canvas {
+  width: 100%;
+  height: 320rpx;
+}
+.chart-empty {
+  margin-top: 20rpx;
+  height: 200rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+  background-color: var(--xc-surface-2);
+  border-radius: var(--xc-radius-md);
+}
+
+/* ---- 图下小统计 ---- */
+.chart-stats {
+  display: flex;
+  margin-top: 20rpx;
+  gap: 24rpx;
+}
+.chart-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12rpx 0;
+  background-color: var(--xc-surface-2);
+  border-radius: var(--xc-radius-sm);
+}
+.chart-stat-label {
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+}
+.chart-stat-value {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+}
+
+/* ---- 热量图例 ---- */
+.chart-legend {
+  display: flex;
+  align-items: center;
+  margin-top: 16rpx;
+  gap: 28rpx;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+.legend-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 6rpx;
+  margin-right: 8rpx;
+}
+.legend-intake {
+  background-color: var(--xc-state-accent);
+}
+.legend-line {
+  width: 36rpx;
+  height: 4rpx;
+  margin-right: 8rpx;
+  background-color: var(--xc-chart-line);
+}
+.legend-text {
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* ---- 详情入口 ---- */
+.entry-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.entry-text {
+  font-size: 28rpx;
+  color: var(--xc-primary);
+}
+.entry-chevron {
+  font-size: 36rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* ---- 颜色探针：把设计 token 颜色透出给 canvas 读取（移到屏幕外不可见） ---- */
+.chart-colors-probe {
+  position: fixed;
+  left: -9999rpx;
+  top: 0;
+  width: 20rpx;
+  height: 20rpx;
+  color: var(--xc-chart-line);
+  background-color: var(--xc-chart-grid);
+  border-color: var(--xc-state-accent);
+  pointer-events: none;
+}

@@ -1,0 +1,87 @@
+<!-- 体重趋势详情页 -->
+<view class="xc-page">
+  <!-- 自定义导航栏：左上返回、居中标题、右侧空位避让胶囊按钮 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px">
+    <view class="nav-content" style="height: {{navBarHeight}}px; padding-right: {{menuPaddingRight}}px">
+      <view class="nav-left" bindtap="handleBack">
+        <text class="nav-back icon">{{icons.chevronLeft}} 返回</text>
+      </view>
+      <text class="nav-title">体重趋势</text>
+      <view class="nav-right"></view>
+    </view>
+  </view>
+
+  <view class="page-body">
+    <!-- 时间维度切换：周 / 月 / 全部 -->
+    <view class="card seg-card">
+      <view class="seg">
+        <view
+          class="seg-item {{range === '7d' ? 'seg-active' : ''}}"
+          data-range="7d"
+          bindtap="onRangeChange">周</view>
+        <view
+          class="seg-item {{range === '30d' ? 'seg-active' : ''}}"
+          data-range="30d"
+          bindtap="onRangeChange">月</view>
+        <view
+          class="seg-item {{range === 'all' ? 'seg-active' : ''}}"
+          data-range="all"
+          bindtap="onRangeChange">全部</view>
+      </view>
+    </view>
+
+    <!-- 大尺寸折线图：canvas 2d，数据≥2 条才展示 -->
+    <view class="card">
+      <view class="chart-box" wx:if="{{history.length >= 2}}">
+        <canvas type="2d" id="weightChart" class="chart-canvas"></canvas>
+      </view>
+      <view class="chart-empty" wx:else>暂无体重记录</view>
+    </view>
+
+    <!-- 统计数据行：最高 / 最低 / 平均 / 减重总量 -->
+    <view class="card">
+      <view class="stats-grid">
+        <view class="stat-item">
+          <text class="stat-label">最高体重</text>
+          <text class="stat-value">{{stats.max}} kg</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">最低体重</text>
+          <text class="stat-value">{{stats.min}} kg</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">平均体重</text>
+          <text class="stat-value">{{stats.avg}} kg</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">减重总量</text>
+          <text class="stat-value">{{stats.lost}} kg</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 体重记录列表：日期倒序，与上一条的变化量带颜色 -->
+    <view class="card list-card">
+      <view class="list-header">
+        <text class="list-title">体重记录</text>
+      </view>
+      <view class="list-empty" wx:if="{{!records.length}}">暂无记录</view>
+      <block wx:for="{{records}}" wx:key="date">
+        <view class="list-item">
+          <text class="list-date">{{item.dateLabel}}</text>
+          <text class="list-weight">{{item.weight}} kg</text>
+          <text class="list-change {{item.changeClass}}" wx:if="{{item.changeText}}">{{item.changeText}}</text>
+        </view>
+        <view class="list-divider" wx:if="{{index < records.length - 1}}"></view>
+      </block>
+    </view>
+
+    <!-- 颜色探针：把设计 token 的 var(--xc-*) 真值透出给 canvas 读取（移到屏幕外不可见） -->
+    <view id="chart-colors-probe" class="chart-colors-probe"></view>
+  </view>
+
+  <!-- 右下角浮动「记录体重」按钮 -->
+  <view class="fab" bindtap="handleRecordWeight">
+    <text class="fab-text">记录体重</text>
+  </view>
+</view>

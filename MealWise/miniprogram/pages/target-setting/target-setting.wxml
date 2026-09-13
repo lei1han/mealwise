@@ -1,0 +1,90 @@
+<view class="xc-page">
+  <!-- 自定义导航栏：左返回 + 居中标题 + 右侧空位避让胶囊 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px">
+    <view class="nav-content" style="height: {{navBarHeight}}px; padding-right: {{menuPaddingRight}}px">
+      <view class="nav-left" bindtap="handleBack">
+        <text class="nav-back icon">{{icons.chevronLeft}} 返回</text>
+      </view>
+      <text class="nav-title">目标管理</text>
+      <view class="nav-right"></view>
+    </view>
+  </view>
+
+  <view class="page-body">
+    <!-- 当前目标卡片 -->
+    <view class="target-card">
+      <text class="card-label">当前目标</text>
+      <view class="target-value-row">
+        <text class="target-value">{{targetWeightText}}</text>
+        <text class="target-unit">kg</text>
+      </view>
+      <text wx:if="{{currentWeightText}}" class="card-sub">当前 {{currentWeightText}} kg<text wx:if="{{toLoseText}}"> · 还需减重 {{toLoseText}} kg</text></text>
+
+      <!-- 进度条 -->
+      <view class="progress-track">
+        <view class="progress-fill" wx:if="{{progress > 0}}" style="width: {{progress}}%"></view>
+      </view>
+
+      <!-- 关键信息行 -->
+      <view class="info-row">
+        <text class="info-label">预计达成</text>
+        <text class="info-value">{{estimatedDateText || '--'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">减重速度</text>
+        <text class="info-value">{{speedText}}</text>
+      </view>
+      <view class="info-row" wx:if="{{weeksText}}">
+        <text class="info-label">预估周期</text>
+        <text class="info-value">约 {{weeksText}} 周</text>
+      </view>
+    </view>
+
+    <!-- 修改目标区域 -->
+    <view class="edit-section">
+      <text class="section-title">修改目标</text>
+
+      <!-- 目标体重设置 -->
+      <view class="field">
+        <text class="field-label">目标体重</text>
+        <view class="input-wrap">
+          <input
+            class="input"
+            type="digit"
+            value="{{targetWeightInput}}"
+            placeholder="请输入目标体重"
+            placeholder-class="input-placeholder"
+            bindinput="onTargetInput"
+          />
+          <text class="input-unit">kg</text>
+        </view>
+        <text class="field-hint" wx:if="{{rangeText}}">{{rangeText}}</text>
+      </view>
+
+      <!-- 减重速度选择 -->
+      <view class="field">
+        <text class="field-label">减重速度</text>
+        <view class="speed-pills">
+          <view
+            wx:for="{{speeds}}"
+            wx:key="value"
+            class="speed-pill {{speed === item.value ? 'speed-pill-active' : ''}}"
+            data-value="{{item.value}}"
+            bindtap="onSpeedSelect"
+          >
+            <text class="speed-label">{{item.label}}</text>
+            <text class="speed-desc">{{item.desc}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位（避免固定按钮遮挡内容） -->
+    <view class="save-spacer"></view>
+  </view>
+
+  <!-- 底部保存按钮 -->
+  <view class="save-area">
+    <view class="save-btn" bindtap="onSave">保存修改</view>
+  </view>
+</view>

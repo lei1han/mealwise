@@ -1,33 +1,47 @@
 /* ============================================
-   三餐教练 全局设计令牌（Design Tokens v1.0）
-   配色方案：鼠尾草绿 v2
+   三餐教练 全局设计令牌（Design Tokens v3.0）
+   配色方案：薄荷马卡龙 v3
    ============================================ */
 
+/* 图标字体：assets/fonts/iconfont.ttf（Font Awesome Free / CC BY 4.0 + SIL OFL）
+   码位见 assets/build_iconfont.py 的 ICONS 表；用法：<text class="icon">&#xe00X;</text> 或 data.icons.xxx */
+@font-face {
+  font-family: 'xc-icon';
+  src: url("data:font/truetype;charset=utf-8;base64,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") format("truetype");
+}
+
+.icon {
+  font-family: 'xc-icon';
+  font-size: inherit;
+  line-height: 1;
+  font-weight: 400;
+}
+
 page {
-  /* ---- Brand Primary: Sage Green ---- */
-  --xc-primary: #4E7A5C;
+  /* ---- Brand Primary: Mint Macaron ---- */
+  --xc-primary: #7CB89E;
   --xc-primary-foreground: #FFFFFF;
-  --xc-primary-50: #EEF5F0;
-  --xc-primary-100: #D6E8DC;
+  --xc-primary-50: #EDF6F2;
+  --xc-primary-100: #D4EBE0;
 
   /* ---- Surfaces ---- */
-  --xc-background: #F8FBF9;
+  --xc-background: #F6FBF8;
   --xc-surface: #FFFFFF;
-  --xc-surface-2: #F1F5F2;
+  --xc-surface-2: #EFF6F2;
 
   /* ---- Text ---- */
-  --xc-foreground: #1A2620;
-  --xc-muted-foreground: #5C7064;
-  --xc-placeholder: #9AACA0;
+  --xc-foreground: #1A2822;
+  --xc-muted-foreground: #5E7066;
+  --xc-placeholder: #9AAFA2;
 
   /* ---- Lines & Borders ---- */
-  --xc-border: #DEE6E0;
-  --xc-input: #DEE6E0;
-  --xc-ring: #4E7A5C;
-  --xc-divider: rgba(26, 38, 32, 0.06);
+  --xc-border: #DCE6E0;
+  --xc-input: #DCE6E0;
+  --xc-ring: #7CB89E;
+  --xc-divider: rgba(26, 40, 34, 0.06);
 
   /* ---- Status / Accent ---- */
-  --xc-state-accent: #C5733A;
+  --xc-state-accent: #D4754A;
   --xc-state-accent-foreground: #FFFFFF;
   --xc-state-success: #22C55E;
   --xc-state-warning: #F59E0B;
@@ -41,9 +55,44 @@ page {
   --xc-radius-pill: 999rpx;
 
   /* ---- Shadows ---- */
-  --xc-shadow-1: 0 2rpx 4rpx rgba(26, 38, 32, 0.05);
-  --xc-shadow-2: 0 16rpx 48rpx -16rpx rgba(26, 38, 32, 0.05);
-  --xc-shadow-3: 0 48rpx 120rpx -40rpx rgba(26, 38, 32, 0.05);
+  --xc-shadow-1: 0 2rpx 4rpx rgba(26, 40, 34, 0.04), 0 1rpx 2rpx rgba(26, 40, 34, 0.02);
+  --xc-shadow-2: 0 16rpx 48rpx -16rpx rgba(26, 40, 34, 0.04);
+  --xc-shadow-3: 0 48rpx 120rpx -40rpx rgba(26, 40, 34, 0.04);
+
+  /* 输入栏顶部与发送按钮专用阴影 */
+  --xc-shadow-input-bar: 0 -4rpx 16rpx rgba(26, 40, 34, 0.04);
+  --xc-shadow-send: 0 6rpx 16rpx rgba(124, 184, 158, 0.28);
+
+  /* ---- 组件级 Token（P2 支撑） ---- */
+  --xc-progress-track: var(--xc-surface-2);
+  --xc-progress-fill: var(--xc-primary);
+  --xc-progress-fill-warning: var(--xc-state-warning);
+  --xc-progress-fill-danger: var(--xc-state-error);
+  --xc-progress-bar-height: 8rpx;
+  --xc-progress-ring-width: 12rpx;
+
+  /* 图表 */
+  --xc-chart-line: var(--xc-primary);
+  --xc-chart-line-secondary: var(--xc-state-accent);
+  --xc-chart-grid: var(--xc-border);
+  --xc-chart-tooltip-bg: var(--xc-foreground);
+  --xc-chart-tooltip-fg: var(--xc-surface);
+
+  /* 列表与卡片 */
+  --xc-list-icon-bg: var(--xc-primary-50);
+  --xc-list-item-height: 96rpx;
+  --xc-section-gap: 24rpx;
+  --xc-card-padding: 32rpx;
+
+  /* 数据字号 */
+  --xc-font-size-data-xl: 56rpx;
+  --xc-font-size-data-lg: 44rpx;
+  --xc-font-size-data-md: 36rpx;
+  --xc-font-size-data-sm: 24rpx;
+  --xc-line-height-tight: 1.2;
+
+  /* 连续打卡/强调 */
+  --xc-streak: #F59E0B;
 
   /* ---- Typography ---- */
   --xc-font-sans: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;

@@ -1,0 +1,82 @@
+<view class="sheet-page">
+  <!-- 蒙层：点击关闭 -->
+  <view class="mask" bindtap="handleClose"></view>
+
+  <!-- 底部 Sheet 面板 -->
+  <view class="sheet">
+    <!-- 顶部把手条 -->
+    <view class="sheet-handle">
+      <view class="handle-bar"></view>
+    </view>
+
+    <!-- 标题行：标题 + 关闭按钮 -->
+    <view class="sheet-header">
+      <text class="sheet-title">今日饮食</text>
+      <view class="sheet-close" bindtap="handleClose">
+        <text class="sheet-close-icon icon">{{icons.close}}</text>
+      </view>
+    </view>
+
+    <!-- 今日总热量概览 -->
+    <view class="total-row" wx:if="{{!loading}}">
+      <text class="total-label">今日合计</text>
+      <text class="total-value">{{totalKcal ? totalKcal + ' 大卡' : '--'}}</text>
+    </view>
+
+    <!-- 四餐 tab -->
+    <view class="tab-bar">
+      <view
+        wx:for="{{tabs}}"
+        wx:key="key"
+        class="tab-item {{activeKey === item.key ? 'tab-item-active' : ''}}"
+        data-key="{{item.key}}"
+        bindtap="handleSwitchTab"
+      >{{item.label}}</view>
+    </view>
+
+    <!-- 内容区（可滚动） -->
+    <scroll-view class="sheet-body" scroll-y enhanced show-scrollbar="{{false}}">
+      <!-- 加载态 -->
+      <view class="state-box" wx:if="{{loading}}">
+        <text class="state-text">加载中...</text>
+      </view>
+
+      <!-- 加载失败 -->
+      <view class="state-box" wx:elif="{{loadError}}">
+        <text class="state-text">加载失败，请稍后重试</text>
+      </view>
+
+      <!-- 数据已就绪 -->
+      <block wx:else>
+        <!-- 餐次名 + 该餐总热量 -->
+        <view class="meal-head">
+          <text class="meal-name">{{currentMeal.name}}</text>
+          <text class="meal-kcal">{{currentMeal.kcal != null ? currentMeal.kcal + ' 大卡' : '--'}}</text>
+        </view>
+
+        <!-- 食物明细 -->
+        <view class="meal-list" wx:if="{{currentMeal.recorded && currentMeal.items.length}}">
+          <view
+            wx:for="{{currentMeal.items}}"
+            wx:key="name"
+            class="food-item {{index > 0 ? 'food-item-border' : ''}}"
+          >
+            <text class="food-name">{{item.name}}</text>
+            <text class="food-amount">{{item.amount}}</text>
+            <text class="food-kcal">{{item.kcal != null ? item.kcal + ' 大卡' : '--'}}</text>
+          </view>
+        </view>
+
+        <!-- 该餐未记录占位 -->
+        <view class="empty-box" wx:else>
+          <text class="empty-text">这餐还没记录</text>
+        </view>
+      </block>
+    </scroll-view>
+
+    <!-- 底部操作按钮 -->
+    <view class="btn-area xc-safe-bottom">
+      <button class="btn-add" bindtap="handleAddFood">添加食物</button>
+    </view>
+  </view>
+</view>

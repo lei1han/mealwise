@@ -13,20 +13,23 @@ const Mock = {
   _onboardingState: 'new',
   /** 摸底对话轮次（仅 mock 走查用） */
   _onboardingTurns: 0,
-  /** 用户资料 */
+
+  /** 用户资料（扩展 P2 所需字段） */
   _profile: {
     nickname: '',
     avatar_url: '',
     phone: '',
     gender: 'female',
     age_group: '25-34',
+    birthdate: '1995-06-15',
     height: 165,
     initial_weight: 68,
     target_weight: 55,
     estimate_weeks: 26,
     daily_calorie_budget: 1450,
     snark_level: 'light',
-    onboarding_completed: false
+    onboarding_completed: false,
+    bio: '想瘦回大学体重的打工人'
   },
 
   /** 聊天消息 */
@@ -37,6 +40,124 @@ const Mock = {
 
   /** 今日是否已报过体重（mock 走查用，对应 user.state.get 返回 reported_weight_today） */
   _reportedWeightToday: false,
+
+  /** 目标与 streak（P2） */
+  _goal: {
+    target_weight: 55,
+    weekly_speed: 'medium',
+    start_weight: 68,
+    start_date: '2026-06-01',
+    estimated_date: '2026-12-15'
+  },
+
+  _streak: {
+    current: 5,
+    longest: 12,
+    last_check_in_date: new Date().toISOString().slice(0, 10)
+  },
+
+  /** 体重记录（P2：趋势详情/统计） */
+  _weightRecords: [],
+
+  /** 饮食记录（P2：饮食详情/热量趋势） */
+  _dietRecords: [],
+
+  /** 连续打卡/热量趋势等派生数据初始化 */
+  _initMockData() {
+    if (this._weightRecords.length) return;
+    this._weightRecords = this._generateWeightRecords(90);
+    this._dietRecords = this._generateDietRecords(30);
+    this._todayBudget = {
+      total: 1450,
+      consumed: 650,
+      remaining: 800,
+      target_weight: this._goal.target_weight,
+      current_weight: this._weightRecords[this._weightRecords.length - 1].weight_kg,
+      weekly_change: -0.4
+    };
+  },
+
+  /** 生成体重记录：从 initial_weight 波动下降到 current_weight */
+  _generateWeightRecords(days) {
+    const records = [];
+    const endDate = new Date();
+    const endWeight = 67.5;
+    const startWeight = 70.0;
+    for (let i = days; i >= 0; i--) {
+      const d = new Date(endDate);
+      d.setDate(d.getDate() - i);
+      const progress = (days - i) / days;
+      const trend = startWeight + (endWeight - startWeight) * progress;
+      const noise = (Math.random() - 0.5) * 0.8;
+      records.push({
+        date: d.toISOString().slice(0, 10),
+        weight_kg: Math.max(50, Number((trend + noise).toFixed(1)))
+      });
+    }
+    return records;
+  },
+
+  /** 生成近 N 天饮食记录（含每餐热量与食物列表） */
+  _generateDietRecords(days) {
+    const sampleMeals = {
+      breakfast: {
+        name: '早餐',
+        kcal: 280,
+        items: [
+          { name: '全麦面包', amount: '2 片', kcal: 120 },
+          { name: '煮鸡蛋', amount: '1 个', kcal: 70 },
+          { name: '牛奶', amount: '250 ml', kcal: 90 }
+        ]
+      },
+      lunch: {
+        name: '午餐',
+        kcal: 400,
+        items: [
+          { name: '米饭', amount: '1 碗', kcal: 200 },
+          { name: '鸡腿肉', amount: '100 g', kcal: 130 },
+          { name: '青菜', amount: '1 份', kcal: 70 }
+        ]
+      },
+      dinner: {
+        name: '晚餐',
+        kcal: 350,
+        items: [
+          { name: '杂粮粥', amount: '1 碗', kcal: 150 },
+          { name: '豆腐', amount: '100 g', kcal: 100 },
+          { name: '凉拌黄瓜', amount: '1 份', kcal: 50 }
+        ]
+      },
+      snack: {
+        name: '加餐',
+        kcal: 120,
+        items: [
+          { name: '苹果', amount: '1 个', kcal: 80 },
+          { name: '无糖酸奶', amount: '100 g', kcal: 40 }
+        ]
+      }
+    };
+    const endDate = new Date();
+    const records = [];
+    for (let i = days; i >= 0; i--) {
+      const d = new Date(endDate);
+      d.setDate(d.getDate() - i);
+      const date = d.toISOString().slice(0, 10);
+      const meals = ['breakfast', 'lunch', 'dinner', 'snack'];
+      const dailyMeals = {};
+      let total = 0;
+      meals.forEach((key) => {
+        if (i > 2 || (i <= 2 && key !== 'dinner' && key !== 'snack')) {
+          const meal = { ...sampleMeals[key], recorded: true };
+          dailyMeals[key] = meal;
+          total += meal.kcal;
+        } else {
+          dailyMeals[key] = { name: sampleMeals[key].name, kcal: null, recorded: false, items: [] };
+        }
+      });
+      records.push({ date, meals: dailyMeals, total_kcal: total });
+    }
+    return records;
+  },
 
   /* ==========================================
      用户相关
@@ -62,7 +183,7 @@ const Mock = {
     return { onboarding_state: this._onboardingState, reported_weight_today: this._reportedWeightToday };
   },
 
-  /** 获取用户资料 */
+  /** 获取用户资料（P2 扩展 bio、birthdate 等字段） */
   async getProfile() {
     await this._delay(200);
     return { ...this._profile };
@@ -228,7 +349,7 @@ const Mock = {
     }
 
     // 体重汇报
-    if (/[\d.]+.*[k公斤g斤]/.test(lower) || /^[\d.]+$/.test(lower)) {
+    if (/[\d.]+.*[k公斤g斤]/.test(lower) ||/^[\d.]+$/.test(lower)) {
       this._reportedWeightToday = true;
       return {
         reply_text: '收到，记下了。今天早饭吃了没？',
@@ -290,15 +411,130 @@ const Mock = {
   /** 获取今日预算 */
   async getTodayBudget() {
     await this._delay(200);
-    this._todayBudget = {
-      total: 1450,
-      consumed: 650,
-      remaining: 800,
-      target_weight: 55,
-      current_weight: 67.5,
-      weekly_change: -0.4
-    };
+    this._initMockData();
     return { ...this._todayBudget };
+  },
+
+  /* ==========================================
+     P2 新增：数据/个人/目标/饮食
+     ========================================== */
+
+  /** 体重历史（P2 stats-weight-detail / stats-main 折线图）
+   * @param {string} range '7d' | '30d' | 'all'
+   */
+  async getWeightHistory(range = '30d') {
+    await this._delay(200);
+    this._initMockData();
+    let days = 30;
+    if (range === '7d') days = 7;
+    if (range === 'all') days = this._weightRecords.length;
+    return this._weightRecords.slice(-days);
+  },
+
+  /** 今日四餐概览（P1 饮食概览浮层 + P2 sheet-diet-detail） */
+  async getTodayMeals() {
+    await this._delay(200);
+    this._initMockData();
+    const today = new Date().toISOString().slice(0, 10);
+    const record = this._dietRecords.find((r) => r.date === today);
+    if (!record) {
+      return { date: today, meals: {}, total_kcal: 0 };
+    }
+    return { date: record.date, meals: record.meals, total_kcal: record.total_kcal };
+  },
+
+  /** 某日饮食详情（P2 sheet-diet-detail）
+   * @param {string} date 'YYYY-MM-DD'，缺省为今天
+   */
+  async getDietDetail(date) {
+    await this._delay(200);
+    this._initMockData();
+    const target = date || new Date().toISOString().slice(0, 10);
+    const record = this._dietRecords.find((r) => r.date === target);
+    if (!record) {
+      return { date: target, meals: {}, total_kcal: 0 };
+    }
+    return { date: record.date, meals: record.meals, total_kcal: record.total_kcal };
+  },
+
+  /** 热量趋势（P2 stats-main 摄入 vs 预算）
+   * @param {number} days 近 N 天
+   */
+  async getCalorieTrend(days = 7) {
+    await this._delay(200);
+    this._initMockData();
+    const endDate = new Date();
+    const trend = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(endDate);
+      d.setDate(d.getDate() - i);
+      const date = d.toISOString().slice(0, 10);
+      const intake = Math.round(1100 + Math.random() * 700);
+      trend.push({
+        date,
+        budget: this._profile.daily_calorie_budget,
+        intake,
+        remaining: Math.max(0, this._profile.daily_calorie_budget - intake)
+      });
+    }
+    return trend;
+  },
+
+  /** 连续打卡天数（P2 stats-main / profile-main） */
+  async getStreak() {
+    await this._delay(100);
+    return { ...this._streak };
+  },
+
+  /** 目标管理（P2 target-setting） */
+  async getGoal() {
+    await this._delay(200);
+    return { ...this._goal };
+  },
+
+  /** 更新目标（P2 target-setting 保存）
+   * @param {object} fields { target_weight, weekly_speed }
+   */
+  async updateGoal(fields) {
+    await this._delay(300);
+    const speedMap = { fast: 0.75, medium: 0.5, slow: 0.25 };
+    const speed = speedMap[fields.weekly_speed] || speedMap[this._goal.weekly_speed];
+    const currentWeight = this._profile.initial_weight;
+    const targetWeight = fields.target_weight != null ? fields.target_weight : this._goal.target_weight;
+    const weeks = Math.max(1, Math.ceil((currentWeight - targetWeight) / speed));
+    const est = new Date();
+    est.setDate(est.getDate() + weeks * 7);
+    this._goal = {
+      ...this._goal,
+      ...fields,
+      target_weight: targetWeight,
+      estimated_date: est.toISOString().slice(0, 10)
+    };
+    this._profile.target_weight = this._goal.target_weight;
+    return { ...this._goal };
+  },
+
+  /** 数据主页统计摘要（P2 stats-main 概览卡片） */
+  async getStatsSummary() {
+    await this._delay(200);
+    this._initMockData();
+    const current = this._todayBudget.current_weight;
+    const start = this._profile.initial_weight;
+    const target = this._goal.target_weight;
+    const records = this._weightRecords;
+    const bmi = Number((current / ((this._profile.height / 100) ** 2)).toFixed(1));
+    return {
+      current_weight: current,
+      target_weight: target,
+      initial_weight: start,
+      weight_lost: Number((start - current).toFixed(1)),
+      bmi,
+      max_weight: Math.max(...records.map((r) => r.weight_kg)),
+      min_weight: Math.min(...records.map((r) => r.weight_kg)),
+      avg_weight: Number((records.reduce((s, r) => s + r.weight_kg, 0) / records.length).toFixed(1)),
+      streak: this._streak.current,
+      weekly_change: this._todayBudget.weekly_change
+    };
   },
 
   /* ==========================================
@@ -320,19 +556,35 @@ const Mock = {
     this._messages = [];
     this._todayBudget = null;
     this._reportedWeightToday = false;
+    this._weightRecords = [];
+    this._dietRecords = [];
+    this._streak = {
+      current: 5,
+      longest: 12,
+      last_check_in_date: new Date().toISOString().slice(0, 10)
+    };
+    this._goal = {
+      target_weight: 55,
+      weekly_speed: 'medium',
+      start_weight: 68,
+      start_date: '2026-06-01',
+      estimated_date: '2026-12-15'
+    };
     this._profile = {
       nickname: '',
       avatar_url: '',
       phone: '',
       gender: 'female',
       age_group: '25-34',
+      birthdate: '1995-06-15',
       height: 165,
       initial_weight: 68,
       target_weight: 55,
       estimate_weeks: 26,
       daily_calorie_budget: 1450,
       snark_level: 'light',
-      onboarding_completed: false
+      onboarding_completed: false,
+      bio: '想瘦回大学体重的打工人'
     };
   }
 };

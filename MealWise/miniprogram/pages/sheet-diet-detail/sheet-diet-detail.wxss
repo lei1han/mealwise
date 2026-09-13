@@ -1,0 +1,240 @@
+/* 饮食详情 Sheet：底部抽屉展示今日四餐
+   仅依赖全局 --xc-* 变量，不硬编码颜色（白色文字 #FFFFFF 除外） */
+.sheet-page {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* 半透明蒙层 */
+.mask {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* 底部 Sheet 容器 */
+.sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-lg) var(--xc-radius-lg) 0 0;
+  box-shadow: var(--xc-shadow-3);
+  max-height: 85vh;
+  padding: 20rpx 40rpx 24rpx;
+  overflow: hidden;
+}
+
+/* 顶部把手条 */
+.sheet-handle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20rpx;
+}
+
+.handle-bar {
+  width: 80rpx;
+  height: 8rpx;
+  border-radius: var(--xc-radius-pill);
+  background-color: var(--xc-border);
+}
+
+/* 标题行 */
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20rpx;
+}
+
+.sheet-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--xc-foreground);
+}
+
+.sheet-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: var(--xc-radius-pill);
+  background-color: var(--xc-surface-2);
+}
+
+.sheet-close-icon {
+  font-size: 30rpx;
+  line-height: 1;
+  color: var(--xc-muted-foreground);
+}
+
+/* 今日总热量概览 */
+.total-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  border-bottom: 2rpx solid var(--xc-border);
+}
+
+.total-label {
+  font-size: 28rpx;
+  color: var(--xc-muted-foreground);
+}
+
+.total-value {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--xc-foreground);
+}
+
+/* 四餐 tab 分段切换条 */
+.tab-bar {
+  display: flex;
+  gap: 12rpx;
+  padding: 20rpx 0;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 68rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--xc-muted-foreground);
+  background-color: var(--xc-surface-2);
+  border: 2rpx solid var(--xc-border);
+  border-radius: var(--xc-radius-pill);
+  transition: all 0.2s;
+}
+
+.tab-item-active {
+  color: #FFFFFF;
+  background-color: var(--xc-primary);
+  border-color: var(--xc-primary);
+}
+
+/* 内容区（可滚动，承接剩余高度） */
+.sheet-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* 加载/异常状态占位 */
+.state-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+}
+
+.state-text {
+  font-size: 28rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* 当餐头部：餐次名 + 总热量 */
+.meal-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 16rpx 0;
+}
+
+.meal-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+}
+
+.meal-kcal {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--xc-state-accent);
+}
+
+/* 食物明细列表 */
+.food-item {
+  display: flex;
+  align-items: center;
+  min-height: 88rpx;
+  padding: 16rpx 0;
+}
+
+.food-item-border {
+  border-bottom: 2rpx solid var(--xc-border);
+}
+
+.food-name {
+  flex: 1;
+  font-size: 30rpx;
+  color: var(--xc-foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.food-amount {
+  flex-shrink: 0;
+  margin: 0 24rpx;
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+}
+
+.food-kcal {
+  flex-shrink: 0;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--xc-foreground);
+}
+
+/* 未记录占位 */
+.empty-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx 0;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* 底部操作按钮 */
+.btn-area {
+  padding-top: 20rpx;
+}
+
+.btn-add {
+  height: 96rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  background-color: var(--xc-primary);
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--xc-radius-md);
+}
+
+.btn-add::after {
+  border: none;
+}
+
+/* 触底安全区域 */
+.xc-safe-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom) / 2 + 12rpx);
+}

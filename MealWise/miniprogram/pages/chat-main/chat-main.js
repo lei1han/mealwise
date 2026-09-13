@@ -31,16 +31,58 @@ Page({
     /** 输入锁定：摸底弹出体质录入期间禁止聊天输入 */
     inputLocked: false,
     /** 教练头像（来源：云端 app_config 公开配置 coach_avatar_url；空则回退「教」字占位） */
-    coachAvatarUrl: ''
+    coachAvatarUrl: '',
+    /** 功能菜单是否展开 */
+    menuOpen: false,
+    /** 今日饮食概览是否收起 */
+    mealOverviewCollapsed: false,
+    /** 今日四餐概览（未记录 recorded=false，kcal 为 null） */
+    todayMeals: {
+      breakfast: { kcal: null, recorded: false },
+      lunch: { kcal: null, recorded: false },
+      dinner: { kcal: null, recorded: false },
+      snack: { kcal: null, recorded: false }
+    },
+    /** 今日剩余热量 */
+    todayRemainingKcal: 0,
+    /** 今日预算总量 */
+    todayBudgetTotal: 0,
+    /** 进度条填充百分比（0-100） */
+    progressRatio: 0,
+    /** 进度条状态文案 */
+    progressText: '今天还没记录',
+    /** 毒舌档位中文标签（gentle/light/spicy） */
+    snarkBadgeText: '轻损',
+    /** iconfont 码位（见 assets/build_iconfont.py） */
+    icons: {
+      more: '\ue001',
+      bell: '\ue002',
+      chart: '\ue003',
+      target: '\ue004',
+      activity: '\ue005',
+      user: '\ue006',
+      chevronUp: '\ue007',
+      chevronDown: '\ue008',
+      grid: '\ue009',
+      keyboard: '\ue00a',
+      send: '\ue00b',
+      close: '\ue016'
+    }
   },
 
   onLoad() {
     // 自定义导航栏：状态栏占位 + 胶囊对齐 + 右侧操作避让胶囊
     this.setData(nav.getNavInfo());
     this._initChat();
+    // 服务号进度条/饮食概览：读取今日四餐与预算
+    this._loadTodayProgress();
 
     // 键盘高度监听：保存引用，onUnload 精准解除，避免个别基础库失效
     this._onKeyboardHeightChange = (res) => {
+      // 键盘弹出时收起功能菜单，避免遮挡
+      if (res.height > 0 && this.data.menuOpen) {
+        this.setData({ menuOpen: false });
+      }
       this.setData({ keyboardHeight: res.height });
     };
     wx.onKeyboardHeightChange(this._onKeyboardHeightChange);
@@ -180,6 +222,7 @@ Page({
       this.setData({
         reportedWeightToday,
         snarkLevel: profileRes.snark_level || 'light',
+        snarkBadgeText: this._snarkBadgeText(profileRes.snark_level || 'light'),
         coachAvatarUrl: (appConfig && appConfig.coach_avatar_url) || ''
       });
 
@@ -329,14 +372,102 @@ Page({
     wx.navigateTo({ url: '/pages/sheet-weight/sheet-weight?mode=weight' });
   },
 
-  /** 打开毒舌档位 */
-  handleOpenSnark() {
-    wx.navigateTo({ url: '/pages/sheet-snark/sheet-snark?selected=' + (this.data.snarkLevel || 'light') });
-  },
-
   /** 打开订阅 */
   handleOpenSubscribe() {
     wx.navigateTo({ url: '/pages/sheet-subscribe/sheet-subscribe' });
+  },
+
+  /* ==========================================
+     v3 服务号模式：进度条 / 饮食概览 / 功能菜单
+     ========================================== */
+
+  /** 毒舌档位中文标签 */
+  _snarkBadgeText(level) {
+    const map = { gentle: '温柔', light: '轻损', spicy: '辛辣' };
+    return map[level] || '轻损';
+  },
+
+  /** 加载今日进度条与饮食概览数据 */
+  async _loadTodayProgress() {
+    try {
+      const meals = await API.getTodayMeals();
+      // 归一化四餐：未记录 → recorded=false, kcal=null
+      const keys = ['breakfast', 'lunch', 'dinner', 'snack'];
+      const todayMeals = {};
+      keys.forEach((k) => {
+        const m = meals && meals.meals && meals.meals[k];
+        todayMeals[k] = m && m.recorded
+          ? { kcal: m.kcal, recorded: true }
+          : { kcal: null, recorded: false };
+      });
+
+      // 预算：优先用已加载的 budget，否则用 mock 默认预算与今日已录入之和
+      let total = (this.data.budget && this.data.budget.total) || 1450;
+      let consumed = (this.data.budget && this.data.budget.consumed != null)
+        ? this.data.budget.consumed
+        : (meals && meals.total_kcal) || 0;
+      const remaining = Math.max(0, total - consumed);
+      const ratio = total > 0 ? Math.min(100, Number(((consumed / total) * 100).toFixed(0))) : 0;
+
+      // 状态文案
+      const hasBreakfast = todayMeals.breakfast.recorded;
+      const hasLunch = todayMeals.lunch.recorded;
+      const hasDinner = todayMeals.dinner.recorded;
+      let progressText = '今天还没记录';
+      if (hasDinner) progressText = '一天的热量都记上了';
+      else if (hasBreakfast && hasLunch) progressText = '晚餐前还有余量';
+      else if (hasBreakfast || hasLunch) progressText = '状态不错，继续加油';
+      else if (ratio >= 100) progressText = '今日额度已用完，注意别超标';
+
+      this.setData({
+        todayMeals,
+        todayRemainingKcal: Math.round(remaining),
+        todayBudgetTotal: total,
+        progressRatio: ratio,
+        progressText
+      });
+    } catch (e) {
+      // 网络/数据异常：保留默认展示，不影响聊天
+    }
+  },
+
+  /** 切换功能菜单展开/收起 */
+  handleToggleMenu() {
+    this.setData({ menuOpen: !this.data.menuOpen });
+  },
+
+  /** 跳转数据统计页 */
+  handleNavStats() {
+    this.setData({ menuOpen: false });
+    wx.navigateTo({ url: '/pages/stats-main/stats-main' });
+  },
+
+  /** 跳转目标管理页 */
+  handleNavTarget() {
+    this.setData({ menuOpen: false });
+    wx.navigateTo({ url: '/pages/target-setting/target-setting' });
+  },
+
+  /** 跳转身体数据（体重录入） */
+  handleNavBodyData() {
+    this.setData({ menuOpen: false });
+    wx.navigateTo({ url: '/pages/sheet-weight/sheet-weight?mode=weight' });
+  },
+
+  /** 跳转个人中心页 */
+  handleNavProfile() {
+    this.setData({ menuOpen: false });
+    wx.navigateTo({ url: '/pages/profile-main/profile-main' });
+  },
+
+  /** 折叠/展开饮食概览 */
+  handleToggleMealOverview() {
+    this.setData({ mealOverviewCollapsed: !this.data.mealOverviewCollapsed });
+  },
+
+  /** 打开饮食详情 Sheet */
+  handleOpenDietDetail() {
+    wx.navigateTo({ url: '/pages/sheet-diet-detail/sheet-diet-detail' });
   },
 
   /** 关闭催报卡片（本会话） */

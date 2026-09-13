@@ -1,0 +1,207 @@
+/* 目标管理页样式：仅依赖全局 --xc-* 变量，不硬编码颜色（#FFFFFF 白字允许） */
+.xc-page {
+  min-height: 100vh;
+  background-color: var(--xc-background);
+}
+
+/* ========== 自定义导航栏 ========== */
+.nav-bar {
+  background-color: var(--xc-surface);
+  border-bottom: 1rpx solid var(--xc-border);
+}
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+}
+.nav-left { width: 120rpx; }
+.nav-back { font-size: 32rpx; color: var(--xc-primary); }
+.nav-title { font-size: 34rpx; font-weight: 600; color: var(--xc-foreground); }
+.nav-right { width: 120rpx; }
+
+/* ========== 页面主体 ========== */
+.page-body {
+  padding: 24rpx 0 calc(180rpx + env(safe-area-inset-bottom));
+}
+
+/* ========== 当前目标卡片 ========== */
+.target-card {
+  margin: 0 24rpx;
+  padding: 32rpx;
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-lg);
+  box-shadow: var(--xc-shadow-1);
+}
+.card-label {
+  display: block;
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+  margin-bottom: 12rpx;
+}
+.target-value-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12rpx;
+}
+.target-value {
+  font-size: var(--xc-font-size-data-lg);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--xc-primary);
+}
+.target-unit {
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+  padding-bottom: 6rpx;
+}
+.card-sub {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* 进度条 */
+.progress-track {
+  height: var(--xc-progress-bar-height);
+  width: 100%;
+  margin-top: 28rpx;
+  border-radius: var(--xc-radius-pill);
+  background-color: var(--xc-progress-track);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: var(--xc-radius-pill);
+  background-color: var(--xc-progress-fill);
+}
+
+/* 关键信息行 */
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+.info-label {
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+}
+.info-value {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+}
+
+/* ========== 修改目标区域 ========== */
+.edit-section {
+  margin: 32rpx 24rpx 0;
+}
+.section-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+  margin-bottom: 24rpx;
+}
+
+.field { margin-bottom: 36rpx; }
+.field-label {
+  display: block;
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+  margin-bottom: 16rpx;
+}
+
+/* 目标体重输入框 */
+.input-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 96rpx;
+  padding: 0 32rpx;
+  background-color: var(--xc-surface);
+  border: 2rpx solid var(--xc-border);
+  border-radius: var(--xc-radius-md);
+}
+.input {
+  flex: 1;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+}
+.input-placeholder { color: var(--xc-placeholder); font-weight: 400; }
+.input-unit {
+  font-size: 28rpx;
+  color: var(--xc-muted-foreground);
+}
+.field-hint {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+}
+
+/* 减重速度 pill 选择器 */
+.speed-pills {
+  display: flex;
+  gap: 20rpx;
+}
+.speed-pill {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  padding: 24rpx 12rpx;
+  background-color: var(--xc-surface);
+  border: 2rpx solid var(--xc-border);
+  border-radius: var(--xc-radius-md);
+  transition: all 0.2s;
+}
+.speed-pill-active {
+  background-color: var(--xc-primary);
+  border-color: var(--xc-primary);
+  box-shadow: var(--xc-shadow-1);
+}
+.speed-label {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+}
+.speed-desc {
+  font-size: 22rpx;
+  color: var(--xc-muted-foreground);
+  text-align: center;
+  line-height: 1.4;
+}
+.speed-pill-active .speed-label { color: #FFFFFF; }
+.speed-pill-active .speed-desc { color: rgba(255, 255, 255, 0.9); }
+
+/* ========== 底部保存按钮 ========== */
+.save-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background-color: var(--xc-surface);
+  border-top: 1rpx solid var(--xc-border);
+  padding: 20rpx 24rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  box-shadow: var(--xc-shadow-1);
+}
+.save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96rpx;
+  border-radius: var(--xc-radius-sm);
+  background-color: var(--xc-primary);
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+/* 页面底部占位，避免内容被固定按钮遮挡 */
+.save-spacer { height: 40rpx; }

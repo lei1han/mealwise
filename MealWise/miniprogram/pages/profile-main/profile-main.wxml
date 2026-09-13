@@ -1,0 +1,104 @@
+<!-- 个人中心页 -->
+<view class="xc-page">
+  <!-- 自定义导航栏：左返回 + 居中标题 + 右侧空位避让胶囊 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px">
+    <view class="nav-content" style="height: {{navBarHeight}}px; padding-right: {{menuPaddingRight}}px">
+      <view class="nav-left" bindtap="handleBack">
+        <text class="nav-back icon">{{icons.chevronLeft}} 返回</text>
+      </view>
+      <text class="nav-title">个人中心</text>
+      <view class="nav-right"></view>
+    </view>
+  </view>
+
+  <!-- 用户信息卡 -->
+  <view class="user-card">
+    <!-- 头像：有图显图，无图显示昵称首字占位 -->
+    <view class="avatar">
+      <image wx:if="{{avatarUrl}}" class="avatar-img" src="{{avatarUrl}}" mode="aspectFill"></image>
+      <text wx:else class="avatar-text">{{avatarInitial}}</text>
+    </view>
+    <!-- 用户信息 -->
+    <view class="user-info">
+      <view class="user-name-row">
+        <text class="user-name">{{nickname}}</text>
+        <text class="user-snark">毒舌 · {{snarkLevel}}</text>
+      </view>
+      <text class="user-bio" wx:if="{{bio}}">{{bio}}</text>
+      <text class="user-bio user-bio-ph" wx:else>点右上角编辑资料，完善你的瘦身档案</text>
+    </view>
+    <!-- 编辑资料按钮 -->
+    <view class="edit-btn" bindtap="goEdit">编辑资料</view>
+  </view>
+
+  <!-- 数据概览：三个圆形进度环 -->
+  <view class="rings-card">
+    <view class="ring-item" wx:for="{{rings}}" wx:key="label">
+      <view class="ring">
+        <view class="half half-right">
+          <view class="fill" style="transform: rotate({{item.rightRot}}deg)"></view>
+        </view>
+        <view class="half half-left">
+          <view class="fill" style="transform: rotate({{item.leftRot}}deg)"></view>
+        </view>
+        <view class="ring-center">
+          <text class="ring-value">{{item.value}}</text>
+          <text class="ring-unit" wx:if="{{item.unit}}">{{item.unit}}</text>
+        </view>
+      </view>
+      <text class="ring-label">{{item.label}}</text>
+    </view>
+  </view>
+
+  <!-- 连续打卡 -->
+  <view class="streak-card">
+    <text class="streak-icon icon">{{icons.flame}}</text>
+    <text class="streak-text">{{streakText}}</text>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="function-section">
+    <text class="section-title">目标与数据</text>
+    <view class="list-card">
+      <view class="list-item list-item-border" bindtap="goTarget">
+        <view class="list-icon"><text class="icon">{{icons.target}}</text></view>
+        <text class="list-text">目标管理</text>
+        <text class="list-arrow icon">{{icons.chevronRight}}</text>
+      </view>
+      <view class="list-item list-item-border" bindtap="goBodyData">
+        <view class="list-icon"><text class="icon">{{icons.scale}}</text></view>
+        <text class="list-text">身体数据</text>
+        <text class="list-arrow icon">{{icons.chevronRight}}</text>
+      </view>
+      <view class="list-item" bindtap="goSnark">
+        <view class="list-icon"><text class="icon">{{icons.flame}}</text></view>
+        <text class="list-text">毒舌档位</text>
+        <text class="list-value">{{snarkLevel}}</text>
+        <text class="list-arrow icon">{{icons.chevronRight}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="function-section">
+    <text class="section-title">设置与帮助</text>
+    <view class="list-card">
+      <view class="list-item list-item-border" bindtap="goSubscribe">
+        <view class="list-icon"><text class="icon">{{icons.bell}}</text></view>
+        <text class="list-text">通知设置</text>
+        <text class="list-arrow icon">{{icons.chevronRight}}</text>
+      </view>
+      <view class="list-item list-item-border" bindtap="goAbout">
+        <view class="list-icon"><text class="icon">{{icons.info}}</text></view>
+        <text class="list-text">关于我们</text>
+        <text class="list-arrow icon">{{icons.chevronRight}}</text>
+      </view>
+      <view class="list-item" bindtap="goAgreement">
+        <view class="list-icon"><text class="icon">{{icons.file}}</text></view>
+        <text class="list-text">用户协议</text>
+        <text class="list-arrow icon">{{icons.chevronRight}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="page-gap"></view>
+</view>

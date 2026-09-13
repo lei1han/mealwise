@@ -122,6 +122,66 @@ const API = {
   },
 
   /* ==========================================
+     P2 新增：数据/个人/目标/饮食
+     ========================================== */
+
+  /** 体重历史（stats-weight-detail / stats-main 折线图）
+   * @param {string} range '7d' | '30d' | 'all'
+   */
+  async getWeightHistory(range = '30d') {
+    if (!useReal('weight.history')) return Mock.getWeightHistory(range);
+    return callCloudFunction('weight.history', { range });
+  },
+
+  /** 今日四餐概览（P1 饮食概览浮层 + P2 sheet-diet-detail） */
+  async getTodayMeals() {
+    if (!useReal('diet.today')) return Mock.getTodayMeals();
+    return callCloudFunction('diet.today', {});
+  },
+
+  /** 某日饮食详情（sheet-diet-detail）
+   * @param {string} date 'YYYY-MM-DD'
+   */
+  async getDietDetail(date) {
+    if (!useReal('diet.detail')) return Mock.getDietDetail(date);
+    return callCloudFunction('diet.detail', { date });
+  },
+
+  /** 热量趋势（stats-main 摄入 vs 预算）
+   * @param {number} days 近 N 天
+   */
+  async getCalorieTrend(days = 7) {
+    if (!useReal('calorie.trend')) return Mock.getCalorieTrend(days);
+    return callCloudFunction('calorie.trend', { days });
+  },
+
+  /** 连续打卡天数（stats-main / profile-main） */
+  async getStreak() {
+    if (!useReal('streak.get')) return Mock.getStreak();
+    return callCloudFunction('streak.get', {});
+  },
+
+  /** 目标管理（target-setting） */
+  async getGoal() {
+    if (!useReal('goal.get')) return Mock.getGoal();
+    return callCloudFunction('goal.get', {});
+  },
+
+  /** 更新目标（target-setting 保存）
+   * @param {object} fields { target_weight, weekly_speed }
+   */
+  async updateGoal(fields) {
+    if (!useReal('goal.update')) return Mock.updateGoal(fields);
+    return callCloudFunction('goal.update', fields);
+  },
+
+  /** 数据主页统计摘要（stats-main 概览卡片） */
+  async getStatsSummary() {
+    if (!useReal('stats.summary')) return Mock.getStatsSummary();
+    return callCloudFunction('stats.summary', {});
+  },
+
+  /* ==========================================
      全局配置（云端 app_config 公开配置）
      ========================================== */
 

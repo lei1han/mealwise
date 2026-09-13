@@ -1,13 +1,36 @@
-<!-- 聊天主流程 -->
+<!-- 聊天主流程（v3 服务号模式） -->
 <view class="chat-page">
-  <!-- 导航栏（custom：状态栏占位 + 与胶囊等高对齐，右侧避让胶囊） -->
+  <!-- 导航栏（服务号：头像 + 毒舌档位 + 更多，右侧避让胶囊） -->
   <view class="nav-bar" style="padding-top: {{statusBarHeight}}px">
     <view class="nav-content" style="height: {{navBarHeight}}px; padding-right: {{menuPaddingRight}}px">
-      <text class="nav-title">三餐教练</text>
-      <view class="nav-actions">
-        <text class="nav-action" bindtap="handleOpenSnark">毒舌</text>
-        <text class="nav-action" bindtap="handleOpenSubscribe">通知</text>
+      <view class="nav-left" bindtap="handleNavProfile">
+        <!-- 教练头像：有图显图、无图显「教」字 -->
+        <view class="nav-avatar">
+          <image wx:if="{{coachAvatarUrl}}" class="avatar-img-sm" src="{{coachAvatarUrl}}" mode="aspectFill"></image>
+          <text wx:else class="avatar-icon-sm">教</text>
+        </view>
+        <text class="nav-snark-badge">{{snarkBadgeText}}</text>
       </view>
+      <view class="nav-right">
+        <!-- 更多按钮 → 打开订阅/通知 -->
+        <view class="nav-more-btn" bindtap="handleOpenSubscribe">
+          <text class="more-dots icon">{{icons.more}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日进度条（sticky：点击跳数据主页） -->
+  <view class="progress-sticky" bindtap="handleNavStats">
+    <view class="progress-top">
+      <text class="progress-label">今日还可吃</text>
+      <text class="progress-status">{{progressText}}</text>
+    </view>
+    <view class="progress-value-row">
+      <text class="progress-value">{{todayRemainingKcal}}<text class="progress-unit"> 大卡</text></text>
+    </view>
+    <view class="progress-track">
+      <view class="progress-fill" style="width: {{progressRatio}}%"></view>
     </view>
   </view>
 
@@ -68,9 +91,9 @@
 
       <!-- 催报卡片 -->
       <view wx:if="{{showReminder}}" class="reminder-card">
-        <text class="reminder-close" bindtap="handleCloseReminder">×</text>
+        <text class="reminder-close icon" bindtap="handleCloseReminder">{{icons.close}}</text>
         <view class="reminder-body">
-          <view class="reminder-icon">⏰</view>
+          <view class="reminder-icon icon">{{icons.bell}}</view>
           <view class="reminder-main">
             <text class="reminder-title">还没报今天的体重哦</text>
             <text class="reminder-desc">教练在等你，报完就能开始记录饮食了</text>
@@ -96,9 +119,63 @@
     </view>
   </scroll-view>
 
-  <!-- 输入栏 -->
+  <!-- 底部浮动区：菜单展开时显示菜单面板，否则显示今日饮食概览 -->
+  <!-- 功能菜单面板（输入栏上方） -->
+  <view class="menu-panel" wx:if="{{menuOpen}}">
+    <view class="menu-grid">
+      <view class="menu-item" bindtap="handleNavStats">
+        <view class="menu-icon"><text class="icon">{{icons.chart}}</text></view>
+        <text class="menu-label">数据统计</text>
+      </view>
+      <view class="menu-item" bindtap="handleNavTarget">
+        <view class="menu-icon"><text class="icon">{{icons.target}}</text></view>
+        <text class="menu-label">目标管理</text>
+      </view>
+      <view class="menu-item" bindtap="handleNavBodyData">
+        <view class="menu-icon"><text class="icon">{{icons.activity}}</text></view>
+        <text class="menu-label">身体数据</text>
+      </view>
+      <view class="menu-item" bindtap="handleNavProfile">
+        <view class="menu-icon"><text class="icon">{{icons.user}}</text></view>
+        <text class="menu-label">个人中心</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日饮食概览（输入栏上方，点击弹饮食详情） -->
+  <view class="meal-overview" wx:else bindtap="handleOpenDietDetail">
+    <view class="overview-row">
+      <view class="ov-item">
+        <text class="ov-label">早餐</text>
+        <text class="ov-num {{todayMeals.breakfast.recorded ? '' : 'ov-none'}}">{{todayMeals.breakfast.recorded ? todayMeals.breakfast.kcal : '--'}}</text>
+      </view>
+      <view class="ov-item">
+        <text class="ov-label">午餐</text>
+        <text class="ov-num {{todayMeals.lunch.recorded ? '' : 'ov-none'}}">{{todayMeals.lunch.recorded ? todayMeals.lunch.kcal : '--'}}</text>
+      </view>
+      <view class="ov-item">
+        <text class="ov-label">晚餐</text>
+        <text class="ov-num {{todayMeals.dinner.recorded ? '' : 'ov-none'}}">{{todayMeals.dinner.recorded ? todayMeals.dinner.kcal : '--'}}</text>
+      </view>
+      <view class="ov-item">
+        <text class="ov-label">加餐</text>
+        <text class="ov-num {{todayMeals.snack.recorded ? '' : 'ov-none'}}">{{todayMeals.snack.recorded ? todayMeals.snack.kcal : '--'}}</text>
+      </view>
+      <view class="ov-arrow">
+        <text wx:if="{{mealOverviewCollapsed}}" class="ov-arrow-icon icon">{{icons.chevronDown}}</text>
+        <text wx:else class="ov-arrow-icon icon">{{icons.chevronUp}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 输入栏（服务号：切换按钮 + 输入框 + 圆形发送） -->
   <view class="input-bar" style="padding-bottom: {{keyboardHeight > 0 ? keyboardHeight + 'px' : 'env(safe-area-inset-bottom)'}}">
     <view class="input-inner">
+      <!-- 左侧切换按钮：菜单开→键盘图标；关→九宫格/菜单图标 -->
+      <view class="input-toggle-btn {{menuOpen ? 'input-toggle-active' : ''}}" bindtap="handleToggleMenu">
+        <text wx:if="{{menuOpen}}" class="toggle-icon icon">{{icons.keyboard}}</text>
+        <text wx:else class="toggle-icon icon">{{icons.grid}}</text>
+      </view>
       <!-- 原生 input 在 flex 布局下 flex:1 不生效，需用 view 包裹拉伸 -->
       <view class="input-wrap">
         <input
@@ -115,7 +192,10 @@
           cursor-spacing="20"
         />
       </view>
-      <view class="send-btn {{inputLocked ? 'send-btn-disabled' : (canSend ? 'send-btn-active' : 'send-btn-disabled')}}" bindtap="handleSend">发送</view>
+      <!-- 圆形图标发送按钮 -->
+      <view class="send-btn {{canSend && !inputLocked ? 'send-btn-active' : 'send-btn-disabled'}}" bindtap="handleSend">
+        <text class="send-icon icon">{{icons.send}}</text>
+      </view>
     </view>
   </view>
 </view>

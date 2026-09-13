@@ -1,0 +1,103 @@
+<view class="xc-page">
+  <!-- 自定义导航栏：左返回 + 居中标题 + 右侧「保存」按钮 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px">
+    <view class="nav-content" style="height: {{navBarHeight}}px; padding-right: {{menuPaddingRight}}px">
+      <view class="nav-left" bindtap="handleBack">
+        <text class="nav-back icon">{{icons.chevronLeft}} 返回</text>
+      </view>
+      <text class="nav-title">编辑资料</text>
+      <view class="nav-right">
+        <text class="nav-save" bindtap="onSave">保存</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="page-body">
+    <!-- 头像上传区 -->
+    <view class="avatar-section" bindtap="onChooseAvatar">
+      <view class="avatar">
+        <!-- avatarTemp 优先（本次本地选择的预览），其次 avatarUrl（原服务端头像），最后昵称首字占位 -->
+        <image wx:if="{{avatarTemp}}" class="avatar-img" src="{{avatarTemp}}" mode="aspectFill"></image>
+        <image wx:elif="{{avatarUrl}}" class="avatar-img" src="{{avatarUrl}}" mode="aspectFill"></image>
+        <text wx:else class="avatar-text">{{avatarInitial}}</text>
+      </view>
+      <text class="avatar-tip">点击更换头像</text>
+    </view>
+
+    <!-- 表单项（分组列表） -->
+    <view class="form-card">
+      <!-- 昵称 -->
+      <view class="form-item form-item-border">
+        <text class="item-label">昵称</text>
+        <input
+          class="item-input"
+          type="text"
+          value="{{nickname}}"
+          placeholder="请输入昵称"
+          placeholder-class="item-placeholder"
+          confirm-type="done"
+          bindinput="onNicknameInput"
+        />
+      </view>
+
+      <!-- 性别：男/女 pill 二选一 -->
+      <view class="form-item form-item-border">
+        <text class="item-label">性别</text>
+        <view class="gender-pills">
+          <view
+            class="gender-pill {{gender === 'male' ? 'gender-pill-active' : ''}}"
+            data-value="male"
+            bindtap="onGenderSelect"
+          >男</view>
+          <view
+            class="gender-pill {{gender === 'female' ? 'gender-pill-active' : ''}}"
+            data-value="female"
+            bindtap="onGenderSelect"
+          >女</view>
+        </view>
+      </view>
+
+      <!-- 身高 -->
+      <view class="form-item form-item-border">
+        <text class="item-label">身高</text>
+        <view class="item-input-wrap">
+          <input
+            class="item-input"
+            type="number"
+            value="{{height}}"
+            placeholder="请输入身高"
+            placeholder-class="item-placeholder"
+            confirm-type="done"
+            bindinput="onHeightInput"
+          />
+          <text class="item-unit">cm</text>
+        </view>
+      </view>
+
+      <!-- 出生日期 -->
+      <view class="form-item">
+        <text class="item-label">出生日期</text>
+        <picker mode="date" value="{{birthdate}}" end="{{maxDate}}" bindchange="onBirthdateChange">
+          <view class="picker-value {{birthdate ? '' : 'picker-placeholder'}}">
+            <text>{{birthdateText}}</text>
+            <text class="picker-arrow icon">{{icons.chevronRight}}</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 提示文字 -->
+    <view class="hint">
+      <text class="hint-icon">ⓘ</text>
+      <text class="hint-text">身高、出生日期等身体数据会影响每日热量预算的计算，请确保准确。</text>
+    </view>
+
+    <!-- 底部占位（避免固定按钮遮挡内容） -->
+    <view class="save-spacer"></view>
+  </view>
+
+  <!-- 底部保存按钮 -->
+  <view class="save-area">
+    <view class="save-btn" bindtap="onSave">保存</view>
+  </view>
+</view>

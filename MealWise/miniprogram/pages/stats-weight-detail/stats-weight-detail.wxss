@@ -1,0 +1,189 @@
+/* 体重趋势详情页样式：仅依赖全局 --xc-* 变量，不硬编码颜色 */
+.xc-page {
+  min-height: 100vh;
+  background-color: var(--xc-background);
+}
+
+/* 自定义导航栏 */
+.nav-bar {
+  background-color: var(--xc-surface);
+  border-bottom: 1rpx solid var(--xc-border);
+}
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+}
+.nav-left { width: 120rpx; }
+.nav-back { font-size: 32rpx; color: var(--xc-primary); }
+.nav-title { font-size: 34rpx; font-weight: 600; color: var(--xc-foreground); }
+.nav-right { width: 120rpx; }
+
+/* 页面主体：底部留出浮动按钮的空间 */
+.page-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  padding: 24rpx 24rpx 220rpx;
+}
+
+/* 通用卡片 */
+.card {
+  background-color: var(--xc-surface);
+  border-radius: var(--xc-radius-lg);
+  padding: var(--xc-card-padding);
+  box-shadow: var(--xc-shadow-1);
+}
+
+/* 时间分段控件（pill） */
+.seg-card { padding: 12rpx; }
+.seg {
+  display: flex;
+  background-color: var(--xc-surface-2);
+  border-radius: var(--xc-radius-pill);
+  padding: 6rpx;
+}
+.seg-item {
+  flex: 1;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: var(--xc-muted-foreground);
+  border-radius: var(--xc-radius-pill);
+}
+.seg-active {
+  background-color: var(--xc-primary);
+  color: var(--xc-primary-foreground);
+  font-weight: 600;
+}
+
+/* 大尺寸折线图 */
+.chart-box {
+  width: 100%;
+  height: 440rpx;
+}
+.chart-canvas {
+  width: 100%;
+  height: 440rpx;
+}
+.chart-empty {
+  height: 280rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+  background-color: var(--xc-surface-2);
+  border-radius: var(--xc-radius-md);
+}
+
+/* 统计数据 2x2 网格 */
+.stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 36rpx;
+}
+.stat-item {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+.stat-label {
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+}
+.stat-value {
+  margin-top: 8rpx;
+  font-size: var(--xc-font-size-data-md);
+  font-weight: 600;
+  color: var(--xc-foreground);
+}
+
+/* 体重记录列表 */
+.list-card {
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 8rpx;
+}
+.list-header {
+  padding: 8rpx var(--xc-card-padding) 20rpx;
+}
+.list-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+}
+.list-empty {
+  padding: 56rpx var(--xc-card-padding);
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--xc-muted-foreground);
+}
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 26rpx var(--xc-card-padding);
+}
+.list-date {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--xc-foreground);
+}
+.list-weight {
+  flex: 1;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--xc-foreground);
+}
+.list-change {
+  flex: 1;
+  text-align: right;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+.change-down { color: var(--xc-state-success); } /* 减：绿色 */
+.change-up { color: var(--xc-state-accent); }    /* 增：强调色 */
+.list-divider {
+  height: 1rpx;
+  background-color: var(--xc-border);
+  margin-left: var(--xc-card-padding);
+}
+
+/* 颜色探针：把设计 token 颜色透出给 canvas 读取（移到屏幕外不可见） */
+.chart-colors-probe {
+  position: fixed;
+  left: -9999rpx;
+  top: 0;
+  width: 20rpx;
+  height: 20rpx;
+  color: var(--xc-chart-line);
+  background-color: var(--xc-chart-grid);
+  border-color: var(--xc-state-accent);
+  pointer-events: none;
+}
+
+/* 右下角浮动「记录体重」按钮：主色圆角胶囊 + 阴影，避开底部安全区 */
+.fab {
+  position: fixed;
+  right: 32rpx;
+  bottom: calc(48rpx + constant(safe-area-inset-bottom));
+  bottom: calc(48rpx + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 88rpx;
+  padding: 0 44rpx;
+  background-color: var(--xc-primary);
+  border-radius: var(--xc-radius-pill);
+  box-shadow: var(--xc-shadow-2);
+  z-index: 10;
+}
+.fab-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--xc-primary-foreground);
+}

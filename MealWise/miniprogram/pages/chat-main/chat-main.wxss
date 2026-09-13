@@ -6,9 +6,9 @@
   background-color: var(--xc-background);
 }
 
-/* ---- 导航栏 ---- */
+/* ---- 导航栏（服务号） ---- */
 .nav-bar {
-  background-color: var(--xc-background);
+  background-color: var(--xc-surface);
   border-bottom: 1rpx solid var(--xc-border);
   flex-shrink: 0;
 }
@@ -17,24 +17,119 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 88rpx;
-  padding: 0 32rpx;
+  padding: 0 24rpx;
 }
 
-.nav-title {
-  font-size: 34rpx;
-  font-weight: 600;
-  color: var(--xc-foreground);
-}
-
-.nav-actions {
+.nav-left {
   display: flex;
-  gap: 32rpx;
+  align-items: center;
+  gap: 16rpx;
 }
 
-.nav-action {
-  font-size: 28rpx;
+.nav-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background-color: var(--xc-primary-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.avatar-img-sm {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  display: block;
+}
+
+.avatar-icon-sm {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--xc-primary);
+}
+
+.nav-snark-badge {
+  padding: 4rpx 16rpx;
+  background-color: var(--xc-primary-50);
+  color: var(--xc-primary);
+  font-size: 22rpx;
+  font-weight: 600;
+  border-radius: var(--xc-radius-pill);
+}
+
+.nav-more-btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background-color: var(--xc-surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--xc-muted-foreground);
+}
+
+.more-dots {
+  font-size: 28rpx;
+  line-height: 1;
+  letter-spacing: 2rpx;
+}
+
+/* ---- 今日进度条（sticky） ---- */
+.progress-sticky {
+  background-color: var(--xc-surface);
+  border-bottom: 1rpx solid var(--xc-border);
+  padding: 16rpx 32rpx 20rpx;
+  flex-shrink: 0;
+}
+
+.progress-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.progress-label {
+  font-size: 24rpx;
+  color: var(--xc-muted-foreground);
+}
+
+.progress-status {
+  font-size: 22rpx;
+  font-weight: 500;
+  color: var(--xc-primary);
+}
+
+.progress-value-row {
+  margin-top: 6rpx;
+}
+
+.progress-value {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--xc-primary);
+}
+
+.progress-unit {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: var(--xc-muted-foreground);
+}
+
+.progress-track {
+  margin-top: 12rpx;
+  height: var(--xc-progress-bar-height);
+  background-color: var(--xc-progress-track);
+  border-radius: var(--xc-radius-pill);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--xc-progress-fill);
+  border-radius: var(--xc-radius-pill);
+  transition: width 0.3s ease;
 }
 
 /* ---- 聊天区域 ---- */
@@ -289,7 +384,7 @@
 .input-bar {
   background-color: var(--xc-background);
   border-top: 1rpx solid var(--xc-border);
-  box-shadow: 0 -4rpx 16rpx rgba(26, 38, 32, 0.04);
+  box-shadow: var(--xc-shadow-input-bar);
   flex-shrink: 0;
 }
 
@@ -298,6 +393,28 @@
   align-items: center;
   gap: 12rpx;
   padding: 14rpx 28rpx;
+}
+
+/* 左侧切换按钮：菜单开→键盘图标；关→菜单图标 */
+.input-toggle-btn {
+  flex: 0 0 auto;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background-color: var(--xc-surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--xc-muted-foreground);
+}
+
+.input-toggle-active {
+  color: var(--xc-primary);
+}
+
+.toggle-icon {
+  font-size: 36rpx;
+  line-height: 1;
 }
 
 /* 包裹层负责 flex 拉伸（原生 input 直接做 flex 子项不生效） */
@@ -309,8 +426,8 @@
 
 .chat-input {
   width: 100%;
-  height: 88rpx;
-  padding: 0 15rpx;
+  height: 80rpx;
+  padding: 0 24rpx;
   background-color: var(--xc-surface);
   border: 1rpx solid var(--xc-input);
   border-radius: var(--xc-radius-pill);
@@ -323,31 +440,122 @@
   color: var(--xc-placeholder);
 }
 
+/* 圆形图标发送按钮 */
 .send-btn {
   /* 用 view 承载发送按钮：规避原生 button 默认块级宽度（flex 中会被拉成与输入框均分） */
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 96rpx;
-  height: 88rpx;
+  width: 72rpx;
+  height: 72rpx;
   margin: 0;
   padding: 0;
-  font-size: 28rpx;
-  font-weight: 600;
-  border-radius: var(--xc-radius-pill);
+  border-radius: 50%;
   border: none;
   box-sizing: border-box;
+}
+
+.send-icon {
+  font-size: 34rpx;
+  line-height: 1;
 }
 
 /* 禁用态（view 无 disabled 属性，用 class 控制） */
 .send-btn-disabled {
   background-color: var(--xc-primary-50);
-  color: rgba(78, 122, 92, 0.55);
+  color: var(--xc-primary);
+  opacity: 0.55;
 }
 
 .send-btn-active {
   background-color: var(--xc-primary);
   color: #FFFFFF;
-  box-shadow: 0 6rpx 16rpx rgba(78, 122, 92, 0.28);
+  box-shadow: var(--xc-shadow-send);
+}
+
+/* ---- 今日饮食概览（输入栏上方） ---- */
+.meal-overview {
+  background-color: var(--xc-surface);
+  border-top: 1rpx solid var(--xc-border);
+  padding: 12rpx 24rpx;
+  flex-shrink: 0;
+}
+
+.overview-row {
+  display: flex;
+  align-items: center;
+}
+
+.ov-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rpx;
+}
+
+.ov-label {
+  font-size: 20rpx;
+  color: var(--xc-muted-foreground);
+}
+
+.ov-num {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--xc-primary);
+}
+
+.ov-none {
+  color: var(--xc-muted-foreground);
+  font-weight: 400;
+}
+
+.ov-arrow {
+  width: 48rpx;
+}
+
+.ov-arrow-icon {
+  font-size: 30rpx;
+  color: var(--xc-muted-foreground);
+  text-align: right;
+}
+
+/* ---- 功能菜单面板（输入栏上方，4 列网格） ---- */
+.menu-panel {
+  background-color: var(--xc-surface-2);
+  border-top: 1rpx solid var(--xc-border);
+  padding: 20rpx 24rpx;
+  flex-shrink: 0;
+}
+
+.menu-grid {
+  display: flex;
+  justify-content: space-between;
+}
+
+.menu-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.menu-icon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 24rpx;
+  background-color: var(--xc-surface);
+  box-shadow: var(--xc-shadow-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  color: var(--xc-primary);
+}
+
+.menu-label {
+  font-size: 22rpx;
+  color: var(--xc-foreground);
 }

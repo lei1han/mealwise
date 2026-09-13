@@ -3,13 +3,19 @@
     "pages/splash/splash",
     "pages/auth-login/auth-login",
     "pages/chat-main/chat-main",
+    "pages/stats-main/stats-main",
+    "pages/profile-main/profile-main",
+    "pages/stats-weight-detail/stats-weight-detail",
+    "pages/target-setting/target-setting",
+    "pages/profile-edit/profile-edit",
     "pages/sheet-weight/sheet-weight",
     "pages/sheet-snark/sheet-snark",
-    "pages/sheet-subscribe/sheet-subscribe"
+    "pages/sheet-subscribe/sheet-subscribe",
+    "pages/sheet-diet-detail/sheet-diet-detail"
   ],
   "window": {
     "navigationStyle": "custom",
-    "backgroundColor": "#F8FBF9",
+    "backgroundColor": "#F6FBF8",
     "backgroundTextStyle": "dark"
   },
   "style": "v2",
