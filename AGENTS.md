@@ -6,8 +6,10 @@
 
 ## 文档入口（唯一事实来源）
 
+- 仓库导航：`README.md`
 - 设计规格：`docs/superpowers/specs/2026-08-28-xcoach-design.md`
 - 实施总计划（含接口契约）：`docs/superpowers/plans/2026-08-28-xcoach-master-plan.md`
+- 运行工程：`MealWise/README.md`
 
 ## 目录规划
 
@@ -21,7 +23,7 @@
 | `deliverables/prompt/` | 提示词成品（各场景提示词、结构化输出 schema） | 板块2 提示词 |
 | `deliverables/backend/` | 后端方案 / 代码 / 数据库脚本 / 食物库 | 板块3 后端 |
 | `deliverables/operations-business/` | 商业计划 / 运营方案 / 指标与埋点 | 板块4 运营商业 |
-| `data/` | 跨板块共享数据（食物库基准数据，后端与提示词共用） | 板块2/3 |
+| `MealWise/cloudfunctions/api/src/data/`（及快照 `deliverables/backend/src/data/`） | 食物库基准数据（`foods.json`、`food-calib.json`），提示词与后端共用 | 板块2/3 |
 
 - 命名约定：产品中文名「三餐教练」、英文名「MealWise」；客户侧文案统一用中文名，代码标识统一用英文名 `mealwise`。文档 `YYYY-MM-DD-xcoach-<主题>.md`；交付物子目录用英文短横线命名。
 - 已完成迁移：
