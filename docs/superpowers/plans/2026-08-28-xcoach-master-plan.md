@@ -2,9 +2,9 @@
 
 * 文档类型：实施总计划（Master Plan）
 
-* 版本：v1.2（契约 B 对齐 prompt 冻结版 + 承接契约 A 增量提案）
+* 版本：v1.3（资料对齐：工程快照索引 + 阅读说明）
 
-* 日期：2026-08-28
+* 日期：2026-08-28（正文）；工程快照更新 2026-09-14
 
 * 依赖设计：`../specs/2026-08-28-xcoach-design.md`
 
@@ -30,6 +30,22 @@
 ## 1. 跨板块接口契约（开工前必须先行对齐）
 
 这是 4 个板块能并行、且最终能拼起来的"公共接口"。每个板块开工前先在对应会话里 Review 一次这节。
+
+### 1.0 当前工程快照（资料阅读用，2026-09-14）
+
+阅读 §1.3 时，**以本节与文末最新日期增量为准**；文中较早的引用块（如「仅 3 个 action、其余 Mock」）为历史记录，已被 2026-08-31～09-01 增量取代。
+
+| 项 | 现状 |
+|----|------|
+| 运行工程 | 仓库根目录 `MealWise/`（非 `deliverables/frontend/mealwise-miniapp/`） |
+| 云函数 action | `api` 内核已实现契约 C 主要 action + `app.config.get` / `db.ensure`（见 §1.3 末尾增量） |
+| 前端联调 | `MealWise/miniprogram/utils/api.js`：`REAL_ACTIONS` 覆盖主要 action；`USE_MOCK` 为总开关 |
+| Schema 冻结 | `MealWise/cloudfunctions/api/src/db/schema.js` |
+| 内核测试 | `cd MealWise/cloudfunctions/api && npm test` → 32/32 |
+| 后端交付快照 | `deliverables/backend/` — 改代码后以 `MealWise/.../src` 为准再同步 |
+| 未完成（人工/外部） | M5 订阅模板 ID；模拟器 E2E 走查；`subscribe.report` 的 `template_key` 前端补齐 |
+
+仓库导航：`README.md`；前端视觉版本线：`deliverables/frontend/2026-09-14-xcoach-frontend-visual-version.md`。
 
 ### 1.1 契约 A：数据模型（后端产出，提示词/前端消费）
 
