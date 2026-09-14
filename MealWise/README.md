@@ -7,10 +7,11 @@
 ```
 MealWise/
 ├── miniprogram/          # 小程序前端（6 个页面）
-│   ├── pages/            # splash / auth-login / chat-main（摸底+日常合并单页）/ sheet-weight / sheet-snark / sheet-subscribe
+│   ├── pages/            # splash / auth-login / auth-profile / chat-main / …（见 app.json）
 │   ├── utils/
-│   │   ├── api.js        # API 层：Mock 与真实云函数的统一入口（REAL_ACTIONS 白名单灰度）
-│   │   ├── mock.js       # 本地 Mock 数据（模拟后端 onboarding 状态机）
+│   │   ├── api.js
+│   │   ├── auth-flow.js  # 登录后资料完善路由与头像上传
+│   │   ├── mock.js
 │   │   └── nav.js        # 自定义导航栏尺寸工具（状态栏/胶囊按钮适配）
 │   ├── app.js            # 云开发初始化（env: cloud1-d6gmjs12rfd5c3925）
 │   ├── app.json
@@ -30,7 +31,9 @@ MealWise/
 1. 用微信开发者工具导入本目录（AppID：`wxd6def00245936b4c`）。
 2. 云开发环境：`cloud1-d6gmjs12rfd5c3925`（已在 `app.js` 中初始化）。
 3. 右键 `cloudfunctions/api` →「上传并部署：云端安装依赖」。
-4. 模拟器编译运行；默认走本地 Mock，联调时在 `utils/api.js` 的 `REAL_ACTIONS` 中加入 action（如 `'chat.send'`）切换真实云函数。
+4. 模拟器编译运行。登录：**手机号授权即可进聊天**；昵称/头像可选，在 **个人中心 → 去完善** 补充。
+
+**头像云存储**：见 [`docs/cloud-storage-setup.md`](docs/cloud-storage-setup.md)。
 
 ## Mock / 真实云函数切换
 
@@ -44,6 +47,8 @@ const REAL_ACTIONS = [];      // 白名单内的 action 无视总开关，强制
 后端内核当前支持 3 个 action：`chat.send`、`subscribe.report`、`scheduler.nudge`（详见总计划 §1.3 契约 C）。
 
 > 注：`src/package.json` 的 `{"type":"module"}` 标记是 ESM 内核在 CJS 云函数入口下运行的必要条件，勿删。
+
+**头像上传**：资料完善页将头像上传至云存储 `user-avatars/`。**开通与安全规则**见 [`docs/cloud-storage-setup.md`](docs/cloud-storage-setup.md)。
 
 ## 相关文档
 

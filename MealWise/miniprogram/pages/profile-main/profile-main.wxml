@@ -11,6 +11,12 @@
     </view>
   </view>
 
+  <!-- 资料完善提示（可选，不阻断聊天） -->
+  <view class="profile-banner" wx:if="{{showProfileBanner}}" bindtap="goCompleteProfile">
+    <text class="profile-banner-text">补充昵称和头像，教练界面更亲切</text>
+    <text class="profile-banner-action">去完善</text>
+  </view>
+
   <!-- 用户信息卡 -->
   <view class="user-card">
     <!-- 头像：有图显图，无图显示昵称首字占位 -->

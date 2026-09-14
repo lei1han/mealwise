@@ -167,8 +167,12 @@ const Mock = {
   async login({ phoneCode, nickname, avatarUrl } = {}) {
     await this._delay(300);
     if (phoneCode) this._profile.phone = this._profile.phone || '138****0000';
-    if (nickname) this._profile.nickname = nickname;
-    if (avatarUrl) this._profile.avatar_url = avatarUrl;
+    if (nickname && !String(this._profile.nickname || '').trim()) {
+      this._profile.nickname = nickname;
+    }
+    if (avatarUrl && !String(this._profile.avatar_url || '').trim()) {
+      this._profile.avatar_url = avatarUrl;
+    }
     return {
       is_new: !this._profile.phone,
       phone: this._profile.phone || null,

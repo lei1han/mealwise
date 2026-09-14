@@ -44,13 +44,20 @@ Page({
       chevronLeft: '\ue011'
     },
 
-    loading: true
+    loading: true,
+    showProfileBanner: false
   },
 
   onLoad() {
-    // 自定义导航栏：状态栏占位 + 胶囊对齐 + 右侧内容避让胶囊
     this.setData(nav.getNavInfo());
     this._loadAll();
+  },
+
+  onShow() {
+    if (this._didShow) {
+      this._loadAll();
+    }
+    this._didShow = true;
   },
 
   /** 并行拉取资料、统计摘要、连续打卡 */
@@ -91,6 +98,7 @@ Page({
       avatarUrl: profile.avatar_url || '',
       avatarInitial: nickname ? nickname.charAt(0) : '我',
       bio: profile.bio || '',
+      showProfileBanner: require('../../utils/auth-flow.js').needsProfileCompletion(profile),
       snarkRaw,
       snarkLevel: snarkMap[snarkRaw] || '轻损',
       rings: [
@@ -149,6 +157,11 @@ Page({
   /** 编辑资料 */
   goEdit() {
     wx.navigateTo({ url: '/pages/profile-edit/profile-edit' });
+  },
+
+  /** 补充昵称/头像（可选） */
+  goCompleteProfile() {
+    wx.navigateTo({ url: '/pages/auth-profile/auth-profile?from=profile' });
   },
 
   /** 目标管理 */

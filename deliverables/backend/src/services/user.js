@@ -1,6 +1,7 @@
-// 用户服务（契约 C §5.2）：user.profile.get / user.profile.update / user.target.update
+// 用户服务（契约 C §5.2）：auth.login / user.profile.get / user.profile.update / user.target.update
 // 契约 A：daily_calorie_budget_kcal 不入库（get 时服务端派生）；snark_level 入库持久化（2026-09-01 决策，替代 MVP 代码常量）。
-import { dailyBudget, estimateWeeks } from '../domain/onboarding.js';
+// 2026-09-01 增量：auth.login 建/更新用户并回填 phone/nickname/avatar_url（仅空字段写，不覆盖已有画像）。
+import { dailyBudget, estimateWeeks, makeOnboarding } from '../domain/onboarding.js';
 
 // 毒舌档位默认值与合法集合（gentle=温柔 / light=轻损 / spicy=辛辣；未设置或非法值回退默认）
 export const SNARK_LEVEL = 'light';
@@ -27,6 +28,43 @@ export class UserService {
     return this.db.findOne('users', (d) => d.user_id === userId);
   }
 
+  /**
+   * 授权登录（action: auth.login）：upsert 用户并回填授权资料。
+   * phone 由适配层经 getPhoneNumber 云调用换得（无 code / 换号失败时为 null）；nickname/avatarUrl 来自微信头像昵称填写能力。
+   * 回填策略：仅空字段写入，不覆盖已有画像（手机号不换绑、昵称头像仅在首次/缺失时写入）。
+   */
+  login({ userId, phone = null, nickname = null, avatarUrl = null } = {}) {
+    const iso = this.now().toISOString();
+    let u = this._user(userId);
+    let isNew = false;
+    if (!u) {
+      u = { ...makeOnboarding(userId), last_active_at: iso, created_at: iso, updated_at: iso };
+      this.db.insert('users', u);
+      isNew = true;
+    }
+    let touched = false;
+    if (phone && !u.phone) {
+      u.phone = phone;
+      touched = true;
+    }
+    if (nickname && !u.nickname) {
+      u.nickname = nickname;
+      touched = true;
+    }
+    if (avatarUrl && !u.avatar_url) {
+      u.avatar_url = avatarUrl;
+      touched = true;
+    }
+    u.last_active_at = iso;
+    if (touched) u.updated_at = iso;
+    return {
+      is_new: isNew,
+      phone: u.phone ?? null,
+      nickname: u.nickname ?? null,
+      avatar_url: u.avatar_url ?? null,
+    };
+  }
+
   /** 初始体重锚点：首条体重记录；无记录回退当前体重 */
   _initialWeight(userId, user) {
     const first = this.db
@@ -41,6 +79,7 @@ export class UserService {
     if (!u) {
       return {
         nickname: null,
+        avatar_url: null,
         gender: null,
         age_group: null,
         height: null,
@@ -54,6 +93,7 @@ export class UserService {
     }
     return {
       nickname: u.nickname ?? null,
+      avatar_url: u.avatar_url ?? null,
       gender: u.gender ?? null,
       age_group: u.age_group ?? null,
       height: u.height_cm ?? null,
