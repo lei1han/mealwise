@@ -123,27 +123,12 @@ Page({
     }
   },
 
-  /** 每日报体重完成（active 用户）：追加教练回复（挂预算卡）、收起催报卡、标记今日已报 */
+  /** 每日报体重完成（active 用户）：追加教练回复、收起催报卡、标记今日已报 */
   _handleWeightReported(reply) {
-    // 预算卡：active 且本轮有剩余预算单值时挂到教练消息上（与 handleSend 规则 4 一致）
-    let msgBudget = null;
-    if (this.data.budget && reply.budget_remaining_kcal != null) {
-      // 以最新剩余反推已消耗，使"已消耗/进度条"随对话推进实时更新；total 为 0 时避免 Infinity%，并钳制 [0, 100]
-      const total = Number(this.data.budget.total) || 0;
-      const remaining = Math.min(Math.max(Number(reply.budget_remaining_kcal) || 0, 0), total);
-      const consumed = total > 0 ? total - remaining : 0;
-      msgBudget = {
-        ...this.data.budget,
-        remaining,
-        consumed,
-        ratio: total > 0 ? consumed / total * 100 : 0
-      };
-      // 回写缓存，保证后续轮次卡片基于最新预算（_loadBudget 会话内只拉一次）
-      this.setData({ budget: msgBudget });
-    }
+    this._syncBudgetCache(reply);
     const messages = [
       ...this.data.messages,
-      { role: 'coach', text: reply.reply_text || '收到，记下了。', budget: msgBudget }
+      { role: 'coach', text: reply.reply_text || '收到，记下了。' }
     ];
     this.setData({
       messages,
@@ -259,6 +244,29 @@ Page({
     this._scrollToBottom();
   },
 
+  /**
+   * 用本轮 budget_remaining_kcal 更新会话预算缓存与顶部「今日还可吃」进度条；
+   * 不在每条教练气泡下重复展示预算卡（避免对话冗长）。
+   */
+  _syncBudgetCache(reply) {
+    const base = this.data.budget;
+    if (!base || reply.budget_remaining_kcal == null) return;
+    const total = Number(base.total) || 0;
+    const remaining = Math.min(Math.max(Number(reply.budget_remaining_kcal) || 0, 0), total);
+    const consumed = total > 0 ? total - remaining : 0;
+    const ratio = total > 0 ? consumed / total * 100 : 0;
+    this.setData({
+      budget: {
+        ...base,
+        remaining,
+        consumed,
+        ratio,
+        ratioWidth: ratio + '%'
+      }
+    });
+    this._loadTodayProgress();
+  },
+
   /** 加载今日预算（仅 active 后） */
   async _loadBudget() {
     if (this.data.budget) return this.data.budget;
@@ -309,24 +317,9 @@ Page({
       budget = await this._loadBudget();
     }
 
-    // 预算卡：active 且本轮有剩余预算单值时挂到教练消息上
-    let msgBudget = null;
     if (nextState === 'active' && budget && reply.budget_remaining_kcal != null) {
-      // 以最新剩余反推已消耗，使"已消耗/进度条"随对话推进实时更新；total 为 0 时避免 Infinity%，并钳制 [0, 100]
-      const total = Number(budget.total) || 0;
-      const remaining = Math.min(Math.max(Number(reply.budget_remaining_kcal) || 0, 0), total);
-      const consumed = total > 0 ? total - remaining : 0;
-      const ratio = total > 0 ? consumed / total * 100 : 0;
-      msgBudget = {
-        ...budget,
-        remaining,
-        consumed,
-        ratio,
-        // 进度条宽度直接拼成带 % 的字符串，避免 WXML 中 {{expr}}% 触发 IDE CSS 校验报错
-        ratioWidth: ratio + '%'
-      };
-      // 回写缓存，保证后续轮次卡片基于最新预算（_loadBudget 会话内只拉一次）
-      this.setData({ budget: msgBudget });
+      if (!this.data.budget) this.setData({ budget });
+      this._syncBudgetCache(reply);
     }
 
     // 本轮报了体重：催报卡可收起（状态性关闭）
@@ -338,13 +331,18 @@ Page({
       this.setData({ showReminder: true });
     }
 
+    const dietCard = reply.diet_card || null;
     messages.push({
       role: 'coach',
       text: reply.reply_text,
-      budget: msgBudget
+      dietCard
     });
 
     this.setData({ messages, coachTyping: false, onboardingState: nextState });
+
+    if ((dietCard || reply.intent === 'diet_report') && nextState === 'active') {
+      this._loadTodayProgress();
+    }
 
     // 摸底"问体重"环节：先锁住输入（未保存前不出下一轮对话），再自动弹出体质录入 sheet
     if (reply.action === 'open_weight_sheet' && !this.data.weightSheetTriggered) {
@@ -357,6 +355,10 @@ Page({
     if (reply.subscribe_hint && !this.data.subscribeHintShown) {
       this.setData({ subscribeHintShown: true });
       wx.showToast({ title: '记得开通知，漏报我可要催了', icon: 'none', duration: 2000 });
+    }
+
+    if (reply.record_date_rejected) {
+      wx.showToast({ title: '只能记录今天或昨天的饮食/体重', icon: 'none', duration: 2500 });
     }
 
     this._scrollToBottom();

@@ -55,7 +55,22 @@ function rateLimited(app, userId, now = new Date()) {
 }
 
 export async function main(event = {}, _ctx, app = buildApp()) {
-  const { action = 'chat.send', userId, text, slot, dryRun, limit, cursor, patch, fields, accepted, phone, nickname, avatarUrl } = event;
+  const {
+    action = 'chat.send',
+    userId,
+    text,
+    record_date,
+    slot,
+    dryRun,
+    limit,
+    cursor,
+    patch,
+    fields,
+    accepted,
+    phone,
+    nickname,
+    avatarUrl,
+  } = event;
   const { target_weight_kg, target_estimate_weeks, template_key } = event;
 
   try {
@@ -64,10 +79,13 @@ export async function main(event = {}, _ctx, app = buildApp()) {
     switch (action) {
       case 'chat.send': {
         if (text != null && typeof text !== 'string') return badPayload('chat.send: text must be a string');
+        if (record_date != null && typeof record_date !== 'string') {
+          return badPayload('chat.send: record_date must be a string');
+        }
         if (rateLimited(app, userId)) {
           return { code: ERR.RATE_LIMITED, message: '发送太频繁了，歇一分钟再来' };
         }
-        return wrap(await app.chat.send({ userId, text }));
+        return wrap(await app.chat.send({ userId, text, record_date }));
       }
       case 'conversation.current':
         return wrap(app.conversation.current({ userId, limit }));

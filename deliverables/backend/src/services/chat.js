@@ -4,6 +4,7 @@ import { parseRaw } from '../llm/parser.js';
 import { budgetRemaining, todayConsumption } from '../domain/budget.js';
 import { dailyBudget, evaluateOnboarding, applyProfiling, estimateWeeks, makeOnboarding } from '../domain/onboarding.js';
 import { HISTORY_ROUNDS, ONBOARDING_STATES } from '../domain/constants.js';
+import { buildDietCard } from '../domain/diet-card.js';
 import { formatFoodDbHint } from '../domain/foods.js';
 import { render } from './config.js';
 
@@ -264,6 +265,8 @@ export class ChatService {
     parsed.budget_remaining_kcal = calcBudget;
 
     const remaining = this._subscribeRemaining(userId);
+    const dietRecord = parsed.extracted?.diet_record;
+    const diet_card = dietRecord ? buildDietCard(dietRecord) : undefined;
     return {
       reply_text: parsed.reply_text ?? '（我这里有点卡，你再说一遍？）',
       intent: parsed.intent,
@@ -272,6 +275,7 @@ export class ChatService {
       subscribe_hint: user.onboarding_state === 'active' && remaining < 3,
       onboarding_state: user.onboarding_state,
       action: this._sheetAction(user),
+      diet_card,
     };
   }
 

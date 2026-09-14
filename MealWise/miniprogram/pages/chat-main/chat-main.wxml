@@ -54,30 +54,32 @@
           <view class="msg-bubble msg-bubble-coach">
             <text>{{msg.text}}</text>
 
-            <!-- 预算卡片 -->
-            <view wx:if="{{msg.budget}}" class="budget-card">
-              <view class="budget-row">
-                <view class="budget-item">
-                  <text class="budget-label">今日预算</text>
-                  <text class="budget-value budget-total">{{msg.budget.total}}</text>
-                  <text class="budget-unit">kcal</text>
+            <!-- 本餐食物明细表 -->
+            <view wx:if="{{msg.dietCard && msg.dietCard.rows.length}}" class="diet-card">
+              <view class="diet-card-head">
+                <text class="diet-card-title">{{msg.dietCard.meal_label}} · 食物明细</text>
+                <text class="diet-card-total">合计约 {{msg.dietCard.total_text}} 大卡</text>
+              </view>
+              <view class="diet-table">
+                <view class="diet-row diet-row-head">
+                  <text class="diet-col diet-col-name">食物</text>
+                  <text class="diet-col diet-col-kcal">热量</text>
+                  <text class="diet-col diet-col-note">情况</text>
                 </view>
-                <view class="budget-item">
-                  <text class="budget-label">已消耗</text>
-                  <text class="budget-value budget-consumed">{{msg.budget.consumed}}</text>
-                  <text class="budget-unit">kcal</text>
-                </view>
-                <view class="budget-item">
-                  <text class="budget-label">剩余</text>
-                  <text class="budget-value budget-remaining">{{msg.budget.remaining}}</text>
-                  <text class="budget-unit">kcal</text>
+                <view
+                  wx:for="{{msg.dietCard.rows}}"
+                  wx:key="name"
+                  wx:for-item="row"
+                  class="diet-row"
+                >
+                  <text class="diet-col diet-col-name">{{row.name}}</text>
+                  <text class="diet-col diet-col-kcal">{{row.cal_text}}</text>
+                  <text class="diet-col diet-col-note">{{row.situation}}</text>
                 </view>
               </view>
-              <!-- 进度条 -->
-              <view class="budget-progress">
-                <view class="budget-bar" style="width: {{msg.budget.ratioWidth}}"></view>
-              </view>
+              <text wx:if="{{msg.dietCard.is_estimated}}" class="diet-estimated-hint">* 含估算项，区间仅供参考</text>
             </view>
+
           </view>
         </view>
 

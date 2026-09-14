@@ -1,9 +1,10 @@
 // 预算：计算今日已报餐累计与剩余（单值口径，对齐契约 B / 后端 §6.4）
 // remaining = budget − 中位(Σcal_min, Σcal_max)；未定标/无预算时返回 null
 
+import { recordDateKey } from './record-date.js';
+
 function todayKey(date = new Date()) {
-  const d = date.toISOString().slice(0, 10);
-  return d;
+  return recordDateKey(date);
 }
 
 // 从 diet_records（或内存态）累计今日热量

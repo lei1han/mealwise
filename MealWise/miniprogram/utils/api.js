@@ -4,6 +4,7 @@
  */
 
 const Mock = require('./mock.js');
+const { buildDietCard } = require('./diet-card.js');
 
 // 切换标志：true = Mock，false = 真实接口
 const USE_MOCK = true;
@@ -95,9 +96,17 @@ const API = {
      聊天相关
      ========================================== */
 
-  async sendMessage(text) {
-    if (!useReal('chat.send')) return Mock.sendMessage(text);
-    return callCloudFunction('chat.send', { text });
+  async sendMessage(text, options = {}) {
+    const payload = { text };
+    if (options.record_date) payload.record_date = options.record_date;
+    if (!useReal('chat.send')) {
+      const reply = await Mock.sendMessage(text, options);
+      if (!reply.diet_card && reply.extracted && reply.extracted.diet_record) {
+        reply.diet_card = buildDietCard(reply.extracted.diet_record);
+      }
+      return reply;
+    }
+    return callCloudFunction('chat.send', payload);
   },
 
   async getHistory(cursor) {

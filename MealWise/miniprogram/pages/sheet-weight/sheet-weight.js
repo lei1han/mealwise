@@ -1,4 +1,5 @@
 const API = require('../../utils/api.js');
+const recordDate = require('../../utils/record-date.js');
 
 Page({
   data: {
@@ -14,7 +15,9 @@ Page({
     ],
     weight: '',
     targetWeight: '',
-    height: ''
+    height: '',
+    /** 报体重：today | yesterday */
+    recordDay: 'today'
   },
 
   onLoad(options) {
@@ -42,6 +45,10 @@ Page({
     this.setData({ ageGroup: e.currentTarget.dataset.value });
   },
 
+  handleRecordDay(e) {
+    this.setData({ recordDay: e.currentTarget.dataset.value });
+  },
+
   /** 输入框变更 */
   handleInput(e) {
     const field = e.currentTarget.dataset.field;
@@ -60,7 +67,15 @@ Page({
     if (this.data.mode === 'weight') {
       wx.showLoading({ title: '上报中...' });
       try {
-        const reply = await API.sendMessage('今日体重 ' + weight + 'kg');
+        const day = this.data.recordDay === 'yesterday' ? 'yesterday' : 'today';
+        const dateKey = day === 'yesterday' ? recordDate.yesterdayKey() : recordDate.todayKey();
+        const label = day === 'yesterday' ? '昨日' : '今日';
+        const reply = await API.sendMessage(`${label}体重 ${weight}kg`, { record_date: dateKey });
+        if (reply.record_date_rejected) {
+          wx.hideLoading();
+          wx.showToast({ title: '只能记录今天或昨天', icon: 'none' });
+          return;
+        }
         // 落地待展示的教练回复：返回聊天页后由 chat-main 追加气泡
         wx.setStorageSync('pendingWeightReport', reply);
         wx.hideLoading();
