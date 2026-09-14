@@ -56,8 +56,9 @@ const REAL_ACTIONS = [ /* auth.login, chat.send, … 见源码 */ ];
 ```
 
 - `useReal(action)`：当 `USE_MOCK === false` **或** action 在 `REAL_ACTIONS` 中时走 `wx.cloud.callFunction({ name: 'api', data: { action, payload } })`。
-- 当前仓库默认 **`REAL_ACTIONS` 已列出契约 C 主要 action**；联调时可设 `USE_MOCK = false`，或清空/缩减白名单以回退 Mock。
+- 当前仓库默认 **`REAL_ACTIONS` 已列出契约 C 主要 action**（`auth.login`、`conversation.*`、`user.*`、`onboarding.profile.submit`、`budget.today`、`app.config.get`、`subscribe.report` 等；`scheduler.nudge` 同函数路由）；联调时可设 `USE_MOCK = false`，或清空/缩减白名单以回退 Mock。
 - 云函数 envelope：`{ code: 0, data }` 成功；`40001` / `42901` / `50000` 等见总计划 §1.3 与后端计划 §5.3。
+- 上传云函数前须在开发者工具 **右键 `cloudfunctions` 绑定云环境**，见 [DEV_GUIDE.md](./DEV_GUIDE.md) § A3。
 
 ## 后端内核与测试
 
