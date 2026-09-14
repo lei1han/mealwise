@@ -41,7 +41,7 @@ const USE_MOCK = true;        // 全局总开关
 const REAL_ACTIONS = [];      // 白名单内的 action 无视总开关，强制走真实云函数
 ```
 
-后端内核当前支持 3 个 action：`chat.send`、`subscribe.report`、`scheduler.nudge`（详见总计划 §1.3 契约 C）。
+后端内核已实现契约 C 所列 action（含 `auth.login`、`conversation.*`、`user.*`、`onboarding.profile.submit`、`budget.today`、`app.config.get`、`db.ensure` 等；`scheduler.nudge` 与 `subscribe.report` 同函数路由）。详见总计划 §1.3。
 
 > 注：`src/package.json` 的 `{"type":"module"}` 标记是 ESM 内核在 CJS 云函数入口下运行的必要条件，勿删。
 

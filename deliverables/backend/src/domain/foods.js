@@ -27,7 +27,26 @@ export function search(keyword) {
   return RAW.filter((f) => f.name.includes(k) || f.category.includes(k) || f.id.includes(k));
 }
 
-// 供 setup-db 打印
+// 食物库概况（供外部脚本/调试打印）
 export function summary() {
   return { total: RAW.length, byCategory: RAW.reduce((m, f) => ((m[f.category] = (m[f.category] || 0) + 1), m), {}) };
+}
+
+/** 生成注入 LLM 的食物库清单（对齐提示词成品 §4 / 占位符 food_db_hint） */
+export function formatFoodDbHint() {
+  const byCat = RAW.reduce((m, f) => {
+    (m[f.category] ??= []).push(f);
+    return m;
+  }, {});
+  const lines = [];
+  for (const [cat, items] of Object.entries(byCat)) {
+    lines.push(`【${cat}】`);
+    for (const f of items) {
+      lines.push(
+        `- ${f.name}：基准 ${f.kcal} kcal（${f.min}~${f.max}），food_ref=food:${f.id}`
+      );
+    }
+  }
+  lines.push(`（共 ${RAW.length} 项，优先匹配库内 id；库外/复合菜用 food:external）`);
+  return lines.join('\n');
 }
