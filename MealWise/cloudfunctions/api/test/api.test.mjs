@@ -179,6 +179,14 @@ test('错误码契约 §5.3：未知 action 与非法 payload 均 40001', async 
   assert.equal(badPatch.code, 40001);
 });
 
+test('chat.send：前天报体重不落库并返回 record_date_rejected', async () => {
+  const app = freshApp();
+  const r = await app.chat.send({ userId: 'date1', text: '前天体重 70kg' });
+  assert.equal(r.record_date_rejected, true);
+  const weights = app.db.find('weight_records', (w) => w.user_id === 'date1');
+  assert.equal(weights.length, 0);
+});
+
 test('chat.send 饮食汇报：返回 diet_card 食物热量明细表', async () => {
   const app = freshApp();
   const r = await app.chat.send({ userId: 'diet-ui', text: '午餐吃了一拳米饭和鸡胸肉' });

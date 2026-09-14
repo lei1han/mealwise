@@ -357,6 +357,10 @@ Page({
       wx.showToast({ title: '记得开通知，漏报我可要催了', icon: 'none', duration: 2000 });
     }
 
+    if (reply.record_date_rejected) {
+      wx.showToast({ title: '只能记录今天或昨天的饮食/体重', icon: 'none', duration: 2500 });
+    }
+
     this._scrollToBottom();
   },
 

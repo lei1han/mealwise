@@ -96,15 +96,17 @@ const API = {
      聊天相关
      ========================================== */
 
-  async sendMessage(text) {
+  async sendMessage(text, options = {}) {
+    const payload = { text };
+    if (options.record_date) payload.record_date = options.record_date;
     if (!useReal('chat.send')) {
-      const reply = await Mock.sendMessage(text);
+      const reply = await Mock.sendMessage(text, options);
       if (!reply.diet_card && reply.extracted && reply.extracted.diet_record) {
         reply.diet_card = buildDietCard(reply.extracted.diet_record);
       }
       return reply;
     }
-    return callCloudFunction('chat.send', { text });
+    return callCloudFunction('chat.send', payload);
   },
 
   async getHistory(cursor) {

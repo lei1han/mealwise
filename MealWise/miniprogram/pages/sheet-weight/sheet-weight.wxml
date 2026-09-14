@@ -9,11 +9,28 @@
       <view class="handle-bar"></view>
     </view>
 
-    <text class="sheet-title">{{mode === 'weight' ? '报今日体重' : '体质信息录入'}}</text>
+    <text class="sheet-title">{{mode === 'weight' ? '记录体重' : '体质信息录入'}}</text>
 
     <!-- 教练提示 -->
     <view class="coach-bubble">
-      <text>{{mode === 'weight' ? '今天体重多少公斤？直接填数字就行。' : '先填一下基本身体信息，我帮你算预算。'}}</text>
+      <text>{{mode === 'weight' ? '只能记今天或昨天哦。选日期后填公斤数就行。' : '先填一下基本身体信息，我帮你算预算。'}}</text>
+    </view>
+
+    <!-- 记录日期（仅报体重） -->
+    <view class="form-group" wx:if="{{mode === 'weight'}}">
+      <text class="form-label">记录日期</text>
+      <view class="gender-row">
+        <view
+          class="gender-btn {{recordDay === 'today' ? 'gender-btn-selected' : ''}}"
+          data-value="today"
+          bindtap="handleRecordDay"
+        >今天</view>
+        <view
+          class="gender-btn {{recordDay === 'yesterday' ? 'gender-btn-selected' : ''}}"
+          data-value="yesterday"
+          bindtap="handleRecordDay"
+        >昨天</view>
+      </view>
     </view>
 
     <!-- 性别（摸底全量才需要） -->
@@ -51,7 +68,7 @@
 
     <!-- 体重 -->
     <view class="form-group">
-      <text class="form-label">{{mode === 'weight' ? '今日体重' : '当前体重'}}</text>
+      <text class="form-label">{{mode === 'weight' ? '体重' : '当前体重'}}</text>
       <view class="input-wrapper">
         <input
           class="form-input"

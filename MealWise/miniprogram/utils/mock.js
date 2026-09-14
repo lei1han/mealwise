@@ -233,7 +233,7 @@ const Mock = {
    * @param {string} text 用户发送的文字；'__start__'（或空文本）为摸底/回归开场
    * @returns {object} 教练回复 + 结构化结果 + onboarding_state
    */
-  async sendMessage(text) {
+  async sendMessage(text, options = {}) {
     await this._delay(800);
 
     const raw = (text || '').trim();
@@ -246,7 +246,7 @@ const Mock = {
     }
 
     // 根据当前状态和消息内容做 mock 回复
-    const reply = this._generateReply(raw);
+    const reply = this._generateReply(raw, options);
     // 日常回复补齐契约 C 字段
     if (reply.onboarding_state == null) reply.onboarding_state = this._onboardingState;
     if (reply.subscribe_hint == null) reply.subscribe_hint = false;
@@ -327,8 +327,29 @@ const Mock = {
   /**
    * Mock 回复生成
    */
-  _generateReply(text) {
+  _generateReply(text, options = {}) {
     const lower = text.toLowerCase().trim();
+    const recordDate = require('./record-date.js');
+
+    if (options.record_date && !recordDate.isAllowedRecordDate(options.record_date)) {
+      return {
+        reply_text: '只能记录今天或昨天的体重和饮食，请重新选择日期。',
+        intent: 'other',
+        extracted: { memory_points: [] },
+        record_date_rejected: true,
+        budget_remaining_kcal: null
+      };
+    }
+
+    if (/前天|大前天|上周|上个月|去年/.test(text)) {
+      return {
+        reply_text: '体重和饮食我只能帮你记今天或昨天的，更早的日期没法落库哦。',
+        intent: 'other',
+        extracted: { memory_points: [] },
+        record_date_rejected: true,
+        budget_remaining_kcal: this._todayBudget ? this._todayBudget.remaining : null
+      };
+    }
 
     // 摸底期：脚本化推进，状态机由"后端"（mock）主导
     const onboarding = this._onboardingReply(text);
