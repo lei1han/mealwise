@@ -31,7 +31,9 @@ MealWise/
 1. 用微信开发者工具导入本目录（AppID：`wxd6def00245936b4c`）。
 2. 云开发环境：`cloud1-d6gmjs12rfd5c3925`（已在 `app.js` 中初始化）。
 3. 右键 `cloudfunctions/api` →「上传并部署：云端安装依赖」。
-4. 模拟器编译运行。登录动线：闪屏 → 授权 → **资料完善（昵称+头像）** → 聊天；联调见 `utils/api.js` 的 `USE_MOCK` / `REAL_ACTIONS`。
+4. 模拟器编译运行。登录：**手机号授权即可进聊天**；昵称/头像可选，在 **个人中心 → 去完善** 补充。
+
+**头像云存储**：见 [`docs/cloud-storage-setup.md`](docs/cloud-storage-setup.md)。
 
 ## Mock / 真实云函数切换
 
@@ -46,7 +48,7 @@ const REAL_ACTIONS = [];      // 白名单内的 action 无视总开关，强制
 
 > 注：`src/package.json` 的 `{"type":"module"}` 标记是 ESM 内核在 CJS 云函数入口下运行的必要条件，勿删。
 
-**头像上传**：资料完善页将头像上传至云存储目录 `user-avatars/`；若保存失败，请在云开发控制台检查存储权限与安全规则。
+**头像上传**：资料完善页将头像上传至云存储 `user-avatars/`。**开通与安全规则**见 [`docs/cloud-storage-setup.md`](docs/cloud-storage-setup.md)。
 
 ## 相关文档
 

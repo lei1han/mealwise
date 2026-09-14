@@ -21,6 +21,30 @@
 .nav-title { font-size: 34rpx; font-weight: 600; color: var(--xc-foreground); }
 .nav-right { width: 120rpx; }
 
+.profile-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 24rpx 8rpx;
+  padding: 24rpx 28rpx;
+  background-color: var(--xc-primary-50);
+  border-radius: var(--xc-radius-md);
+  border: 1rpx solid var(--xc-primary-100);
+}
+.profile-banner-text {
+  flex: 1;
+  font-size: 26rpx;
+  color: var(--xc-foreground);
+  line-height: 1.4;
+}
+.profile-banner-action {
+  flex: none;
+  margin-left: 16rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--xc-primary);
+}
+
 /* ========== 用户信息卡 ========== */
 .user-card {
   display: flex;

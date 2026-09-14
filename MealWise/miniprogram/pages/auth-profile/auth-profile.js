@@ -6,23 +6,19 @@ Page({
   data: {
     nickname: '',
     avatarTemp: '',
-    submitting: false
+    submitting: false,
+    fromProfile: false
   },
 
   _avatarTempPath: '',
 
-  async onLoad() {
-    const cached = app.globalData.userInfo;
-    if (cached && !AuthFlow.needsProfileCompletion(cached)) {
-      wx.reLaunch({ url: AuthFlow.CHAT_URL });
-      return;
-    }
-    if (cached && cached.nickname) {
-      this.setData({ nickname: cached.nickname });
-    }
+  async onLoad(options) {
+    const fromProfile = options.from === 'profile';
+    this.setData({ fromProfile });
+
     try {
       const p = await API.getProfile();
-      if (p && p.nickname && !AuthFlow.needsProfileCompletion(p)) {
+      if (p && !AuthFlow.needsProfileCompletion(p) && !fromProfile) {
         wx.reLaunch({ url: AuthFlow.CHAT_URL });
         return;
       }
@@ -68,22 +64,34 @@ Page({
     this.setData({ submitting: true });
     try {
       const user = await API.completeLoginProfile({ nickname, avatarTempPath: this._avatarTempPath });
-      app.globalData.isLoggedIn = true;
       app.globalData.userInfo = user;
-      wx.setStorageSync('token', 'logged-in');
 
       if (AuthFlow.needsProfileCompletion(user)) {
         wx.showToast({ title: '资料未保存完整，请重试', icon: 'none' });
         return;
       }
 
-      wx.showToast({ title: '好了，开聊', icon: 'success', duration: 1000 });
-      setTimeout(() => wx.reLaunch({ url: AuthFlow.CHAT_URL }), 1000);
+      wx.showToast({ title: '资料已保存', icon: 'success', duration: 900 });
+      setTimeout(() => {
+        if (this.data.fromProfile) {
+          wx.navigateBack();
+        } else {
+          wx.reLaunch({ url: AuthFlow.CHAT_URL });
+        }
+      }, 900);
     } catch (err) {
       console.error('profile submit failed', err);
       wx.showToast({ title: (err && err.message) || '保存失败，请重试', icon: 'none' });
     } finally {
       this.setData({ submitting: false });
+    }
+  },
+
+  onSkip() {
+    if (this.data.fromProfile) {
+      wx.navigateBack();
+    } else {
+      wx.reLaunch({ url: AuthFlow.CHAT_URL });
     }
   }
 });

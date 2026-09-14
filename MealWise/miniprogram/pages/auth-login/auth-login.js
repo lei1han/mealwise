@@ -37,7 +37,7 @@ Page({
     }
   },
 
-  /** 暂不授权手机号：仍须完善昵称/头像后再聊天 */
+  /** 暂不授权手机号：仍可先体验聊天，资料稍后在个人中心补 */
   handleSkip() {
     app.globalData.isLoggedIn = true;
     wx.setStorageSync('token', 'logged-in');
@@ -45,7 +45,7 @@ Page({
   },
 
   _goNext(user) {
-    AuthFlow.routeAfterAuth(user || {});
+    AuthFlow.routeAfterAuth();
   },
 
   handleAgreement(e) {

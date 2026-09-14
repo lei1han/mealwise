@@ -31,9 +31,10 @@
 
     <view class="btn-area">
       <button class="btn-primary" bindtap="onSubmit" disabled="{{submitting}}">
-        {{submitting ? '保存中…' : '开始跟教练聊'}}
+        {{submitting ? '保存中…' : '保存资料'}}
       </button>
-      <text class="btn-note">昵称与头像仅用于小程序内展示，可随时在「我的」中修改</text>
+      <text class="btn-skip" bindtap="onSkip">稍后再说</text>
+      <text class="btn-note">也可在「个人中心」随时补充昵称与头像</text>
     </view>
   </view>
 </scroll-view>
