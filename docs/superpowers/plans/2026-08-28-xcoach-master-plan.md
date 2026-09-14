@@ -165,6 +165,14 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 > * **测试**：内核本地 `npm test` 29/29 通过（新增 `config.test.mjs`：app.config.get 公开/内部隔离、prompt 覆盖、render 占位符、集合缺失兜底）；`npm test` 脚本由 `node --test test/` 改为 `node --test`（Node v25 目录参数无法解析的兼容修正）。
 >
 > * **数据库工具 action（同日增量）**：新增 `db.ensure`（幂等建表检查：7 个用户集合 + `app_config` 缺失自动创建，返回 `{ collection, status, count }`）。集合被删除后，任意 API 调用都会自动重建空表——运营「删表重建」即可完成整库重置（SDK 建表不建索引，正式环境需按后端计划 §4 在控制台重建）。内核本地 `npm test` 32/32。
+>
+> **2026-09-14 增量（调优推荐套餐）**：
+>
+> * **提示词运行时对齐成品**：`promptAssembly.js` 将 §2/§4/§9 合并进 system，并挂载摸底 §3（非 active）、情绪 §5（关键词）；`foods.json` 全量注入 `food_db_hint`；`OUTPUT_CONTRACT` 含 `off_topic`；`INTENTS` 枚举同步。
+>
+> * **新 action** **`weight.report`**：`payload { weight_kg }` → 直写 `weight_records` + 更新 `current_weight_kg`，返回与 `chat.send` 同结构；前端 `sheet-weight`（mode=weight）改调此 action。
+>
+> * **测试**：内核 `npm test` 38/38；决策见 [调优专题议程](2026-09-14-xcoach-tuning-topic-agenda.md) §5。
 
 ***
 
@@ -178,7 +186,7 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 
 - **文档对齐**：新增 [产品决策记录](2026-09-14-xcoach-product-decisions.md)、[文档索引](../README.md)；刷新设计规格 v1.3、dev-deploy §1、`MealWise/README.md`。
 - **MVP 边界**：订阅/定时督促（M5）不做进首发；资料完善纳入 MVP；提审待功能与调优专题完成后进行。
-- **已知实现 gap**：调优报告（2026-09-02）中提示词/食物库注入与成品文档不一致——**挂起专题**，提审前需结论。
+- **调优套餐（2026-09-14）**：推荐套餐已落地（提示词组装 + `weight.report`）；提审前模拟器验收 T1–T5。
 - **工程真源**：`MealWise/`（非 `deliverables/frontend/mealwise-miniapp` 快照）；内核 action 与 `npm test` 32/32 见 §1.3 2026-09-01 注记。
 
 ***
