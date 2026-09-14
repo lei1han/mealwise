@@ -86,7 +86,7 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 
 * 会话：`callFunction('api', { action: 'chat.send', payload: { text } })` → 返回回复 + 结构化结果（统一 envelope `{ code, data, message }`）。支持 `text: '__start__'`（或空文本）作摸底开场：首次用户（`onboarding_state=new`）无历史时前端自动触发，后端返回并落库摸底开场白。返回含 `onboarding_state`（`new/profiling/active`），前端据此渲染摸底引导 / 预算卡，状态机由后端主导、前端不做本地判定。
 
-* 授权登录（**2026-09-01 增量**）：`action: 'auth.login'`，payload `{ phoneCode?, nickname?, avatarUrl? }` → `{ is_new, phone, nickname, avatar_url }`。手机号 code 由云函数适配层经 `cloud.openapi.phonenumber.getPhoneNumber` 换号（失败静默 → `phone=null`）；`nickname`/`avatarUrl` 回填能力保留（来自微信头像昵称填写能力，头像经云存储上传换取 fileID 后落库）。upsert 用户且**仅空字段写**（手机号不换绑）。**MVP 暂不启用资料完善步**：授权手机号成功后直接进入聊天，资料完善界面后续版本再设计接入。
+* 授权登录（**2026-09-01 增量**）：`action: 'auth.login'`，payload `{ phoneCode?, nickname?, avatarUrl? }` → `{ is_new, phone, nickname, avatar_url }`。手机号 code 由云函数适配层经 `cloud.openapi.phonenumber.getPhoneNumber` 换号（失败静默 → `phone=null`）；`nickname`/`avatarUrl` 回填能力保留（来自微信头像昵称填写能力，头像经云存储上传换取 fileID 后落库）。upsert 用户且**仅空字段写**（手机号不换绑）。**MVP 资料完善（2026-09-14 决策回写）**：授权后若 `nickname` 或 `avatar_url` 为空，须先完成昵称/头像完善再进入聊天；**不含**订阅消息与定时督促（移出 MVP，见 [产品决策记录](2026-09-14-xcoach-product-decisions.md) §1）。
 
 * 会话上下文：`action: 'conversation.current'`、历史消息 `action: 'conversation.history'`（cursor 分页）；用户状态 `action: 'user.state.get'`（首帧读取 `onboarding_state` 与 `reported_weight_today`——是否今日已报体重，供前端催报卡判断）。
 
@@ -165,6 +165,14 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 > * **测试**：内核本地 `npm test` 29/29 通过（新增 `config.test.mjs`：app.config.get 公开/内部隔离、prompt 覆盖、render 占位符、集合缺失兜底）；`npm test` 脚本由 `node --test test/` 改为 `node --test`（Node v25 目录参数无法解析的兼容修正）。
 >
 > * **数据库工具 action（同日增量）**：新增 `db.ensure`（幂等建表检查：7 个用户集合 + `app_config` 缺失自动创建，返回 `{ collection, status, count }`）。集合被删除后，任意 API 调用都会自动重建空表——运营「删表重建」即可完成整库重置（SDK 建表不建索引，正式环境需按后端计划 §4 在控制台重建）。内核本地 `npm test` 32/32。
+>
+> **2026-09-14 增量（调优推荐套餐）**：
+>
+> * **提示词运行时对齐成品**：`promptAssembly.js` 将 §2/§4/§9 合并进 system，并挂载摸底 §3（非 active）、情绪 §5（关键词）；`foods.json` 全量注入 `food_db_hint`；`OUTPUT_CONTRACT` 含 `off_topic`；`INTENTS` 枚举同步。
+>
+> * **新 action** **`weight.report`**：`payload { weight_kg }` → 直写 `weight_records` + 更新 `current_weight_kg`，返回与 `chat.send` 同结构；前端 `sheet-weight`（mode=weight）改调此 action。
+>
+> * **测试**：内核 `npm test` 38/38；决策见 [调优专题议程](2026-09-14-xcoach-tuning-topic-agenda.md) §5。
 
 ***
 
@@ -173,6 +181,13 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 1. **先对齐契约**：4 个板块各自开工前，先花一小段确认其依赖的「接口契约」并冻结。
 2. **并行推进**：板块 1/2/3 可高度并行；板块 4 可先起方法论与获客/合规部分，成本与路线图最后收敛。
 3. **汇总集成**：最后一轮会话统一 Review 四个板块产出，做接口对账、端到端走查、产出合并后的整体文档，并据此启动后续开发。
+
+### 2.1 汇总走查记录（2026-09-14）
+
+- **文档对齐**：新增 [产品决策记录](2026-09-14-xcoach-product-decisions.md)、[文档索引](../README.md)；刷新设计规格 v1.3、dev-deploy §1、`MealWise/README.md`。
+- **MVP 边界**：订阅/定时督促（M5）不做进首发；资料完善纳入 MVP；提审待功能与调优专题完成后进行。
+- **调优套餐（2026-09-14）**：推荐套餐已落地（提示词组装 + `weight.report`）；提审前模拟器验收 T1–T5。
+- **工程真源**：`MealWise/`（非 `deliverables/frontend/mealwise-miniapp` 快照）；内核 action 与 `npm test` 32/32 见 §1.3 2026-09-01 注记。
 
 ***
 

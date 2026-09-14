@@ -6,8 +6,10 @@
 
 ## 文档入口（唯一事实来源）
 
+- 文档索引：`docs/superpowers/README.md`
 - 设计规格：`docs/superpowers/specs/2026-08-28-xcoach-design.md`
 - 实施总计划（含接口契约）：`docs/superpowers/plans/2026-08-28-xcoach-master-plan.md`
+- 产品决策（2026-09-14 起）：`docs/superpowers/plans/2026-09-14-xcoach-product-decisions.md`
 
 ## 目录规划
 

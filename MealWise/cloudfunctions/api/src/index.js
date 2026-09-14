@@ -55,7 +55,7 @@ function rateLimited(app, userId, now = new Date()) {
 }
 
 export async function main(event = {}, _ctx, app = buildApp()) {
-  const { action = 'chat.send', userId, text, slot, dryRun, limit, cursor, patch, fields, accepted, phone, nickname, avatarUrl } = event;
+  const { action = 'chat.send', userId, text, slot, dryRun, limit, cursor, patch, fields, accepted, phone, nickname, avatarUrl, weight_kg } = event;
   const { target_weight_kg, target_estimate_weeks, template_key } = event;
 
   try {
@@ -99,6 +99,13 @@ export async function main(event = {}, _ctx, app = buildApp()) {
       }
       case 'budget.today':
         return wrap(app.chat.todayBudget({ userId }));
+      case 'weight.report': {
+        const n = weight_kg != null ? Number(weight_kg) : NaN;
+        if (!Number.isFinite(n) || n < 20 || n > 300) return badPayload('weight.report: weight_kg must be between 20 and 300');
+        const res = app.chat.reportWeight({ userId, weight_kg: n });
+        if (res?.error) return badPayload('weight.report: invalid weight_kg');
+        return wrap(res);
+      }
       case 'app.config.get':
         return wrap(app.config.getPublic());
       case 'scheduler.nudge':

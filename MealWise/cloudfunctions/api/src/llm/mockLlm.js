@@ -36,6 +36,15 @@ export function mockComplete({ messages }) {
     throw new Error('mock 返回非 JSON');
   }
 
+  if (/Python|写代码|编程/.test(turn)) {
+    return JSON.stringify({
+      reply_text: '代码我真不在行，我的主场是你的身材。说说今天中午吃了啥？',
+      intent: 'off_topic',
+      extracted: {},
+      budget_remaining_kcal: null,
+    });
+  }
+
   const memoryPoints = [];
 
   // 静态画像：性别/年龄段

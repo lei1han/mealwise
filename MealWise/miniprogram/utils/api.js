@@ -22,7 +22,8 @@ const REAL_ACTIONS = [
   'user.profile.update',
   'user.target.update',
   'subscribe.report',
-  'app.config.get'
+  'app.config.get',
+  'weight.report'
 ];
 
 /**
@@ -98,6 +99,12 @@ const API = {
   async sendMessage(text) {
     if (!useReal('chat.send')) return Mock.sendMessage(text);
     return callCloudFunction('chat.send', { text });
+  },
+
+  /** 结构化报体重（weight.report），不经 LLM */
+  async reportWeight(weight_kg) {
+    if (!useReal('weight.report')) return Mock.reportWeight(weight_kg);
+    return callCloudFunction('weight.report', { weight_kg });
   },
 
   async getHistory(cursor) {

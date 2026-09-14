@@ -10,7 +10,7 @@
 
 * 依赖契约：契约 A（数据模型）、契约 B（结构化输出）、契约 C（前后端接口）
 
-* 状态：待评审
+* 状态：已评审 · 实施中（M5 订阅/定时督促移出 MVP 首发，见 [产品决策记录](2026-09-14-xcoach-product-decisions.md)）
 
 ***
 
@@ -253,6 +253,7 @@ wx.cloud.callFunction({
 | `subscribe.report`                                          | `{ accepted, template_key }`                                                | `{ remaining }`                                                                                                                                                                                                |
 | `onboarding.profile.submit`（2026-09-01 增量，2026-08-31 内核已实现） | `{ fields }`：`{ gender, age_group, height, initial_weight, target_weight }` | `{ reply_text, onboarding_state, degraded }`；字段齐备即状态机转 `active`（`initial_weight` 落 `current_weight_kg`，不新增 schema 字段）                                                                                          |
 | `budget.today`（2026-08-31 补登入契约，前端在用的口径）                    | —                                                                           | `{ total, consumed, remaining, target_weight, current_weight, weekly_change }`；未定标时 `total/remaining` 为 `null`；`weekly_change` 为近 7 天体重首末差值（不足 2 条为 `null`）                                                    |
+| `weight.report`（2026-09-14 调优套餐）                          | `{ weight_kg }`（20~300）                                                     | 与 `chat.send` 同结构 envelope 字段（`reply_text, intent=weight_report, budget_remaining_kcal, degraded, subscribe_hint, onboarding_state`）；直写 `weight_records`（同日覆盖）并更新 `users.current_weight_kg`，不经 LLM |
 | `app.config.get`（2026-09-01 增量）                             | —                                                                           | 公开配置 key-value map（仅 `app_config.public=true` 的行 + 默认 `{ coach_avatar_url: '' }`）；`prompt.*` 内部键不返回给客户端                                                                                                        |
 | `db.ensure`（2026-09-01 增量）                                  | —                                                                           | 幂等建表检查：确保 7 个用户集合 + `app_config` 全部存在（缺失自动创建），返回 `{ collection, status: created/exists, count }`；集合被删除后任意 API 调用会自动重建空表（SDK 建表不建索引，正式环境需按 §4 在控制台重建索引）                                                         |
 
@@ -260,7 +261,9 @@ wx.cloud.callFunction({
 >
 > **2026-09-01 状态**：新增 `app.config.get`（`ConfigService` 直读 `app_config`，公开/内部配置隔离，提示词覆盖实时生效）与 `db.ensure`（幂等建表检查，删表后自动重建空表）。本地 `npm test` 32/32（含 `config.test.mjs`、`db-ensure.test.mjs`）。
 >
-> **2026-09-01 增量（授权登录）**：新增 `auth.login`——前端 `getPhoneNumber` 授权后携 code 调云函数，适配层 `index.js` 云调用换号注入 `phone`，内核 `UserService.login` upsert 用户并回填 `phone/nickname/avatar_url`（仅空字段写）。**MVP 暂不启用资料完善步**：授权手机号成功后直接进入聊天，昵称/头像回填能力保留于 `auth.login`（资料完善界面后续版本再设计接入）。隐私策略同步调整（见 §4.1 变更记录）。
+> **2026-09-14 状态（调优推荐套餐）**：`promptAssembly.js` 注入食物库 §4 + 内容安全 §9 + 场景子提示词；`weight.report`；`INTENTS` 含 `off_topic`。本地 `npm test` 38/38。
+>
+> **2026-09-01 增量（授权登录）**：新增 `auth.login`——前端 `getPhoneNumber` 授权后携 code 调云函数，适配层 `index.js` 云调用换号注入 `phone`，内核 `UserService.login` upsert 用户并回填 `phone/nickname/avatar_url`（仅空字段写）。**MVP 资料完善（2026-09-14 决策）**：登录主路径须在昵称/头像缺失时完成资料完善再进聊天；`auth.login` 继续承担 `nickname`/`avatarUrl` 回填（仅空字段写）。前端动线待接入，见决策记录 §3。隐私策略见 §4.1。
 
 限流：`chat.send` 每用户每分钟 6 条上限（防刷 + 控成本）。
 
@@ -537,7 +540,7 @@ scripts/
 
 * [x] 校验 Mifflin 预算与 1200/1500 下限在 mock 与真实模型间一致（2026-08-30：服务端统一覆盖 `budget_remaining_kcal = calcBudget`，与 mock/真 LLM 无关、天然一致；Mifflin 公式与 1200/1500 性别下限已由 `test/cloud.test.js` 的确定性测试锁定，`npm test` 14/14）
 
-#### M5 定时督促（依赖外部申请；**2026-08-31 起从后端开发主线剔除，待模板 ID 申请后单独排期**）
+#### M5 定时督促（**移出 MVP 首发，2026-09-14 产品决策 1B**；内核逻辑保留，待模板 ID 与提审后版本单独排期）
 
 * [ ] 小程序后台申请订阅消息模板（1 个通用提醒类），获取 `template_id`
 

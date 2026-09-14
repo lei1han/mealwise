@@ -1,6 +1,6 @@
 // 领域常量：枚举与预算安全下限（对齐后端计划，契约 B / A 冻结口径）
 
-export const INTENTS = Object.freeze(['diet_report', 'weight_report', 'mood_talk', 'goal_setup', 'other']);
+export const INTENTS = Object.freeze(['diet_report', 'weight_report', 'mood_talk', 'goal_setup', 'off_topic', 'other']);
 
 export const MEALS = Object.freeze(['breakfast', 'lunch', 'dinner', 'snack']);
 

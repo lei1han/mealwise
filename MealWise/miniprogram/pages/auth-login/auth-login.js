@@ -23,7 +23,7 @@ Page({
     }
     this.setData({ loggingIn: true });
     try {
-      // 授权登录落库（phone）；资料完善（昵称/头像）后续版本再设计，MVP 不启用
+      // 授权登录落库（phone）；昵称/头像资料完善为 MVP 范围，动线待接入（见 docs §2.2 / 决策记录 2026-09-14）
       const user = await API.login({ phoneCode: e.detail.code });
       app.globalData.isLoggedIn = true;
       app.globalData.userInfo = user;

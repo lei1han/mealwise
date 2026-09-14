@@ -10,6 +10,8 @@
 
 * 人格关键词：专业冷静 · 天然健康 · 柔和有度
 
+> **归档（2026-09-14）**：已被 [v3](2026-09-01-xcoach-visual-design-v3.md) / [v4](2026-09-01-xcoach-visual-design-v4.md) 取代；现行实现见 `MealWise/miniprogram/app.wxss`。v4 选型挂起见 [产品决策记录](../plans/2026-09-14-xcoach-product-decisions.md) §2.1。
+
 ***
 
 ## 1. 配色总览
