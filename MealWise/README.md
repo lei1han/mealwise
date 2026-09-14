@@ -46,6 +46,8 @@ const REAL_ACTIONS = [];      // 白名单内的 action 无视总开关，强制
 
 > 注：`src/package.json` 的 `{"type":"module"}` 标记是 ESM 内核在 CJS 云函数入口下运行的必要条件，勿删。
 
+**头像上传**：资料完善页将头像上传至云存储目录 `user-avatars/`；若保存失败，请在云开发控制台检查存储权限与安全规则。
+
 ## 相关文档
 
 - 设计规格：`docs/superpowers/specs/2026-08-28-xcoach-design.md`
