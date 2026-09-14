@@ -7,6 +7,7 @@ import { HISTORY_ROUNDS, ONBOARDING_STATES } from '../domain/constants.js';
 import { buildDietCard } from '../domain/diet-card.js';
 import { formatFoodDbHint } from '../domain/foods.js';
 import { recordDateKey, resolveReportingDate } from '../domain/record-date.js';
+import { buildHistoryContext, buildSessionFocus } from '../domain/session-focus.js';
 import { render } from './config.js';
 
 const ENV = Object.freeze({
@@ -76,6 +77,7 @@ const DEFAULT_CONTENT_SAFETY_PROMPT = [
   '5. BMI 明显过低或极端节食：不给激进方案，建议就医。',
   '',
   '## 主题边界与跑题拒绝',
+  '先看「会话要点」与「最近对话」再回复，避免无视上文、重复开场或话题漂移。',
   '明确拒绝：编程/写代码、工作学业、作业、文档表格、修电脑、通用知识问答、创作代劳等。',
   '拒绝结构：共情或表明立场 → 明说不在专业范围 → 一句话拉回健康话题。',
   '语气按毒舌档位「{snark_label}」：温柔=委婉；轻损=轻调侃；辛辣=毒舌但不攻击人格。',
@@ -130,12 +132,14 @@ export class ChatService {
     return this.db.find('diet_records', (r) => r.user_id === userId && r.date === k);
   }
 
-  _historyPrompt(userId) {
-    const msgs = this.db
+  _allMessages(userId) {
+    return this.db
       .find('messages', (m) => m.user_id === userId)
-      .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
-      .slice(-HISTORY_ROUNDS * 2);
-    return msgs.map((m) => `${m.role === 'coach' ? '教练' : '用户'}：${m.content}`).join('\n');
+      .sort((a, b) => (a.created_at < b.created_at ? -1 : 1));
+  }
+
+  _historyPrompt(userId) {
+    return buildHistoryContext(this._allMessages(userId), HISTORY_ROUNDS);
   }
 
   _buildSystem(user, memoryCtx, budget) {
@@ -257,7 +261,8 @@ export class ChatService {
     }
 
     // 历史 + 记忆 + 预算（promptBudget 为"本轮回复前"的剩余，仅供 LLM 参考上下文）
-    const historyCtx = this._historyPrompt(userId);
+    const allMsgs = this._allMessages(userId);
+    const historyCtx = buildHistoryContext(allMsgs, HISTORY_ROUNDS);
     const memoryCtx = this.mem.readContext(userId);
     const todayDiet = this._todayDietRecords(userId);
     const promptBudget = (() => {
@@ -265,11 +270,21 @@ export class ChatService {
       return budgetRemaining(db, todayDiet);
     })();
 
+    const sessionFocus = buildSessionFocus({
+      user,
+      messages: allMsgs,
+      memoryCtx,
+      budgetRemaining: promptBudget,
+      reportedWeightToday: this._reportedWeightToday(userId),
+      todayMealCount: todayDiet.length,
+    });
+
     const system = this._buildSystem(user, memoryCtx, promptBudget);
     const llmMessages = [
       { role: 'system', content: system + (memoryCtx ? `\n\n## 已记录记忆\n${memoryCtx}` : '') + OUTPUT_CONTRACT },
+      { role: 'system', content: `## 会话要点（总结上下文、防止跑题）\n${sessionFocus}` },
     ];
-    if (historyCtx) llmMessages.push({ role: 'system', content: `## 最近对话\n${historyCtx}` });
+    if (historyCtx) llmMessages.push({ role: 'system', content: historyCtx });
     llmMessages.push({ role: 'user', content: text });
 
     let parsed;

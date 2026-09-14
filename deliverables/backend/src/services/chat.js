@@ -6,6 +6,8 @@ import { dailyBudget, evaluateOnboarding, applyProfiling, estimateWeeks, makeOnb
 import { HISTORY_ROUNDS, ONBOARDING_STATES } from '../domain/constants.js';
 import { buildDietCard } from '../domain/diet-card.js';
 import { formatFoodDbHint } from '../domain/foods.js';
+import { recordDateKey, resolveReportingDate } from '../domain/record-date.js';
+import { buildHistoryContext, buildSessionFocus } from '../domain/session-focus.js';
 import { render } from './config.js';
 
 const ENV = Object.freeze({
@@ -62,6 +64,7 @@ const DEFAULT_DIET_ESTIMATE_PROMPT = [
   '拳换算：半拳=0.5×、一拳=1×、两拳=2×、两拳以上=2.5×（回复里可点一句量偏多）。',
   '库外/复合菜：拆成主食+主菜估区间，food_refs 写 food:external；拿不准 confidence=low，回复里诚实说粗略估。',
   '回复硬格式：热量写「这餐约 {min}~{max} 大卡」+ 一句预算对比 + 一句可执行建议。',
+  '落库日期：饮食/体重记录只能记今天或昨天（record_date 用 YYYY-MM-DD）；用户提到前天及更早时不要落库，口头说明只能补今天/昨天。',
 ].join('\n');
 
 // §9.1 + §9.2 内容安全与跑题（始终追加）
@@ -92,8 +95,8 @@ const OUTPUT_CONTRACT = `
   "reply_text": "对用户这句的中文口语回复，简短；",
   "intent": "diet_report | weight_report | mood_talk | goal_setup | off_topic | other",
   "extracted": {
-    "diet_record": { "meal": "breakfast|lunch|dinner|snack", "items": ["食物名"], "cal_min": 0, "cal_max": 0, "food_refs": ["food:库内id 或 food:external"], "confidence": "high|medium|low" },
-    "weight_record": { "weight_kg": 60.0 },
+    "diet_record": { "meal": "breakfast|lunch|dinner|snack", "items": ["食物名"], "cal_min": 0, "cal_max": 0, "food_refs": ["food:库内id 或 food:external"], "confidence": "high|medium|low", "record_date": "YYYY-MM-DD 可选，仅今天或昨天" },
+    "weight_record": { "weight_kg": 60.0, "record_date": "YYYY-MM-DD 可选，仅今天或昨天" },
     "memory_points": [ { "category": "static|dynamic|emotion", "content": "一句话记忆点" } ]
   },
   "budget_remaining_kcal": null
@@ -110,7 +113,7 @@ export class ChatService {
   }
 
   _today() {
-    return this.now().toISOString().slice(0, 10);
+    return recordDateKey(this.now());
   }
 
   _getOrCreateUser(userId) {
@@ -128,12 +131,14 @@ export class ChatService {
     return this.db.find('diet_records', (r) => r.user_id === userId && r.date === k);
   }
 
-  _historyPrompt(userId) {
-    const msgs = this.db
+  _allMessages(userId) {
+    return this.db
       .find('messages', (m) => m.user_id === userId)
-      .sort((a, b) => (a.created_at < b.created_at ? -1 : 1))
-      .slice(-HISTORY_ROUNDS * 2);
-    return msgs.map((m) => `${m.role === 'coach' ? '教练' : '用户'}：${m.content}`).join('\n');
+      .sort((a, b) => (a.created_at < b.created_at ? -1 : 1));
+  }
+
+  _historyPrompt(userId) {
+    return buildHistoryContext(this._allMessages(userId), HISTORY_ROUNDS);
   }
 
   _buildSystem(user, memoryCtx, budget) {
@@ -221,7 +226,31 @@ export class ChatService {
     };
   }
 
-  async send({ userId, text }) {
+  _applyReportingDatePolicy(parsed, { userText, clientDate }) {
+    const hasDiet = !!parsed.extracted?.diet_record;
+    const hasWeight = !!parsed.extracted?.weight_record;
+    if (!hasDiet && !hasWeight) return { recordDate: null, rejected: false };
+
+    const llmDate =
+      parsed.extracted?.diet_record?.record_date ?? parsed.extracted?.weight_record?.record_date ?? null;
+    const resolved = resolveReportingDate({
+      userText,
+      clientDate,
+      llmDate,
+      now: this.now(),
+    });
+    if (!resolved.ok) {
+      if (parsed.extracted) {
+        delete parsed.extracted.diet_record;
+        delete parsed.extracted.weight_record;
+      }
+      parsed.record_date_rejected = true;
+      return { recordDate: null, rejected: true };
+    }
+    return { recordDate: resolved.date, rejected: false };
+  }
+
+  async send({ userId, text, record_date: clientRecordDate }) {
     const user = this._getOrCreateUser(userId);
 
     // __start__（或空文本）：摸底/回归开场，不走 LLM
@@ -231,7 +260,8 @@ export class ChatService {
     }
 
     // 历史 + 记忆 + 预算（promptBudget 为"本轮回复前"的剩余，仅供 LLM 参考上下文）
-    const historyCtx = this._historyPrompt(userId);
+    const allMsgs = this._allMessages(userId);
+    const historyCtx = buildHistoryContext(allMsgs, HISTORY_ROUNDS);
     const memoryCtx = this.mem.readContext(userId);
     const todayDiet = this._todayDietRecords(userId);
     const promptBudget = (() => {
@@ -239,11 +269,21 @@ export class ChatService {
       return budgetRemaining(db, todayDiet);
     })();
 
+    const sessionFocus = buildSessionFocus({
+      user,
+      messages: allMsgs,
+      memoryCtx,
+      budgetRemaining: promptBudget,
+      reportedWeightToday: this._reportedWeightToday(userId),
+      todayMealCount: todayDiet.length,
+    });
+
     const system = this._buildSystem(user, memoryCtx, promptBudget);
     const llmMessages = [
       { role: 'system', content: system + (memoryCtx ? `\n\n## 已记录记忆\n${memoryCtx}` : '') + OUTPUT_CONTRACT },
+      { role: 'system', content: `## 会话要点（总结上下文、防止跑题）\n${sessionFocus}` },
     ];
-    if (historyCtx) llmMessages.push({ role: 'system', content: `## 最近对话\n${historyCtx}` });
+    if (historyCtx) llmMessages.push({ role: 'system', content: historyCtx });
     llmMessages.push({ role: 'user', content: text });
 
     let parsed;
@@ -254,7 +294,8 @@ export class ChatService {
       parsed = { degraded: true, reply_text: text, intent: 'other', extracted: {}, budget_remaining_kcal: null };
     }
 
-    this._persist(user, text, parsed);
+    const datePolicy = this._applyReportingDatePolicy(parsed, { userText: text, clientDate: clientRecordDate });
+    this._persist(user, text, parsed, datePolicy.recordDate);
 
     // 剩余预算在落库后重算：本轮抽取到的饮食立即反映到卡片（避免滞后一轮）
     const calcBudget = budgetRemaining(
@@ -276,6 +317,7 @@ export class ChatService {
       onboarding_state: user.onboarding_state,
       action: this._sheetAction(user),
       diet_card,
+      record_date_rejected: !!parsed.record_date_rejected || datePolicy.rejected,
     };
   }
 
@@ -372,10 +414,11 @@ export class ChatService {
     };
   }
 
-  _persist(user, userText, parsed) {
+  _persist(user, userText, parsed, recordDate) {
     const now = this.now();
     const iso = now.toISOString();
-    const date = iso.slice(0, 10);
+    const date = recordDate ?? this._today();
+    const todayKey = this._today();
 
     // 落消息（用户 + 教练双条，created_at 单调递增）
     this._appendMessage(user.user_id, 'user', userText, now);
@@ -384,13 +427,15 @@ export class ChatService {
     const x = parsed.extracted ?? {};
     // diet
     if (x.diet_record) {
-      this.db.insert('diet_records', { user_id: user.user_id, date, ...x.diet_record });
+      const { record_date: _rd, ...dietPayload } = x.diet_record;
+      this.db.insert('diet_records', { user_id: user.user_id, date, ...dietPayload });
     }
     // weight
     if (x.weight_record) {
+      const { record_date: _rw, weight_kg } = x.weight_record;
       const existing = this.db.findOne('weight_records', (r) => r.user_id === user.user_id && r.date === date);
-      if (existing) Object.assign(existing, x.weight_record);
-      else this.db.insert('weight_records', { user_id: user.user_id, date, ...x.weight_record });
+      if (existing) existing.weight_kg = weight_kg;
+      else this.db.insert('weight_records', { user_id: user.user_id, date, weight_kg });
     }
     // memory
     if (Array.isArray(x.memory_points)) {
@@ -398,8 +443,8 @@ export class ChatService {
       applyProfiling(user, { memories: x.memory_points });
     }
 
-    // profiling 派生 weight/height/target
-    if (user.current_weight_kg == null && x.weight_record) user.current_weight_kg = x.weight_record.weight_kg;
+    // 仅「今天」的体重更新画像 current_weight_kg（昨天补记不改当前展示体重）
+    if (x.weight_record && date === todayKey) user.current_weight_kg = x.weight_record.weight_kg;
 
     // 状态机转移
     const st = evaluateOnboarding(user);

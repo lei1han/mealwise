@@ -88,7 +88,8 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 
 * `diet_record` 仅当本轮汇报饮食时出现：`food_refs` 数组与 `items` 一一对应，库内 `food:xxx`、库外/复合菜 `food:external`；`confidence`（high/medium/low）支撑"低置信度诚实标注"。`is_estimated` 由后端派生：`food_refs` 含 `food:external` 或 `confidence=low` 时为 true，落库 `diet_records.is_estimated`。
 
-* `weight_record` 仅当报体重时出现；`memory_points` 仅当出现值得长期记忆的新信息时出现，`category` 枚举 `static / dynamic / emotion`。
+* `weight_record` 仅当报体重时出现；可选 `record_date`（`YYYY-MM-DD`）。`diet_record` 同理。**落库规则（2026-09-14）**：服务端仅接受 **今天/昨天**（`Asia/Shanghai` 自然日）；聊天口语含前天及更早、或 `record_date` 越界时 **不落库** 饮食/体重，并返回 `record_date_rejected: true`。`chat.send` 可选入参 `record_date`（报体重 sheet 等结构化入口）。昨天补记的体重 **不** 更新 `users.current_weight_kg`。
+* `memory_points` 仅当出现值得长期记忆的新信息时出现，`category` 枚举 `static / dynamic / emotion`。
 
 * `budget_remaining_kcal` 为整数 kcal，**无法确定时填** **`null`**（如定标前闲聊、纯情绪陪聊）；后端以自身预算计算兜底覆盖，不信任模型口径（见后端计划 §6.4）。
 
@@ -104,7 +105,7 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 
 * 授权登录（**2026-09-01 增量**）：`action: 'auth.login'`，payload `{ phoneCode?, nickname?, avatarUrl? }` → `{ is_new, phone, nickname, avatar_url }`。手机号 code 由云函数适配层经 `cloud.openapi.phonenumber.getPhoneNumber` 换号（失败静默 → `phone=null`）；`nickname`/`avatarUrl` 回填能力保留（来自微信头像昵称填写能力，头像经云存储上传换取 fileID 后落库）。upsert 用户且**仅空字段写**（手机号不换绑）。**MVP 暂不启用资料完善步**：授权手机号成功后直接进入聊天，资料完善界面后续版本再设计接入。
 
-* 会话上下文：`action: 'conversation.current'`、历史消息 `action: 'conversation.history'`（cursor 分页）；用户状态 `action: 'user.state.get'`（首帧读取 `onboarding_state` 与 `reported_weight_today`——是否今日已报体重，供前端催报卡判断）。
+* 会话上下文：`action: 'conversation.current'`、历史消息 `action: 'conversation.history'`（cursor 分页）；用户状态 `action: 'user.state.get'`（首帧读取 `onboarding_state` 与 `reported_weight_today`——是否今日已报体重，供前端催报卡判断）。**2026-09-14**：`chat.send` 组装 LLM 时注入规则生成的 **会话要点**（阶段/今日状态/近几轮话题/记忆摘要）+ **更早对话摘要**（超出 `HISTORY_ROUNDS` 窗口的原文裁剪为短摘要），降低多轮后上下文漂移。
 
 * 用户/目标：`user.profile.get / user.profile.update`（**仅主动编辑用**，如 Sheet 补充录入；摸底画像由 `chat.send` + LLM 抽取驱动，不再走 profile.update）、`user.target.update`。
 

@@ -1,6 +1,7 @@
 // 契约 B 解析与校验/降级（对齐提示词成品 §7.3）
 import { INTENTS, MEALS, MEMORY_CATEGORIES } from '../domain/constants.js';
 import { resolveRef } from '../domain/foods.js';
+import { normalizeRecordDate } from '../domain/record-date.js';
 
 function cleanInt(v, lo, hi) {
   if (typeof v !== 'number' || !Number.isFinite(v)) return null;
@@ -18,7 +19,7 @@ export function parseRaw(raw, { now = new Date() } = {}) {
   const text = String(raw ?? '').trim();
   if (text.startsWith('{')) {
     try {
-      return validate(JSON.parse(text), { raw: text, now });
+      return validate(JSON.parse(text), { now });
     } catch {
       return { degraded: true, reply_text: text, intent: 'other', extracted: {}, budget_remaining_kcal: null };
     }
@@ -28,15 +29,15 @@ export function parseRaw(raw, { now = new Date() } = {}) {
   const end = text.lastIndexOf('}');
   if (start !== -1 && end > start) {
     try {
-      return validate(JSON.parse(text.slice(start, end + 1)), { raw: text, now });
+      return validate(JSON.parse(text.slice(start, end + 1)), { now });
     } catch {
-      /* fall through to degrade */
+      /* 解析失败 → 走底部降级 */
     }
   }
   return { degraded: true, reply_text: text, intent: 'other', extracted: {}, budget_remaining_kcal: null };
 }
 
-function validate(o) {
+function validate(o, { now = new Date() } = {}) {
   const out = { degraded: false, extracted: {} };
 
   out.reply_text = typeof o.reply_text === 'string' && o.reply_text.trim() ? o.reply_text.trim() : null;
@@ -56,14 +57,28 @@ function validate(o) {
     const foodRefs = normalizeRefs(d.food_refs);
     const isEstimated = foodRefs.includes('food:external') || confidence === 'low';
     if (meal && calMin != null && calMax != null) {
-      out.extracted.diet_record = { meal, items, cal_min: calMin, cal_max: calMax, food_refs: foodRefs, confidence, is_estimated: isEstimated };
+      const record = { meal, items, cal_min: calMin, cal_max: calMax, food_refs: foodRefs, confidence, is_estimated: isEstimated };
+      if (d.record_date != null) {
+        const rd = normalizeRecordDate(d.record_date, now);
+        if (rd) record.record_date = rd;
+        else out.record_date_rejected = true;
+      }
+      if (!out.record_date_rejected) out.extracted.diet_record = record;
     }
   }
 
   // weight_record（×10 取整到 0.1kg）
   if (o.extracted && o.extracted.weight_record) {
     const tenthKg = cleanInt(o.extracted.weight_record.weight_kg * 10, 20 * 10, 300 * 10);
-    if (tenthKg != null) out.extracted.weight_record = { weight_kg: tenthKg / 10 };
+    if (tenthKg != null) {
+      const record = { weight_kg: tenthKg / 10 };
+      if (o.extracted.weight_record.record_date != null) {
+        const rd = normalizeRecordDate(o.extracted.weight_record.record_date, now);
+        if (rd) record.record_date = rd;
+        else out.record_date_rejected = true;
+      }
+      if (!out.record_date_rejected) out.extracted.weight_record = record;
+    }
   }
 
   // memory_points
