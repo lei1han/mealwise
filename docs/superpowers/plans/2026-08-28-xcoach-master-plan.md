@@ -140,6 +140,8 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 >
 > * **`chat.send`** **返回新增可选** **`action`** **字段**（UI 指令）：摸底推进到"问体重"环节时返回 `action: 'open_weight_sheet'`，前端据此自动弹出体质录入 sheet，并锁定聊天输入（不产出下一轮对话）；待用户保存结构化信息（`onboarding.profile.submit`）产出新对话后再解锁。`action` 仅为前端指令，状态机仍以 `onboarding_state` 为准。
 >
+> * **`chat.send`** **返回新增可选** **`diet_card`**（UI 展示，2026-09-14）：本轮落库 `diet_records` 时由服务端根据契约 B 的 `diet_record` + 食物库 `food_refs` 派生，结构 `{ meal, meal_label, total_text, is_estimated, rows: [{ name, cal_text, situation }] }`；聊天页教练气泡下渲染为简洁表格（食物 / 热量 / 情况），与口语 `reply_text` 并存。
+>
 > **2026-08-31 增量（后端模块全量落地）**：
 >
 > * **内核 9 个 action 全部实现并部署**（2026-08-31 云函数 `api` 重新上传，Nodejs20.19）：新增 `conversation.current` / `conversation.history`（cursor 分页，`{ items, next_cursor }`）/ `user.profile.get`（派生 `daily_calorie_budget`、`snark_level` 常量，均不入库）/ `user.profile.update`（白名单 `nickname/gender/age_group/height_cm`，兼容前端 `height` 字段名）/ `user.target.update` / `onboarding.profile.submit`（`initial_weight` 落 `current_weight_kg`，字段齐备即状态机转 `active`）/ `budget.today`（返回 `{ total, consumed, remaining, target_weight, current_weight, weekly_change }`，对齐前端消费口径）。

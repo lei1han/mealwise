@@ -374,7 +374,7 @@ const Mock = {
             items: ['米饭', '鸡腿肉', '青菜'],
             cal_min: 350,
             cal_max: 420,
-            food_refs: ['food:rice', 'food:chicken_leg', 'food:green_veg'],
+            food_refs: ['food:rice', 'food:chicken_thigh', 'food:greens'],
             confidence: 'medium'
           },
           memory_points: []

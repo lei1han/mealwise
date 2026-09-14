@@ -179,6 +179,16 @@ test('错误码契约 §5.3：未知 action 与非法 payload 均 40001', async 
   assert.equal(badPatch.code, 40001);
 });
 
+test('chat.send 饮食汇报：返回 diet_card 食物热量明细表', async () => {
+  const app = freshApp();
+  const r = await app.chat.send({ userId: 'diet-ui', text: '午餐吃了一拳米饭和鸡胸肉' });
+  assert.equal(r.intent, 'diet_report');
+  assert.ok(r.diet_card, '应附带 diet_card');
+  assert.equal(r.diet_card.meal_label, '午餐');
+  assert.ok(r.diet_card.rows.length >= 2);
+  assert.ok(r.diet_card.rows.some((row) => row.name.includes('米饭')));
+});
+
 test('毒舌档位：chat.send 系统提示词使用用户入库档位（2026-09-01 决策，替代代码常量）', async () => {
   const captured = [];
   const app = buildApp({

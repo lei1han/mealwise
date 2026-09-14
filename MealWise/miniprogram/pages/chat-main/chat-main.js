@@ -338,13 +338,19 @@ Page({
       this.setData({ showReminder: true });
     }
 
+    const dietCard = reply.diet_card || null;
     messages.push({
       role: 'coach',
       text: reply.reply_text,
-      budget: msgBudget
+      budget: msgBudget,
+      dietCard
     });
 
     this.setData({ messages, coachTyping: false, onboardingState: nextState });
+
+    if (dietCard || reply.intent === 'diet_report') {
+      this._loadTodayProgress();
+    }
 
     // 摸底"问体重"环节：先锁住输入（未保存前不出下一轮对话），再自动弹出体质录入 sheet
     if (reply.action === 'open_weight_sheet' && !this.data.weightSheetTriggered) {
