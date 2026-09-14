@@ -24,7 +24,7 @@
 |:---:|---|------|----------|
 | [ ] | A1 | 微信开发者工具已登录，**设置 → 安全设置 → 服务端口** 已开启 | Agent/CLI 可 `open` 项目（可选） |
 | [ ] | A2 | 导入工程目录 `MealWise/`，AppID `wxd6def00245936b4c` | 模拟器可编译，无项目级报错 |
-| [ ] | A3 | 云开发环境 `cloud1-d6gmjs12rfd5c3925` 已开通且与 `miniprogram/app.js` 一致 | 云开发面板可打开 |
+| [ ] | A3 | 云开发环境 `cloud1-d6gmjs12rfd5c3925` 已开通；**在文件树右键 `cloudfunctions` → 选择/切换目标环境**（与 `app.js` 一致） | 云开发面板可打开；上传云函数不再报「请在 cloudfunctionRoot 选择一个云环境」 |
 | [ ] | A4 | 云函数 `cloudfunctions/api` → **上传并部署：云端安装依赖** | 云端最新代码与本地 commit 一致 |
 | [ ] | A5 | 云函数环境变量 `DEEPSEEK_API_KEY` 已配置（勿提交仓库） | 云上 `chat.send` 返回真人化回复，非固定 mock 句式 |
 | [ ] | A6 | 云数据库集合与索引按后端计划 §4 存在（或调用一次 `db.ensure` 后人工补索引） | 控制台可见 users/messages/diet_records 等 |

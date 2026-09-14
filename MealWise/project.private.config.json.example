@@ -1,0 +1,7 @@
+{
+  "description": "复制为 project.private.config.json（仅本机，勿提交）。部分开发者工具版本会在此记录云环境偏好。",
+  "projectname": "mealwise",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "miniprogramRoot": "miniprogram/",
+  "cloudenv": "cloud1-d6gmjs12rfd5c3925"
+}
