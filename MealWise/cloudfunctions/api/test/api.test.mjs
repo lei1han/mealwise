@@ -13,12 +13,19 @@ function call(app, event) {
   return main(event, {}, app);
 }
 
-test('__start__ 开场：新用户返回 open_weight_sheet 指令 + 落库教练消息', async () => {
+test('__start__ 开场：新用户仅问候，不弹体质录入 sheet', async () => {
   const app = freshApp();
   const r = await app.chat.send({ userId: 's1', text: '__start__' });
   assert.equal(r.onboarding_state, 'new');
-  assert.equal(r.action, 'open_weight_sheet');
+  assert.equal(r.action, undefined, '首帧只问候，避免冷启动弹表');
   assert.equal(app.db.find('messages', (m) => m.user_id === 's1').length, 1);
+});
+
+test('摸底互动一轮后：缺身高体重时返回 open_weight_sheet', async () => {
+  const app = freshApp();
+  await app.chat.send({ userId: 's1b', text: '__start__' });
+  const r = await app.chat.send({ userId: 's1b', text: '体检报告吓到了，想认真减一次' });
+  assert.equal(r.action, 'open_weight_sheet');
 });
 
 test('onboarding.profile.submit：结构化字段落库 + 状态机转 active + 产出教练对话', async () => {

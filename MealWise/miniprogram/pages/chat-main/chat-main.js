@@ -239,7 +239,7 @@ Page({
           coachTyping: false,
           onboardingState
         });
-        // 真实链路：开场即带 open_weight_sheet 指令（new/profiling 缺身高体重时），锁输入并自动弹体质录入
+        // 摸底：仅在后端判定「已问候并互动一轮」后带 open_weight_sheet；首帧 __start__ 不弹表
         if (reply.action === 'open_weight_sheet' && !this.data.weightSheetTriggered) {
           this.setData({ weightSheetTriggered: true, inputLocked: true, canSend: false });
           setTimeout(() => this.handleOpenWeight(), 400);

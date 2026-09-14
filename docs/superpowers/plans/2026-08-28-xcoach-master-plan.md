@@ -148,7 +148,7 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 >
 > * **错误码对齐 §5.3 冻结版**：`40001` payload 校验失败 / `42901` 限流（`chat.send` 每用户每分钟 6 条，基于 `messages` 近 1 分钟计数）/ `50000` 内部错误；未知 action 返回 `40001`。
 >
-> * **`chat.send`** **/** **`__start__`** **返回** **`action: 'open_weight_sheet'`**：判定规则为状态机主导——`onboarding_state !== 'active'` 且（`height_cm` 或 `current_weight_kg` 缺失）时附带该指令（不依赖 LLM）；前端 `_initChat` 开场与 `handleSend` 均已处理。
+> * **`chat.send`** **返回** **`action: 'open_weight_sheet'`**（**`__start__` 首帧不返回**）：`onboarding_state !== 'active'` 且缺 `height_cm` 或 `current_weight_kg`，且该用户已有 ≥2 条教练消息（开场问候 + 至少一轮互动）时附带（状态机主导、不依赖 LLM）；前端 `_initChat` 与 `handleSend` 在收到指令后弹体质录入 sheet 并锁输入。
 >
 > * **消息时间戳单调性**：`ChatService._appendMessage` 保证每用户 `messages.created_at` 严格递增（同毫秒多轮 +1ms 推进），修复 cursor 分页排序错乱隐患。
 >

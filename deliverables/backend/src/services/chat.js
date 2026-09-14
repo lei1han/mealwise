@@ -16,8 +16,9 @@ const SNARK_LABELS = Object.freeze({ gentle: '温柔', light: '轻损', spicy: '
 
 // 开场白（__start__ 触发，按 onboarding 状态分发；契约 C §1.3；可被 app_config 的 prompt.opening.* 覆盖）
 const OPENING_LINES = Object.freeze({
-  new: '嗨，我是三餐教练。不教你基础，只盯着你瘦下来。先简单摸个底？',
-  profiling: '咱们接着来，还差一点信息就能给你定标了。',
+  new:
+    '嗨，欢迎来～我是三餐教练。不跟你灌减肥大道理，就想陪你把节奏稳住、一点点瘦下来。先随便聊两句：你最近一次想认真减重，是被什么事触动的？',
+  profiling: '咱们接着聊～还差一点点信息，我就能帮你把每日热量预算算准。',
   active: '来了？今天体重和吃了啥，记得报。',
 });
 
@@ -156,7 +157,7 @@ export class ChatService {
       food_db_hint,
       onboarding_hint:
         user.onboarding_state !== 'active'
-          ? '摸底阶段：先引导用户补充体质信息（性别、年龄段、身高、当前体重、目标体重），信息不足时鼓励用户通过体质录入卡片提交，不要编造数据。'
+          ? '摸底阶段：先温馨问候、倾听动机与过往经历，循序渐进提问；至少一轮对话后再引导补充体质（性别、年龄段、身高、当前体重、目标体重）。需要结构化录入时再让用户打开体质录入卡片，首条开场不要催填表，不要编造数据。'
           : '',
     };
     const tpl = this.config?.getPrompt('prompt.chat.system') ?? DEFAULT_CHAT_SYSTEM_TEMPLATE;
@@ -181,11 +182,16 @@ export class ChatService {
     };
   }
 
-  /** 摸底期 UI 指令（契约 C 2026-09-01 增量）：未定标且缺身高/体重时让前端弹体质录入 sheet */
+  /**
+   * 摸底期 UI 指令（契约 C 2026-09-01 增量）：缺身高/体重时引导体质录入 sheet。
+   * 首帧 __start__ 仅问候，不弹表；至少已有 2 条教练消息（开场 + 一轮互动回复）后再下发。
+   */
   _sheetAction(user) {
     if (user.onboarding_state === 'active') return undefined;
-    if (user.height_cm == null || user.current_weight_kg == null) return 'open_weight_sheet';
-    return undefined;
+    if (user.height_cm != null && user.current_weight_kg != null) return undefined;
+    const coachMsgs = this.db.find('messages', (m) => m.user_id === user.user_id && m.role === 'coach');
+    if (coachMsgs.length < 2) return undefined;
+    return 'open_weight_sheet';
   }
 
   /** 落消息：created_at 严格晚于该用户最后一条（同毫秒多轮时保持单调，避免历史排序错乱） */
