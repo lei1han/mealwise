@@ -1,0 +1,39 @@
+<!-- 登录后资料完善：昵称 + 头像（微信官方能力） -->
+<scroll-view class="profile-page" scroll-y enhanced show-scrollbar="{{false}}">
+  <view class="profile-content">
+    <view class="header-area">
+      <text class="title">完善资料</text>
+      <text class="subtitle">选个头像、起个昵称，教练才好认识你</text>
+    </view>
+
+    <view class="avatar-block">
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image wx:if="{{avatarTemp}}" class="avatar-img" src="{{avatarTemp}}" mode="aspectFill"></image>
+        <view wx:else class="avatar-placeholder">
+          <text class="avatar-plus">+</text>
+        </view>
+      </button>
+      <text class="avatar-hint">点击选择微信头像</text>
+    </view>
+
+    <view class="nickname-card">
+      <text class="field-label">昵称</text>
+      <input
+        class="nickname-input"
+        type="nickname"
+        value="{{nickname}}"
+        placeholder="请输入昵称"
+        placeholder-class="nickname-placeholder"
+        maxlength="20"
+        bindinput="onNicknameInput"
+      />
+    </view>
+
+    <view class="btn-area">
+      <button class="btn-primary" bindtap="onSubmit" disabled="{{submitting}}">
+        {{submitting ? '保存中…' : '开始跟教练聊'}}
+      </button>
+      <text class="btn-note">昵称与头像仅用于小程序内展示，可随时在「我的」中修改</text>
+    </view>
+  </view>
+</scroll-view>

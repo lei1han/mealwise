@@ -7,10 +7,11 @@
 ```
 MealWise/
 ├── miniprogram/          # 小程序前端（6 个页面）
-│   ├── pages/            # splash / auth-login / chat-main（摸底+日常合并单页）/ sheet-weight / sheet-snark / sheet-subscribe
+│   ├── pages/            # splash / auth-login / auth-profile / chat-main / …（见 app.json）
 │   ├── utils/
-│   │   ├── api.js        # API 层：Mock 与真实云函数的统一入口（REAL_ACTIONS 白名单灰度）
-│   │   ├── mock.js       # 本地 Mock 数据（模拟后端 onboarding 状态机）
+│   │   ├── api.js
+│   │   ├── auth-flow.js  # 登录后资料完善路由与头像上传
+│   │   ├── mock.js
 │   │   └── nav.js        # 自定义导航栏尺寸工具（状态栏/胶囊按钮适配）
 │   ├── app.js            # 云开发初始化（env: cloud1-d6gmjs12rfd5c3925）
 │   ├── app.json
@@ -30,7 +31,7 @@ MealWise/
 1. 用微信开发者工具导入本目录（AppID：`wxd6def00245936b4c`）。
 2. 云开发环境：`cloud1-d6gmjs12rfd5c3925`（已在 `app.js` 中初始化）。
 3. 右键 `cloudfunctions/api` →「上传并部署：云端安装依赖」。
-4. 模拟器编译运行；默认走本地 Mock，联调时在 `utils/api.js` 的 `REAL_ACTIONS` 中加入 action（如 `'chat.send'`）切换真实云函数。
+4. 模拟器编译运行。登录动线：闪屏 → 授权 → **资料完善（昵称+头像）** → 聊天；联调见 `utils/api.js` 的 `USE_MOCK` / `REAL_ACTIONS`。
 
 ## Mock / 真实云函数切换
 

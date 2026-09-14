@@ -72,6 +72,18 @@ const API = {
     return callCloudFunction('auth.login', payload);
   },
 
+  /**
+   * 资料完善步：上传头像（真实链路）并 auth.login 回填 nickname / avatar_url
+   */
+  async completeLoginProfile({ nickname, avatarTempPath }) {
+    const AuthFlow = require('./auth-flow.js');
+    let avatarUrl = avatarTempPath;
+    if (useReal('auth.login') && avatarTempPath && !String(avatarTempPath).startsWith('cloud://')) {
+      avatarUrl = await AuthFlow.uploadAvatarToCloud(avatarTempPath);
+    }
+    return this.login({ nickname, avatarUrl });
+  },
+
   async getProfile() {
     if (!useReal('user.profile.get')) return Mock.getProfile();
     return callCloudFunction('user.profile.get', {});

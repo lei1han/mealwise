@@ -79,6 +79,7 @@ export class UserService {
     if (!u) {
       return {
         nickname: null,
+        avatar_url: null,
         gender: null,
         age_group: null,
         height: null,
@@ -92,6 +93,7 @@ export class UserService {
     }
     return {
       nickname: u.nickname ?? null,
+      avatar_url: u.avatar_url ?? null,
       gender: u.gender ?? null,
       age_group: u.age_group ?? null,
       height: u.height_cm ?? null,

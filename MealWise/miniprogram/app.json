@@ -2,6 +2,7 @@
   "pages": [
     "pages/splash/splash",
     "pages/auth-login/auth-login",
+    "pages/auth-profile/auth-profile",
     "pages/chat-main/chat-main",
     "pages/stats-main/stats-main",
     "pages/profile-main/profile-main",
