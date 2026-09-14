@@ -14,7 +14,7 @@
 
 ## 2. 交付物清单
 
-> 已执行完毕，成品见 [`2026-08-28-xcoach-business-plan.md`](file:///c:/Code/weight_loss_coach/deliverables/operations-business/2026-08-28-xcoach-business-plan.md)。
+> 已执行完毕，成品见 [`../../../deliverables/operations-business/2026-08-28-xcoach-business-plan.md`](../../../deliverables/operations-business/2026-08-28-xcoach-business-plan.md)；契约 A 增量提案（已采纳）见 [`../../../deliverables/operations-business/2026-08-28-xcoach-contract-a-proposal.md`](../../../deliverables/operations-business/2026-08-28-xcoach-contract-a-proposal.md)。
 
 - [x] 北极星与过程指标拆解 + 数据埋点方案（对应设计规格第 9 节）
 - [x] 冷启动与获客策略（种子用户、渠道、口碑传播点）

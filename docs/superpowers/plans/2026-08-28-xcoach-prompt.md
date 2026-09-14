@@ -14,7 +14,7 @@
 
 ## 2. 交付物清单
 
-> 已执行完毕，成品见 [`2026-08-28-xcoach-prompts.md`](file:///c:/Code/weight_loss_coach/docs/superpowers/plans/2026-08-28-xcoach-prompts.md)。
+> 已执行完毕，成品见 [`../../../deliverables/prompt/2026-08-28-xcoach-prompts.md`](../../../deliverables/prompt/2026-08-28-xcoach-prompts.md)。
 
 - [x] 系统提示词主模板（人设、亦师亦友 + 毒舌、语气硬约束）
 - [x] 毒舌三档（温柔/轻损/辛辣）的措辞规范与少样本示例

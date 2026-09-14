@@ -11,11 +11,12 @@
 | `backend/` | 后端方案、代码、数据库脚本、食物库 | 板块3 后端 |
 | `operations-business/` | 商业计划、运营方案、指标与埋点 | 板块4 运营商业 |
 
-跨板块共享数据（食物库基准数据，后端与提示词共用）放在仓库根目录 `data/`，不在本目录。
+食物库基准数据（`foods.json`、`food-calib.json`）放在 **`MealWise/cloudfunctions/api/src/data/`**（运行真源）与本目录 `backend/src/data/`（板块快照）；仓库根目录无独立 `data/` 目录。
 
 ## frontend/（板块1 前端）
 
-- `2026-08-29-xcoach-frontend-design-v1.md`：前端设计说明文档。
+- `2026-08-29-xcoach-frontend-design-v1.md`：前端设计说明文档（v1 叙述）。
+- `2026-09-14-xcoach-frontend-visual-version.md`：**当前** HTML v3 / 视觉 spec / 工程页面版本对齐索引。
 - `mealwise-frontend-design/`：HTML 高保真原型（v3），含设计系统（`colors_and_type*.css`）与各页面原型（登录、聊天、个人资料、统计、目标设置及各类底部弹层），`validation-report.json` 等工具产物为历史快照。
 - `mealwise-frontend-design-v2-backup.zip`：v2 版设计稿备份。
 - `mealwise-miniapp/`：微信小程序交付快照（页面、样式、工具函数等）。注意：实际开发运行的项目在仓库根目录 `MealWise/`（含 `miniprogram/` 与 `cloudfunctions/`），本目录为板块交付存档，前端样式改动需两边同步。
@@ -25,6 +26,8 @@
 - `2026-08-28-xcoach-prompts.md`：各场景提示词成品与结构化输出 schema（唯一事实来源）。
 
 ## backend/（板块3 后端）
+
+**同步约定**：内核改动的唯一编辑目录为 `MealWise/cloudfunctions/api/src/`。板块交付或 PR 归档时，将同路径文件同步到本目录 `src/` 并运行 `npm test`（期望 32/32）。两目录若 `diff` 不一致，以 `MealWise` 为准。
 
 - `2026-08-30-xcoach-db-verify.md`：数据库验证记录。
 - `package.json`：依赖与脚本入口。
@@ -37,7 +40,7 @@
 
 - `2026-08-28-xcoach-business-plan.md`：商业计划。
 - `2026-08-28-xcoach-contract-a-proposal.md`：合同 A 提案。
-- `2026-09-02-mealwise-tuning-report/`：小版本调优分析报告（HTML 版）。
+- `2026-09-02-mealwise-tuning-report/`：小版本调优分析报告（HTML + 目录内 `README.md` 索引）。
 
 ## 命名约定
 

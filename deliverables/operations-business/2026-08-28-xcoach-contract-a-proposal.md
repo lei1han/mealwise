@@ -6,6 +6,7 @@
 - 上游：总计划 `../../docs/superpowers/plans/2026-08-28-xcoach-master-plan.md` §1.1（契约 A）、设计规格 `../../docs/superpowers/specs/2026-08-28-xcoach-design.md` §7、商业计划书 `2026-08-28-xcoach-business-plan.md` §1.3
 - 目标读者：板块 3（后端）
 - 状态：**已承接（2026-08-28 后端 v2.1 采纳）**——7 项增量全部被后端 schema 承接，回写总计划 §1.1；差异点见下表，详见后端文档 §3.1 / §4
+- 归档说明：本文档保留提案过程与字段 rationale；**现行契约以总计划 §1.1 与 `MealWise/cloudfunctions/api/src/db/schema.js` 为准**，无需再走提案流程。
 
 ---
 

@@ -1,10 +1,12 @@
 # 三餐教练（原代号 X教练）微信开发者工具接入调试与部署计划
 
 - 文档类型：分阶段执行计划（板块 1/3 落地联调）
-- 版本：v1.0
-- 日期：2026-08-28
-- 依赖：总计划契约 A/B/C、前端 `deliverables/frontend/mealwise-miniapp/`、后端零依赖内核 `deliverables/backend/`
+- 版本：v2.0（对齐 `MealWise/` 工程现状）
+- 日期：2026-08-28（阶段定义）；现状表更新 2026-09-14
+- 依赖：总计划契约 A/B/C、运行工程 [`MealWise/`](../../../MealWise/)、调试指南 [`MealWise/DEV_GUIDE.md`](../../../MealWise/DEV_GUIDE.md)
 - 协作对象：程序开发者（人工，操作微信开发者工具与公众平台）+ agent（负责代码/配置/文档）
+
+> **v1.0 §1 待办表**描述的是 2026-08-28 接入前缺口；**当前完成情况见下表**。未勾选项为发布前仍需人工处理的事项。
 
 ---
 
@@ -14,20 +16,22 @@
 
 - 目标：Mock 验收 → 云开发接入 → 真 LLM → 订阅消息 → 定时督促 → 提审上线。
 - 边界：只做「开发/调试/部署」层面，不改动已冻结的接口契约；确需改动契约必须先回写总计划第 1 节。
-- 前提：微信开发者工具已安装、小程序 AppID 已填入（`project.config.json` 现为 `wx21714dd4f447d40a`）。
+- 前提：微信开发者工具已安装；导入目录为 **`MealWise/`**；AppID `wxd6def00245936b4c`；云环境 `cloud1-d6gmjs12rfd5c3925`。
 
-## 1. 现状盘点与已知待办（接入真接口前必须处理）
+## 1. 现状盘点（2026-09-14）
 
-| # | 项 | 现状 | 处理 |
+| # | 项 | v1.0 缺口 | 当前状态 |
 |---|---|---|---|
-| 1 | **action 对齐** | 前端 `api.js` 真实接口调用 `user.state.get/set`、`user.profile.get/update`、`conversation.history`、`budget.today`；后端 `src/index.js` 仅实现 `chat.send / scheduler.nudge / subscribe.report` | 后端补齐 user/conversation/budget action，或按契约 C 统一 action 命名，二选一后冻结 |
-| 2 | **模块格式** | 后端内核用 ESM（`import/export`）；微信云函数默认 CommonJS | `index.js` 转 CommonJS 或部署时用 esbuild 打包 |
-| 3 | **持久化** | 后端用 `MemoryDB`（内存版） | 新增云数据库适配层（`wx-server-sdk`），落 `users/memories/weight_records/diet_records/messages/subscribe_auth/notify_log` 七集合（对齐后端 §4 schema） |
-| 4 | **cloudfunctionRoot** | `project.config.json` 未配置云函数目录 | 新增 `cloudfunctionRoot` 并建云函数目录（`api`、`scheduler`） |
-| 5 | **云环境 ID** | 前端 `wx.cloud.init` 未指定 env | 开通云开发环境后回填环境 ID |
-| 6 | **template_key** | 前端 `reportSubscribe` 未传 `template_key`（契约 C 要求 `{ accepted, template_key }`） | 申请订阅模板后补齐，后端 `index.js` 已支持 `event.template_key` |
-| 7 | **定时触发器** | 后端有 `scheduler.js`，但无云函数触发器配置 | 云函数目录加 `config.json` triggers（cron，对齐后端 §9.1 四个时段） |
-| 8 | **DeepSeek key** | 未配置 | 部署后写入云函数环境变量，`llm/client.js` 从环境读取 |
+| 1 | **action 对齐** | 后端仅 3 action | ✅ 契约 C 主要 action 已在 `MealWise/cloudfunctions/api/src/index.js` 实现；前端 `REAL_ACTIONS` 已放开 |
+| 2 | **模块格式** | ESM vs CJS | ✅ `api/index.js` CJS 适配 + `src/` ESM（`package.json` `"type":"module"`） |
+| 3 | **持久化** | 仅 MemoryDB | ✅ `src/db/cloud.js` 云库适配；本地测试仍用 MemoryDB |
+| 4 | **cloudfunctionRoot** | 未配置 | ✅ `MealWise/project.config.json` 指向 `cloudfunctions/` |
+| 5 | **云环境 ID** | 未 init | ✅ `miniprogram/app.js` 已 init |
+| 6 | **template_key** | 前端未传 | ⬜ 接真订阅前补齐；模板 ID 仍待申请（M5） |
+| 7 | **定时触发器** | 无 cron | 🟡 `scheduler.nudge` action 与逻辑已就绪；云侧 cron / 独立 scheduler 函数按环境配置 |
+| 8 | **DeepSeek key** | 未配置 | ✅ 支持环境变量 `DEEPSEEK_API_KEY`（部署项，见后端 §15.1） |
+
+**仍待人工**：订阅模板 ID、`sheet-subscribe` 配置、端到端模拟器/真机走查、体验版提审（见 §3 阶段 4～6 与仓库 `README.md`）。
 
 ## 2. 协作模式（开发者 × agent）
 
@@ -63,7 +67,7 @@
 
 | 命令 | 用途 | 阶段 |
 |---|---|---|
-| `cli.bat open --project <mealwise-miniapp路径>` | 打开/编译项目 | 1 |
+| `cli.bat open --project <MealWise路径>` | 打开/编译项目 | 1 |
 | `cli.bat preview --project <路径>` | 生成预览二维码（需开发者扫码） | 3/4 |
 | `cli.bat auto-preview --project <路径>` | 自动预览 | 3/4 |
 | `cli.bat upload --project <路径> -v 1.0.0 -d "说明"` | 上传体验版（需开发者确认） | 6 |
@@ -90,11 +94,11 @@ CLI 仅能「触发」动作，**扫码/登录/审核确认仍是开发者的活
 
 ### 阶段 1：Mock 验收（开发者操作 + agent 修 bug）
 
-目标：在开发者工具模拟器里把 `DEV_GUIDE.md` 的完整用户旅程（闪屏→授权→摸底定标→体质录入→每日聊天→Sheet 子流程）全部走通。
+目标：在开发者工具模拟器里把 `MealWise/DEV_GUIDE.md` 的完整用户旅程（闪屏→授权→**chat-main 合并流**→体质 Sheet→Sheet 子流程）全部走通。
 
-- **开发者**：按 `deliverables/frontend/mealwise-miniapp/DEV_GUIDE.md` 第四、五节逐步操作，记录每个失败点。
+- **开发者**：按 [`MealWise/DEV_GUIDE.md`](../../../MealWise/DEV_GUIDE.md) 逐步操作，记录每个失败点。
 - **agent**：收到反馈后修复前端代码；无法在本机重现的（真机/云环境相关）给排查指引。
-- **验证点**：7 个页面全部可达、交互无阻断性报错、Mock 数据正常展示。
+- **验证点**：`app.json` 所列页面可达、交互无阻断性报错；Mock 与真实云函数切换符合预期。
 
 ### 阶段 2：云开发接入（agent 编码为主，开发者配置环境）
 
