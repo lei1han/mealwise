@@ -27,13 +27,22 @@ function composeDiet(turn, budgetKcal) {
 }
 
 export function mockComplete({ messages }) {
-  // last message = 用户消息
+  // 仅取最后一条用户消息（mock 不看完整历史）
   const last = messages[messages.length - 1]?.content ?? '';
   const turn = String(last);
 
   // 降级测试触发
   if (turn.includes('解析失败测试')) {
     throw new Error('mock 返回非 JSON');
+  }
+
+  if (/Python|写代码|编程/.test(turn)) {
+    return JSON.stringify({
+      reply_text: '代码我真不在行，我的主场是你的身材。说说今天中午吃了啥？',
+      intent: 'off_topic',
+      extracted: {},
+      budget_remaining_kcal: null,
+    });
   }
 
   const memoryPoints = [];
@@ -74,7 +83,6 @@ export function mockComplete({ messages }) {
 
   const diet = composeDiet(turn, null);
 
-  // intent
   let intent = 'other';
   if (weight && !diet.diet) intent = 'weight_report';
   else if (diet.diet) intent = 'diet_report';

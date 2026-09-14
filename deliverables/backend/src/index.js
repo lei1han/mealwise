@@ -1,5 +1,5 @@
-// 云函数接入层包装：本地内核 ChatService + 统一 envelope
-// 部署到微信云开发时，将本文件作为云函数入口，event.action 分发；本地用 scripts/demo-chat.js 跑通同一条流水线。
+// 内核接入层：构建各 Service，统一按 event.action 分发（envelope：{ code, data }）
+// 云函数入口 api/index.js 与定时入口 scheduler.js 均复用本文件 main()。
 import { MemoryDB } from './db/memory.js';
 import { CLOUD_COLLECTIONS } from './db/cloud.js';
 import { DEFAULT_CONFIG_COLLECTION } from './db/schema.js';
@@ -10,7 +10,7 @@ import { ConversationService } from './services/conversation.js';
 import { UserService } from './services/user.js';
 import { ConfigService } from './services/config.js';
 
-// LLM 服务按环境切换：显式指定 openai 或已配置 DEEPSEEK_API_KEY 时走真实 DeepSeek，否则回退 mock（便于本地/未配 key 时联调）
+// LLM 服务按环境切换：LLM_SERVICE=openai 或配置了 DEEPSEEK_API_KEY 时走真实 DeepSeek，否则回退 mock（便于本地/未配 key 时联调）
 function resolveLlmService() {
   if (process.env.LLM_SERVICE === 'openai') return 'openai';
   if (process.env.DEEPSEEK_API_KEY) return 'openai';
@@ -31,7 +31,7 @@ export function buildApp({ db = new MemoryDB(), llm } = {}) {
 }
 
 // 错误码对齐契约 §5.3：40001 payload 校验失败 / 42901 限流 / 50000 内部错误
-//（50010 LLM 解析降级维持 code=0 + degraded:true 语义）
+//（LLM 解析降级不报错：维持 code=0 + degraded:true）
 const ERR = Object.freeze({
   BAD_PAYLOAD: 40001,
   RATE_LIMITED: 42901,
@@ -55,7 +55,7 @@ function rateLimited(app, userId, now = new Date()) {
 }
 
 export async function main(event = {}, _ctx, app = buildApp()) {
-  const { action = 'chat.send', userId, text, slot, dryRun, limit, cursor, patch, fields, accepted } = event;
+  const { action = 'chat.send', userId, text, slot, dryRun, limit, cursor, patch, fields, accepted, phone, nickname, avatarUrl, weight_kg } = event;
   const { target_weight_kg, target_estimate_weeks, template_key } = event;
 
   try {
@@ -75,6 +75,12 @@ export async function main(event = {}, _ctx, app = buildApp()) {
         return wrap(app.conversation.history({ userId, cursor, limit }));
       case 'user.state.get':
         return wrap(app.chat.getState(userId));
+      case 'auth.login': {
+        if (phone != null && typeof phone !== 'string') return badPayload('auth.login: phone must be a string');
+        if (nickname != null && typeof nickname !== 'string') return badPayload('auth.login: nickname must be a string');
+        if (avatarUrl != null && typeof avatarUrl !== 'string') return badPayload('auth.login: avatarUrl must be a string');
+        return wrap(await app.user.login({ userId, phone, nickname, avatarUrl }));
+      }
       case 'user.profile.get':
         return wrap(app.user.getProfile({ userId }));
       case 'user.profile.update': {
@@ -93,6 +99,13 @@ export async function main(event = {}, _ctx, app = buildApp()) {
       }
       case 'budget.today':
         return wrap(app.chat.todayBudget({ userId }));
+      case 'weight.report': {
+        const n = weight_kg != null ? Number(weight_kg) : NaN;
+        if (!Number.isFinite(n) || n < 20 || n > 300) return badPayload('weight.report: weight_kg must be between 20 and 300');
+        const res = app.chat.reportWeight({ userId, weight_kg: n });
+        if (res?.error) return badPayload('weight.report: invalid weight_kg');
+        return wrap(res);
+      }
       case 'app.config.get':
         return wrap(app.config.getPublic());
       case 'scheduler.nudge':

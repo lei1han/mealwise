@@ -60,7 +60,7 @@ Page({
     if (this.data.mode === 'weight') {
       wx.showLoading({ title: '上报中...' });
       try {
-        const reply = await API.sendMessage('今日体重 ' + weight + 'kg');
+        const reply = await API.reportWeight(weight);
         // 落地待展示的教练回复：返回聊天页后由 chat-main 追加气泡
         wx.setStorageSync('pendingWeightReport', reply);
         wx.hideLoading();

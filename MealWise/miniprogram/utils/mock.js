@@ -257,6 +257,22 @@ const Mock = {
     return reply;
   },
 
+  async reportWeight(weight_kg) {
+    await this._delay(400);
+    const n = Number(weight_kg);
+    this._reportedWeightToday = true;
+    this._profile.initial_weight = n;
+    const reply = {
+      reply_text: `记下了，今天 ${n} kg。稳住节奏，别偷着加夜宵。`,
+      intent: 'weight_report',
+      budget_remaining_kcal: 1200,
+      degraded: false,
+      subscribe_hint: false,
+      onboarding_state: this._onboardingState
+    };
+    return reply;
+  },
+
   /** 开场白（按状态分发，与后端 OPENING_LINES 对齐） */
   _openingReply() {
     const lines = {
