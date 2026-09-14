@@ -80,30 +80,6 @@
               <text wx:if="{{msg.dietCard.is_estimated}}" class="diet-estimated-hint">* 含估算项，区间仅供参考</text>
             </view>
 
-            <!-- 预算卡片 -->
-            <view wx:if="{{msg.budget}}" class="budget-card">
-              <view class="budget-row">
-                <view class="budget-item">
-                  <text class="budget-label">今日预算</text>
-                  <text class="budget-value budget-total">{{msg.budget.total}}</text>
-                  <text class="budget-unit">kcal</text>
-                </view>
-                <view class="budget-item">
-                  <text class="budget-label">已消耗</text>
-                  <text class="budget-value budget-consumed">{{msg.budget.consumed}}</text>
-                  <text class="budget-unit">kcal</text>
-                </view>
-                <view class="budget-item">
-                  <text class="budget-label">剩余</text>
-                  <text class="budget-value budget-remaining">{{msg.budget.remaining}}</text>
-                  <text class="budget-unit">kcal</text>
-                </view>
-              </view>
-              <!-- 进度条 -->
-              <view class="budget-progress">
-                <view class="budget-bar" style="width: {{msg.budget.ratioWidth}}"></view>
-              </view>
-            </view>
           </view>
         </view>
 
