@@ -9,6 +9,7 @@
 | [2026-08-28-xcoach-design.md](specs/2026-08-28-xcoach-design.md) | 产品设计规格 |
 | [2026-08-28-xcoach-master-plan.md](plans/2026-08-28-xcoach-master-plan.md) | 实施总计划 + **契约 A/B/C** |
 | [2026-09-14-xcoach-product-decisions.md](plans/2026-09-14-xcoach-product-decisions.md) | **产品决策与挂起待办**（2026-09-14 起） |
+| [2026-09-14-xcoach-tuning-topic-agenda.md](plans/2026-09-14-xcoach-tuning-topic-agenda.md) | **调优专题议程与选项**（提审前） |
 
 ## 分板块计划
 

@@ -32,11 +32,12 @@
 - **参考**：[2026-09-01-xcoach-visual-design-v4.md](../specs/2026-09-01-xcoach-visual-design-v4.md)；HTML 备选 [`deliverables/frontend/color-scheme-options-v4.html`](../../../deliverables/frontend/color-scheme-options-v4.html)。
 - **解除挂起时交付**：更新设计令牌 → `MealWise` 样式与原型对账。
 
-### 2.2 调优报告实现债（挂起 · 专题讨论）
+### 2.2 调优报告实现债（专题进行中）
 
-- **参考**：[三餐教练-小版本调优分析报告.html](../../../deliverables/operations-business/2026-09-02-mealwise-tuning-report/三餐教练-小版本调优分析报告.html)（P0 食物库注入、提示词分段挂载等）。
-- **与决策 6 关系**：提审前应完成本专题并落地共识项（至少 P0 是否必做需在专题内拍板）。
-- **专题建议议程**：P0/P1 范围、与 `app_config` 热覆盖关系、验收用例（报餐/报体重/跑题）。
+- **议程与选项**：[2026-09-14-xcoach-tuning-topic-agenda.md](2026-09-14-xcoach-tuning-topic-agenda.md)（逐项 A/B/C + 推荐套餐）。
+- **参考**：[三餐教练-小版本调优分析报告.html](../../../deliverables/operations-business/2026-09-02-mealwise-tuning-report/三餐教练-小版本调优分析报告.html)。
+- **与决策 6 关系**：提审前应完成本专题拍板并落地「首发包」范围。
+- **状态**：待产品填写议程 §5 决策记录表。
 
 ### 2.3 `USE_MOCK`（待定）
 
