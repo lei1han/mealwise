@@ -86,7 +86,7 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 
 * 会话：`callFunction('api', { action: 'chat.send', payload: { text } })` → 返回回复 + 结构化结果（统一 envelope `{ code, data, message }`）。支持 `text: '__start__'`（或空文本）作摸底开场：首次用户（`onboarding_state=new`）无历史时前端自动触发，后端返回并落库摸底开场白。返回含 `onboarding_state`（`new/profiling/active`），前端据此渲染摸底引导 / 预算卡，状态机由后端主导、前端不做本地判定。
 
-* 授权登录（**2026-09-01 增量**）：`action: 'auth.login'`，payload `{ phoneCode?, nickname?, avatarUrl? }` → `{ is_new, phone, nickname, avatar_url }`。手机号 code 由云函数适配层经 `cloud.openapi.phonenumber.getPhoneNumber` 换号（失败静默 → `phone=null`）；`nickname`/`avatarUrl` 回填能力保留（来自微信头像昵称填写能力，头像经云存储上传换取 fileID 后落库）。upsert 用户且**仅空字段写**（手机号不换绑）。**MVP 暂不启用资料完善步**：授权手机号成功后直接进入聊天，资料完善界面后续版本再设计接入。
+* 授权登录（**2026-09-01 增量**）：`action: 'auth.login'`，payload `{ phoneCode?, nickname?, avatarUrl? }` → `{ is_new, phone, nickname, avatar_url }`。手机号 code 由云函数适配层经 `cloud.openapi.phonenumber.getPhoneNumber` 换号（失败静默 → `phone=null`）；`nickname`/`avatarUrl` 回填能力保留（来自微信头像昵称填写能力，头像经云存储上传换取 fileID 后落库）。upsert 用户且**仅空字段写**（手机号不换绑）。**MVP 资料完善（2026-09-14 决策回写）**：授权后若 `nickname` 或 `avatar_url` 为空，须先完成昵称/头像完善再进入聊天；**不含**订阅消息与定时督促（移出 MVP，见 [产品决策记录](2026-09-14-xcoach-product-decisions.md) §1）。
 
 * 会话上下文：`action: 'conversation.current'`、历史消息 `action: 'conversation.history'`（cursor 分页）；用户状态 `action: 'user.state.get'`（首帧读取 `onboarding_state` 与 `reported_weight_today`——是否今日已报体重，供前端催报卡判断）。
 
@@ -173,6 +173,13 @@ LLM 每次回复除自然语言外，须以统一 JSON 返回"机器可读结果
 1. **先对齐契约**：4 个板块各自开工前，先花一小段确认其依赖的「接口契约」并冻结。
 2. **并行推进**：板块 1/2/3 可高度并行；板块 4 可先起方法论与获客/合规部分，成本与路线图最后收敛。
 3. **汇总集成**：最后一轮会话统一 Review 四个板块产出，做接口对账、端到端走查、产出合并后的整体文档，并据此启动后续开发。
+
+### 2.1 汇总走查记录（2026-09-14）
+
+- **文档对齐**：新增 [产品决策记录](2026-09-14-xcoach-product-decisions.md)、[文档索引](../README.md)；刷新设计规格 v1.3、dev-deploy §1、`MealWise/README.md`。
+- **MVP 边界**：订阅/定时督促（M5）不做进首发；资料完善纳入 MVP；提审待功能与调优专题完成后进行。
+- **已知实现 gap**：调优报告（2026-09-02）中提示词/食物库注入与成品文档不一致——**挂起专题**，提审前需结论。
+- **工程真源**：`MealWise/`（非 `deliverables/frontend/mealwise-miniapp` 快照）；内核 action 与 `npm test` 32/32 见 §1.3 2026-09-01 注记。
 
 ***
 
